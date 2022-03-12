@@ -1,0 +1,61 @@
+
+%option noyywrap
+
+%{
+// Avoid error "error: `fileno' was not declared in this scope"
+extern "C" int fileno(FILE *stream);
+
+#include "parser.tab.hpp"
+%}
+
+L			[a-zA-Z_]
+D     [0-9]
+
+%%
+"if" { return IF;}
+
+"then" {return THEN;}
+
+"else" {return ELSE;}
+
+"while" {return WHILE;}
+
+"const" {return INT_CONSTANT;}
+
+L?\"(\\.|[^\\"])*\"	{ return(STRING_LITERAL); }
+
+
+"*"             { return '*'; }
+"+"             { return '+'; }
+"^"             { return '^'; }
+"-"             { return '-'; }
+"/"             { return '/'; }
+"("             { return '('; }
+")"             { return ')'; }
+"&&"            { return AND;}
+"||"            { return OR;}
+"!"             { return '!';}
+"&"             { return '&';}
+"|"             { return '|'; }
+"=="            { return EQUAL;}
+
+"return"        { return RETURN;}
+
+"int"           {return INT;}
+
+{L}({L}|{D})*  {yylval.string = new std::string(yytext); return IDENTIFIER;}
+
+[0-9]+                         { return NUMBER; }
+(_|[a-z])+[a-zA-Z0-9_]*        { yylval.string=new std::string(yytext); return IDENTIFIER; }
+
+[ \t\r\n]+		{;}
+.               { fprintf(stderr, "Invalid token\n"); exit(1); }
+%%
+
+void yyerror (char const *s)
+{
+  fprintf (stderr, "Parse error : %s\n", s);
+  exit(1);
+}
+
+
