@@ -11,7 +11,7 @@ class Declaration_Mips
 
 public:
     std::vector<NodePtr> declarator_list;
-    // Declaration_Mips(const std::string specifier, NodePtr declarator);
+    Declaration_Mips(const NodePtr specifier, NodePtr declarator);
     Declaration_Mips(const NodePtr specifier, const std::vector<NodePtr> declarator);
     void generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset) override;
     // void prettyPrint(std::ostream &dst) const override;

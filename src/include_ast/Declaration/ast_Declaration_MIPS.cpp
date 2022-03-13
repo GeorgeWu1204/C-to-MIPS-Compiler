@@ -1,4 +1,3 @@
-
 #include "AST/Declaration/ast_Declaration_MIPS.hpp"
 
 Declaration_Mips::Declaration_Mips(const NodePtr specifier, const std::vector<NodePtr> declarator_list)
@@ -6,10 +5,12 @@ Declaration_Mips::Declaration_Mips(const NodePtr specifier, const std::vector<No
     branch.push_back(specifier);
     Node(declarator_list);
 }
-// Declaration_Mips::Declaration_Mips(const std::string specifier, const NodePtr declarator)
-// {
-//     Declaration_Mips(new Type_Mips(specifier), declarator);
-// }
+Declaration_Mips::Declaration_Mips(const NodePtr specifier, const NodePtr declarator)
+{
+    std::vector<NodePtr> list_with_one_element;
+    list_with_one_element.push_back(declarator);
+    Declaration_Mips(specifier,list_with_one_element);
+}
 
 void Declaration_Mips::generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset)
 {

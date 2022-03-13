@@ -73,7 +73,7 @@ Translation_unit
 
 External_declaration
   : Function_definition                                             {$$ = $1;}
-  | Declaration                                                     {$$ = new Global_Declaration($1);}
+  | Declaration                                                     {$$ = new Global_Declaration_Mips($1);}
   ;
 
 //function definition or declaration globally;
@@ -122,7 +122,7 @@ Direct_declarator
   
 	| Direct_declarator '[' Constant_expression ']'                     {std::cout << std::endl;std::cout <<"Parser "<< "196" << " array_Declarator_with_param" << std::endl; $$ = new Declare_Array_Mips($1, $3);}
 	| Direct_declarator '[' ']'                                         {std::cout << std::endl;std::cout <<"Parser "<< "196" << " Function_Declarator_with_param" << std::endl; $$ = new Declare_Array_Mips($1);}
-	| Direct_declarator '(' Parameter_type_list ')'                     {std::cout << std::endl;std::cout <<"Parser "<< "116" << " Function_Declarator_with_param" << std::endl; $$ = new Function_Declarator_Mips($1, *$2);}
+	| Direct_declarator '(' Parameter_type_list ')'                     {std::cout << std::endl;std::cout <<"Parser "<< "116" << " Function_Declarator_with_param" << std::endl; $$ = new Function_Declarator_Mips($1, *$3);}
 	/* | Direct_declarator '(' Identifier_list ')' sos */
 	;
 
@@ -183,8 +183,8 @@ Init_declarator
 
 Initializer
 	: Assignment_expression                                             {$$ = $1;}  // a = assignment || a>b
-	| '{' Initializer_list '}'                                          {$$ = new Array_Initializer_Mips(*$1);}  //  a[2][2] = {{'1', '2'}, {'2', '3'}}
-  | '{' Initializer_list ',' '}'                                      {$$ = new Array_Initializer_Mips(*$1);}  // char a[3] = {'a', 'b'};
+	//| '{' Initializer_list '}'                                          {$$ = new Array_Initializer_Mips(*$1);}  //  a[2][2] = {{'1', '2'}, {'2', '3'}}
+  //| '{' Initializer_list ',' '}'                                      {$$ = new Array_Initializer_Mips(*$1);}  // char a[3] = {'a', 'b'};
   ;
   
 Initializer_list  

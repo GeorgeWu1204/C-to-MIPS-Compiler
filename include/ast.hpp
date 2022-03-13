@@ -18,10 +18,13 @@
 #include "AST/Arithmetic/ast_NotEqual_MIPS.hpp"
 #include "AST/Arithmetic/ast_Right_Shift.hpp"
 #include "AST/Arithmetic/ast_Subtraction_MIPS.hpp"
+#include "AST/Arithmetic/"
 
 //Declaration
 #include "AST/Declaration/ast_Declaration_MIPS.hpp"
 #include "AST/Declaration/ast_Init_Declarator.hpp"
+#include "AST/Declaration/ast_Global_Declaration_MIPS.hpp"
+#include "AST/Declaration/ast_Declare_Array_MIPS.hpp"
 
 // Function
 #include "AST/Function/ast_Function_Declarator_MIPS.hpp"
@@ -29,9 +32,12 @@
 #include "AST/Function/ast_Return_Mips.hpp"
 #include "AST/Function/ast_FunctionCall_MIPS.hpp"
 
+
 // Type
 #include "AST/Type/ast_INT_CONSTANT_MIPS.hpp"
 #include "AST/Type/ast_Type_MIPS.hpp"
+#include "AST/Type/ast_Array_Access_Mips.hpp"
+#include "AST/Type/ast_Array_Initializer_Mips.hpp"
 
 //Selection
 #include "AST/Selection/ast_Selection_statement_MIPS.hpp"
@@ -52,6 +58,7 @@
 #include "AST/SelfAssignment/ast_Post_Increment_MIPS.hpp"
 #include "AST/SelfAssignment/ast_Pre_Decrement_MIPS.hpp"
 #include "AST/SelfAssignment/ast_Pre_Increment_MIPS.hpp"
+
 
 extern const NodePtr parseAST(std::string filename);
 #endif
