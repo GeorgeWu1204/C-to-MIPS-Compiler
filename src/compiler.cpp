@@ -5,14 +5,15 @@ int main()
 {
     Context context;
     MakeName make_name;
+    int dynamic_offset;
     std::cout << "start to test" << std::endl;
     std::string Test = "compiler_tests/my_test/test1.c";
     const NodePtr ast = parseAST(Test);
     std::cout << "after parser" << std::endl;
     std::cout << "" << std::endl;
     std::cout << "" << std::endl;
-    ast->get_Id();
-    ast->generateMips(std::cout, context, 2, make_name);
+    //ast->get_Id();
+    ast->generateMips(std::cout, context, 2, make_name, dynamic_offset);
 
     std::cout << "Generate MIPS complete" << std::endl;
 }

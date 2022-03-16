@@ -19,8 +19,10 @@ public:
     std::string get_type() const override;
     std::string get_Id() const override;
     bool is_Declaration() const override;
-    bool is_Function() const override;
-    bool is_init() const override;
+    int get_argument_size() override;
+    std::map<std::string, std::string> get_argument_map() override;
+    // bool is_Function() const override;
+    // bool is_init() const override;
 };
 
 #endif

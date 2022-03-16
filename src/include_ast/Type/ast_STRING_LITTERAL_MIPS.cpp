@@ -4,7 +4,7 @@ STRING_LITTERAL_MIPS::STRING_LITTERAL_MIPS( std::string input)
     : string_variable(input)
     { }
 
-void STRING_LITTERAL_MIPS::generateMips(std::ostream &dst, Context &context,  int destReg, MakeName &make_name) 
+void STRING_LITTERAL_MIPS::generateMips(std::ostream &dst, Context &context,  int destReg, MakeName &make_name, int &dynamic_offset) 
 {
 // assign the val to a register? allocate register 
 }

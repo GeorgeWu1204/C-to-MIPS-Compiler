@@ -18,7 +18,8 @@
 #include "AST/Arithmetic/ast_NotEqual_MIPS.hpp"
 #include "AST/Arithmetic/ast_Right_Shift.hpp"
 #include "AST/Arithmetic/ast_Subtraction_MIPS.hpp"
-#include "AST/Arithmetic/"
+#include "AST/Arithmetic/ast_Less_Than_Equal_MIPS.hpp"
+#include "AST/Arithmetic/ast_Greater_Than_Equal_MIPS.hpp"
 
 //Declaration
 #include "AST/Declaration/ast_Declaration_MIPS.hpp"

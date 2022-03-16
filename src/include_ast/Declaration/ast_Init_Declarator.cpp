@@ -8,13 +8,21 @@ Init_Declarator_Mips::Init_Declarator_Mips(const NodePtr Declarator, const NodeP
 
 void Init_Declarator_Mips::generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset)
 {
+    // Declarator '=' Initializer
+    int type_size = 0;
+    int offset = 0;
     if (branch[0]->is_Array())
     {
         branch[0]->generateMips(dst, context, destReg, make_name, dynamic_offset);
-        for (int i = 0; i < branch[0]->array_size(); i++)
+        //note here we only consider inside local scope and we assume we only can declare one array at the same time.
+        if(context.find_local(branch[0]->get_Id()).type_name == "INTArray"){
+            type_size = 4;
+        }
+        offset = stoi(context.find_local(branch[0]->get_Id()).offset);
+        for (int i = 0; i < branch[1]->get_size(); i++)
         {
-            branch[1], get_branch(i)->generateMips(dst, context, destReg, make_name, dynamic_offset);
-            dst << "sw " << destReg << context.find << "($30)" << std::endl;
+            branch[1]->get_branch(i)->generateMips(dst, context, destReg, make_name, dynamic_offset);
+            dst << "sw " << "$" << destReg << offset + type_size * i << "($30)" << std::endl;            
         }
     }
     else
@@ -55,4 +63,8 @@ int Init_Declarator_Mips::get_Val() const
 std::string Init_Declarator_Mips::get_StringVal() const
 {
     return branch[1]->get_StringVal();
+}
+
+bool Init_Declarator_Mips::is_Array() const{
+    return branch[0]->is_Array();
 }

@@ -25,3 +25,7 @@ void Pre_Decrement_MIPS::generateMips(std::ostream &dst, Context &context, int d
     << context.find_local(branch[0]->get_Id()).offset 
     << "(" << "$30" << ")" << std::endl;
 }
+
+std::string Pre_Decrement_MIPS::get_Id() const{
+    return branch[0]->get_Id();
+}

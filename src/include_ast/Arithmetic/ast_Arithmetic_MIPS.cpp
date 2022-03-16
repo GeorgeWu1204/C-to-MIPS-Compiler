@@ -13,29 +13,36 @@ void Arithmetic_MIPS::generate_left(std::ostream &dst, Context &context, int des
     // if it is variable defined before.
 
     // maybe we dont need to differeniate them
-    if (leftnode->is_Identifier())
-    {
-        if (context.is_Local(leftnode->get_Id()))
-        {
-            //leftnode->generateMips(dst, context, destReg, make_name, dynamic_offset); SOS
-            dst << "lw "
-                << "$" << destReg << " " << (context.find_local(leftnode->get_Id())).offset << "("
-                << "$30"
-                << ")" << std::endl;
+    // if (leftnode->is_Identifier())
+    // {
+    //     if (context.is_Local(leftnode->get_Id()))
+    //     {
+    //         //leftnode->generateMips(dst, context, destReg, make_name, dynamic_offset); SOS
+    //         dst << "lw "
+    //             << "$" << destReg << " " << (context.find_local(leftnode->get_Id())).offset << "("
+    //             << "$30"
+    //             << ")" << std::endl;
 
-            // assume int type
-            // do not add dynamic offset
-        }
-    }
-    if (leftnode->is_Constant())
+    //         // assume int type
+    //         // do not add dynamic offset
+    //     }
+    // }else if (leftnode->is_Constant())
+    // {
+    //     leftnode->generateMips(dst, context, destReg, make_name, dynamic_offset);
+    //     // assume int type
+    //     // do not add dynamic offset
+    // }
+    // else if (leftnode->is_Function())
+    // {
+    //     // dst << "sw" << "$2" <<
+    //     dst << "not supported" << std::endl;
+    // }
+    // else
+    // {
+    //     leftnode->generateMips(dst, context, destReg, make_name, dynamic_offset); 
+    // }
+    if (leftnode->is_Function())
     {
-        leftnode->generateMips(dst, context, destReg, make_name, dynamic_offset);
-        // assume int type
-        // do not add dynamic offset
-    }
-    else if (leftnode->is_Function())
-    {
-        // dst << "sw" << "$2" <<
         dst << "not supported" << std::endl;
     }
     else
@@ -46,20 +53,32 @@ void Arithmetic_MIPS::generate_left(std::ostream &dst, Context &context, int des
 
 void Arithmetic_MIPS::generate_right(std::ostream &dst, Context &context, int destReg, NodePtr rightnode, MakeName &make_name, int &dynamic_offset)
 {
-    if (rightnode->is_Identifier())
-    {
-        if (context.is_Local(rightnode->get_Id()))
-        {
+    // if (rightnode->is_Identifier())
+    // {
+    //     if (context.is_Local(rightnode->get_Id()))
+    //     {
 
-            dst << "lw "
-                << "$" << destReg << " " << (context.find_local(rightnode->get_Id())).offset << "("
-                << "$30"
-                << ")" << std::endl;
-            // assume int type
-            // do not add dynamic offset
-        }
-    }
-    else if (rightnode->is_Function())
+    //         dst << "lw "
+    //             << "$" << destReg << " " << (context.find_local(rightnode->get_Id())).offset << "("
+    //             << "$30"
+    //             << ")" << std::endl;
+    //         // assume int type
+    //         // do not add dynamic offset
+    //     }
+    // }
+    // else if (rightnode->is_Function())
+    // {
+    //     // dst << "sw" << "$2" <<
+    //     dst << "not supported" << std::endl;
+    // }
+    // else
+    // {
+
+    //     rightnode->generateMips(dst, context, destReg, make_name, dynamic_offset);
+       
+    // }
+    
+    if (rightnode->is_Function())
     {
         // dst << "sw" << "$2" <<
         dst << "not supported" << std::endl;

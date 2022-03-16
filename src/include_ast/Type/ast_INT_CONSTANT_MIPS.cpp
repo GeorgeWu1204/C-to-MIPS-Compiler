@@ -28,6 +28,9 @@ int Int_Constant_Mips::get_Val() const
     return int_number;
 }
 
+int Int_Constant_Mips::array_size() const {
+    return int_number;
+}
 bool Int_Constant_Mips::is_Constant() const
 {
     return true;

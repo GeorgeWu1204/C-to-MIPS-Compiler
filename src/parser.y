@@ -50,13 +50,14 @@
 %type <top> Statement Compound_statement Expression_statement Jump_statemnet
 %type <top> External_declaration ROOT
 %type <top> Parameter_declaration
+%type <top> Enumerator Enum_specifier
 
 
 %type <int_number> INT_CONSTANT
 //sos
 %type <string> IDENTIFIER STRING_LITERAL Type_specifier Unary_operator
 
-%type <list> Declaration_list Init_declarator_list Initializer_list Statement_list Argument_expression_list Translation_unit Identifier_list Parameter_list Parameter_type_list
+%type <list> Declaration_list Init_declarator_list Initializer_list Statement_list Argument_expression_list Translation_unit Identifier_list Parameter_list Parameter_type_list Enumerator_list
 
 
 %start ROOT
@@ -73,12 +74,12 @@ Translation_unit
 
 External_declaration
   : Function_definition                                             {$$ = $1;}
-  | Declaration                                                     {$$ = new Global_Declaration_Mips($1);}
+  | Declaration                                                     {std::cout << std::endl; std::cout <<"Parser "<< "76" << " Global" << std::endl;$$ = new Global_Declaration_Mips($1);std::cout << "done" << std::endl;}
   ;
 
 //function definition or declaration globally;
 Function_definition
-  : Declaration_specifiers Declarator Compound_statement             {std::cout << std::endl; std::cout <<"Parser "<< "77" << " Function" << std::endl;$$ = new Function(new Declaration_Mips($1, $2), $3);}//int variable() {...}
+  : Declaration_specifiers Declarator Compound_statement             {std::cout << std::endl; std::cout <<"Parser "<< "81" << " Function" << std::endl;$$ = new Function(new Declaration_Mips($1, $2), $3);std::cout << "done" << std::endl;}//int variable() {...}
 	//| Declaration_specifiers Declarator Declaration_list Compound_statement     {std::cout << "" << std::endl;}      //int Variable int a,b,c; {...}
 	//| Declarator Declaration_list Compound_statement                                //int int a,b,c; {...}
 	//| Declarator Compound_statement                                                   {}//Variable() {...}           
@@ -114,6 +115,7 @@ Declarator
 //| Pointer Direct_declarator                                         {std::cerr << " Diclerator_Mips Unsupported" << std::endl;}
 	;
 
+
 Direct_declarator                                    
 	: IDENTIFIER                                                        {std::cout << std::endl;std::cout <<"Parser "<< "114" << " IDENTIFIER" << std::endl; $$ = new Identifier_Mips(*$1);}//  Variable
 	| '(' Declarator ')'                                                {std::cerr << " Diclerator_Mips Unsupported" << std::endl;}//$$ = new Declarator_Mips($2);}// (Variable())                                                                      
@@ -121,7 +123,7 @@ Direct_declarator
   //| Declarator  SOS
   
 	| Direct_declarator '[' Constant_expression ']'                     {std::cout << std::endl;std::cout <<"Parser "<< "196" << " array_Declarator_with_param" << std::endl; $$ = new Declare_Array_Mips($1, $3);}
-	| Direct_declarator '[' ']'                                         {std::cout << std::endl;std::cout <<"Parser "<< "196" << " Function_Declarator_with_param" << std::endl; $$ = new Declare_Array_Mips($1);}
+	| Direct_declarator '[' ']'                                         {std::cout << std::endl;std::cout <<"Parser "<< "196" << " array_Declarator" << std::endl; $$ = new Declare_Array_Mips($1);}
 	| Direct_declarator '(' Parameter_type_list ')'                     {std::cout << std::endl;std::cout <<"Parser "<< "116" << " Function_Declarator_with_param" << std::endl; $$ = new Function_Declarator_Mips($1, *$3);}
 	/* | Direct_declarator '(' Identifier_list ')' sos */
 	;
@@ -174,23 +176,41 @@ Init_declarator_list
 	| Init_declarator_list ',' Init_declarator                          {$$ = add_to_list($1, $3);}
 	;
 
-//variable
+
 Init_declarator                                                        
 	: Declarator                                                        {$$ = $1;}
 	| Declarator '=' Initializer                                        {std::cout << std::endl;std::cout <<"Parser "<< "158" << " Init_Declarator" << std::endl;$$ = new Init_Declarator_Mips($1,$3);} //declarator: Variable "=" [a = a + b]
   //check int a = b = 5;
   ;
-
-Initializer
+                                                                      // int x[7] = 1; x[7] = 4;
+Initializer                                               
 	: Assignment_expression                                             {$$ = $1;}  // a = assignment || a>b
-	//| '{' Initializer_list '}'                                          {$$ = new Array_Initializer_Mips(*$1);}  //  a[2][2] = {{'1', '2'}, {'2', '3'}}
-  //| '{' Initializer_list ',' '}'                                      {$$ = new Array_Initializer_Mips(*$1);}  // char a[3] = {'a', 'b'};
+	| '{' Initializer_list '}'                                          {$$ = new Array_Initializer_Mips(*$2);}  //  a[2][2] = {{'1', '2'}, {'2', '3'}}
+  | '{' Initializer_list ',' '}'                                      {$$ = new Array_Initializer_Mips(*$2);}  // char a[3] = {'a', 'b'};
   ;
-  
-Initializer_list  
+                                                                      // std::vector<NodePtr> * 
+Initializer_list                                  
   : Initializer                                                       {$$ = build_new_list($1);}//std::cerr << "Unsupported" << std::endl;} // a>b
 	| Initializer_list ',' Initializer                                  {$$ = add_to_list($1, $3);}         //{{2,4},3}
 	;
+
+
+Enum_specifier  
+	: ENUM '{' Enumerator_list '}'                                      {$$ = new Enum_specifier_Mips(*$3);}
+	| ENUM IDENTIFIER '{' Enumerator_list '}'                           {$$ = new Enum_specifier_Mips(*$2, *$4);}
+	| ENUM IDENTIFIER                                                   {$$ = new Enum_specifier_Mips(*$2);}
+	;
+
+Enumerator_list
+	: Enumerator                                                        {$$ = build_new_list($1);}
+	| Enumerator_list ',' Enumerator                                    {$$ = add_to_list($1, $3);}
+	;
+
+Enumerator
+	: IDENTIFIER                                                        {$$ = new Enumerator_Mips(*$1);}
+	| IDENTIFIER '=' Constant_expression                                {$$ = new Enumerator_Mips(*$1, $3);}
+	;
+
 
 Statement 
   : Compound_statement                                                {std::cout << std::endl;std::cout <<"Parser "<< "175" << " CompoundStatement" << std::endl;$$ = $1;}
@@ -201,7 +221,7 @@ Statement
   ;
 
 Expression 
-  :  Assignment_expression                                            {std::cout << std::endl;std::cout <<"Parser "<< "183" << " Expression" << std::endl; $$ = $1;}
+  :  Assignment_expression                                            {std::cout << std::endl;std::cout <<"Parser "<< "183" << "Assignement Expression" << std::endl; $$ = $1;}
   |  Expression ',' Assignment_expression                             {std::cerr << "Unsupported" << std::endl;}
   ;
 
@@ -252,7 +272,7 @@ Postfix_expression
 	| postfix_expression PTR_OP IDENTIFIER */
 	| Postfix_expression INC_OP                                           {$$ = new Post_Increment_MIPS($1);}
 	| Postfix_expression DEC_OP                                           {$$ = new Post_Decrement_MIPS($1);}
-  | Postfix_expression '[' Expression ']'                               {$$ = new Array_Access_Mips($1, $3);}
+  | Postfix_expression '[' Expression ']'                               {std::cout << std::endl;std::cout <<"Parser "<< "255" << "Array_Access_Mips" << std::endl;$$ = new Array_Access_Mips($1, $3);}
 	;
 
 Argument_expression_list
@@ -391,3 +411,15 @@ const NodePtr parseAST(std::string filename)
   std::cout<<"lexer pass" << std::endl;
   return g_root;
 }
+
+/*
+make c_compiler
+bin/c_compiler -S compiler_tests/my_test/test1.c -o test_program.s
+
+
+make bin/c_compiler -B
+bin/c_compiler -S compiler_tests/array/declare_global.c -o test_program.s
+mips-linux-gnu-gcc -mfp32 -o test_program.o -c test_program.s
+mips-linux-gnu-gcc -mfp32 -static -o test_program test_program.o compiler_tests/array/declare_global_driver.c
+qemu-mips test_program
+*/

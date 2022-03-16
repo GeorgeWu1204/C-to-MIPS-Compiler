@@ -25,27 +25,34 @@ Node::Node()
 {
 }
 
+// std::vector<std::string> Node::get_Id() const
+// { // used for debug here
+//     return std::vector<std::string>();
+// }
+
 std::string Node::get_Id() const
 {
-    std::cerr << "Tried to obtin not implemented content" << std::endl;
+    std::cout << "Tried to obtain not implemented content1" << std::endl;
+    // used for debug here
     return "False";
 }
 std::string Node::get_StringVal() const
 {
-    std::cerr << "Tried to obtin not implemented content" << std::endl;
+    std::cerr << "Tried to obtin not implemented content2" << std::endl;
     return "False";
 }
 std::string Node::get_type() const
 {
-    std::cerr << "Tried to obtin not implemented content" << std::endl;
+    std::cerr << "Tried to obtin not implemented content3" << std::endl;
     return "False";
 }
 int Node::get_Val() const
 {
-    std::cerr << "Tried to obtin not implemented content" << std::endl;
+    std::cerr << "Tried to obtin not implemented content4" << std::endl;
     return 0;
 }
-int Node::array_size() const{
+int Node::array_size() const
+{
     return 0;
 }
 
@@ -80,6 +87,10 @@ bool Node::is_Identifier() const
 {
     return false;
 }
+bool Node::is_Enum() const
+{
+    return false;
+}
 
 bool Node::is_Constant() const
 {
@@ -93,8 +104,17 @@ bool Node::is_Compound_statement() const
 {
     return false;
 }
+
+bool Node::is_Array_Initializer() const
+{
+    return false;
+}
 bool Node::is_Mixed() const
 {
+    return false;
+}
+
+bool Node::is_Jump_statement() const{
     return false;
 }
 
@@ -144,9 +164,9 @@ Node::~Node()
 int Node::Dynamic_context_size()
 {
     return 0;
-    
 }
-int Node::return_dynamic_offset(){
+int Node::return_dynamic_offset()
+{
     return 0;
 }
 int Node::get_argument_size()
@@ -154,12 +174,12 @@ int Node::get_argument_size()
     return 0;
 }
 
-std::map<std::string, std::string> Node::get_argument_map(){
+std::map<std::string, std::string> Node::get_argument_map()
+{
     return std::map<std::string, std::string>();
 }
 
-std::vector<int> Node::return_assigned_val(){
+std::vector<int> Node::return_assigned_val()
+{
     return std::vector<int>();
 }
-
-

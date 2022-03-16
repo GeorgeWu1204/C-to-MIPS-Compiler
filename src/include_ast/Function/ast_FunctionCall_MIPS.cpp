@@ -4,7 +4,9 @@
 FunctionCall_Mips::FunctionCall_Mips(const NodePtr functionID, const std::vector<NodePtr> _Argument_expression_list)
 {
     branch.push_back(functionID);
-    Node(_Argument_expression_list);
+    for(int i = 0; i < _Argument_expression_list.size(); i++){
+        branch.push_back(_Argument_expression_list[i]);
+    }
 }
 
 FunctionCall_Mips::FunctionCall_Mips(const NodePtr functionID)
@@ -24,23 +26,23 @@ void FunctionCall_Mips::generateMips(std::ostream &dst, Context &context, int de
 
     // }
     if(branch.size() <= 5){
-        for(int i = 0; i < branch.size(); i++){
-            branch[i]->generateMips(dst, context, 4 + i, make_name);
+        for(int i = 1; i < branch.size(); i++){
+            branch[i]->generateMips(dst, context, 3 + i, make_name, dynamic_offset);
         }
 
     }
     else{
         int out_size = branch.size() - 5;
         for(int k = 0; k < out_size; k++){
-            branch[5 + k]->generateMips(dst, context, 2, make_name);
+            branch[5 + k]->generateMips(dst, context, 2, make_name, dynamic_offset);
             dst << "sw " << "$2" << k*4 + 16 << "( $30 )" << std::endl;
         }
         for(int i = 0; i < 4; i++){
-            branch[i]->generateMips(dst, context, 4 + i, make_name);
+            branch[i]->generateMips(dst, context, 4 + i, make_name, dynamic_offset);
         }
     }
     dst << "jal"
-        << " " << branch[0]->get_Id() << ":" << std::endl;
+        << " " << branch[0]->get_Id().back() << ":" << std::endl;
 }
 
 // declaration

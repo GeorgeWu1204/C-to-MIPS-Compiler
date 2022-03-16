@@ -22,13 +22,13 @@ public:
     int global_size;
     Global_var(std::string var1)
     {
-        //when it is a variable
+        // when it is a variable
         type_name = var1;
         global_size = 1;
     }
     Global_var(std::string var1, int var2)
     {
-        //when it is an array
+        // when it is an array
         type_name = var1;
         global_size = var2;
     }
@@ -67,6 +67,10 @@ public:
     void assign_offset(std::string input)
     {
         offset = input;
+    }
+    void assign_type(std::string input)
+    {
+        type_name = input;
     }
 
     void is_call()
@@ -110,10 +114,16 @@ public:
     std::vector<std::string> read_whole_local_var_type_waiting_for_declared();
     void sync_local_context(Context upperpart, Context initialpart);
     void assign_offset_to_local_var(std::string Name, std::string Offset);
+    void assign_type_to_local_var(std::string Name, std::string type);
     void local_var_called(std::string input);
-    //void generate_global_var_Mips(std::string var_name, int index);
+    // void generate_global_var_Mips(std::string var_name, int index);
+    // find the size taken for the variable inside
+    //  void find_block_size_global(std::string input);
+    //  void find_block_size_local();
+    // print
     void print_global();
     void print_local();
+    void print_context();
 };
 
 #endif

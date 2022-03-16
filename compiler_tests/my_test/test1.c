@@ -1,8 +1,10 @@
-int f()
+int r2(int n);
+
+int r1(int n)
 {
-
-    int u = 0;
-    int x = 9;
-
-   int q = x + u * x;
+    if(n==0){
+        return 1;
+    }else{
+        return r2(n-1)+r2(n-1);
+    }
 }

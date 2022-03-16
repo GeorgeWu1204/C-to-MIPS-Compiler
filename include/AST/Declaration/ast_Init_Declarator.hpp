@@ -22,6 +22,7 @@ public:
     std::string get_type() const override;
     std::string get_StringVal() const override;
     bool is_init() const override;
+    bool is_Array() const override;
 };
 
 #endif

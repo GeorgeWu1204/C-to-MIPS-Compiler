@@ -2,8 +2,7 @@
 
 Identifier_Mips::Identifier_Mips(const std::string &input)
     : identifier_id(input)
-{
-}
+{}
 
 void Identifier_Mips::generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset)
 {
@@ -40,7 +39,7 @@ std::string Identifier_Mips::get_Id() const
 
 std::vector<std::string> Identifier_Mips::return_waiting_to_declared_list()
 {
-    std::cout << " SOS: Maybe you are swred" << std::endl;
+    //std::cout << " SOS: Maybe you are swred" << std::endl;
     std::vector<std::string> a;
     a.push_back(identifier_id);
     return a;

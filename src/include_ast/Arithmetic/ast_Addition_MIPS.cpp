@@ -13,21 +13,28 @@ Addition_MIPS::Addition_MIPS(NodePtr leftinput, NodePtr rightinput)
 void Addition_MIPS::generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset)
 {
 
-    generate_left(dst, context, 3, branch[0], make_name, dynamic_offset); //Identifier
-    generate_right(dst, context, 4, branch[1], make_name, dynamic_offset); //Express
-    if(branch[0]->is_Identifier() || branch[0]->is_Constant()){
+    generate_left(dst, context, 3, branch[0], make_name, dynamic_offset);  // Identifier
+    generate_right(dst, context, 4, branch[1], make_name, dynamic_offset); // Express
+    if (branch[0]->is_Identifier() || branch[0]->is_Constant())
+    {
         generate_left(dst, context, 3, branch[0], make_name, dynamic_offset);
-    }else{
+    }
+    else
+    {
         dst << "lw "
             << "$3 " << branch[0]->return_dynamic_offset() << "($30)" << std::endl;
     }
-    if(branch[1]->is_Identifier() || branch[1]->is_Constant()){
+    if (branch[1]->is_Identifier() || branch[1]->is_Constant())
+    {
         generate_left(dst, context, 4, branch[1], make_name, dynamic_offset);
-    }else{
+    }
+    else
+    {
         dst << "lw "
             << "$4 " << branch[1]->return_dynamic_offset() << "($30)" << std::endl;
     }
     std::string type = context.find_local("$DynamicContext").type_name;
+    std::cout << context.find_local("$DynamicContext").type_name << std::endl;
     if (type == "INT")
     {
         dynamic_offset += 4;
@@ -53,12 +60,11 @@ void Addition_MIPS::generateMips(std::ostream &dst, Context &context, int destRe
     dst << "sw "
         << "$" << destReg << " " << current_offset << "($30)" << std::endl;
 }
-    // if(branch[0]->is_Identifier()){
-    //     dst << "lw "
-    //             << "$" << destReg << " " << (context.find_local(branch[0]->get_Id())).offset << "("
-    //             << "$30"
-    //             << ")" << std::endl;
-    // }else if(branch[0]->is_Constant()){
-    //     generate_left(dst, context, 3, branch[0], make_name, dynamic_offset);
-    // }
-
+// if(branch[0]->is_Identifier()){
+//     dst << "lw "
+//             << "$" << destReg << " " << (context.find_local(branch[0]->get_Id())).offset << "("
+//             << "$30"
+//             << ")" << std::endl;
+// }else if(branch[0]->is_Constant()){
+//     generate_left(dst, context, 3, branch[0], make_name, dynamic_offset);
+// }

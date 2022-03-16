@@ -19,3 +19,13 @@ std::string Return_Mips::get_Id() const
 {
     return branch[0]->get_Id();
 }
+
+bool Return_Mips::is_Function_inside() const{
+    return branch[0]->is_Function_inside();
+}
+
+bool Return_Mips::is_Jump_statement() const{
+    return true;
+}
+
+

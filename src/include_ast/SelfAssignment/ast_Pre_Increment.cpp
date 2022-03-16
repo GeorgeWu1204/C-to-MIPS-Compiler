@@ -25,3 +25,7 @@ void Pre_Increment_MIPS::generateMips(std::ostream &dst, Context &context, int d
     << "(" << "$30" << ")" << std::endl;
     
 }
+
+std::string Pre_Increment_MIPS::get_Id() const{
+    return branch[0]->get_Id();
+}

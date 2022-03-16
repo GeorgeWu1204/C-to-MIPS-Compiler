@@ -26,3 +26,6 @@ void Post_Increment_MIPS::generateMips(std::ostream &dst, Context &context, int 
 
    
 }
+std::string Post_Increment_MIPS::get_Id() const{
+    return branch[0]->get_Id();
+}

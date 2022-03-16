@@ -15,11 +15,11 @@ bool Context::is_Global(std::string i)
 {
     if (Globalvar.find(i) != Globalvar.end())
     {
-        return false;
+        return true;
     }
     else
     {
-        return true;
+        return false;
     }
 }
 
@@ -94,49 +94,83 @@ std::vector<std::string> Context::read_whole_local_var_type_waiting_for_declared
 
 void Context::sync_local_context(Context upperpart, Context initialpart)
 {
+   // std::cout << "Upper" << std::endl;
+    //upperpart.print_local();
+    //std::cout << "initialpart" << std::endl;
+    //initialpart.print_local();
     Localvar = initialpart.extract_local_var();
     int original_size = Localvar.size();
-    //std::cout << "inside sync" << std::endl;
+    int count_argument = 0;
+    int is_called_subcontext_size = 0;
+    // this is used to count the number of called_subcontext covered in the context.
+    // std::cout << "inside sync" << std::endl;
     std::vector<std::string> ordered_stack(upperpart.extract_local_var().size());
     std::map<std::string, Local_var> UPPER = upperpart.extract_local_var();
-
+    //place all the content inside the upperpart into vector ordered by index.
     for (std::map<std::string, Local_var>::const_iterator it = UPPER.begin(); it != UPPER.end(); ++it)
     {
-        ordered_stack[it->second.index] = it->first;
+        //[0 0 1 2 3 4]
+        if (it->second.index == 0)
+        {
+            ordered_stack[count_argument] = "undefined";
+            // note the index for arguments is always zero;
+            //need to count all the zero before starting to insert into the vector.
+            count_argument += 1;
+            Localvar.insert(std::make_pair(it->first, it->second));
+        }
     }
-    //std::cout << "stage 1 passed" << std::endl;
-    print_local();
-    //std::cout << "<---------->" << std::endl;
-    //std::cout << ordered_stack.size() << std::endl;
-
-    for (int i = 0; i < ordered_stack.size(); i++)
+    for (std::map<std::string, Local_var>::const_iterator it = UPPER.begin(); it != UPPER.end(); ++it)
     {
-        //std::cout << ordered_stack[i] << std::endl;
-        if ( upperpart.find_local(ordered_stack[i]).type_name == "SUBCONTEXT" )
+        if (it->second.index != 0)
+        {
+            ordered_stack[it->second.index + count_argument - 1] = it->first;
+        }
+    }
+     //std::cout << "stage 1 passed" << std::endl;
+    // print_local();
+    // std::cout << "<---------->" << std::endl;
+    // std::cout << ordered_stack.size() << std::endl;
+
+    for (int i = count_argument; i < ordered_stack.size(); i++)
+    {
+        //std::cout <<"oderstack content " << i << " | " <<ordered_stack[i] << std::endl;
+        if (upperpart.find_local(ordered_stack[i]).type_name == "SUBCONTEXT")
         {
             if (upperpart.find_local(ordered_stack[i]).is_called == false)
             {
                 break;
             }
-            
+            // else{
+            //     // when the subcontext is already called.
+            //     is_called_subcontext_size += 1;
+            //do n() cothing here
+            // }
         }
         else
+        {
+            //[undef; x; y; SUBCONTEXT; Dynamic] i = 3 index = 2
+            //<x, y
+            if (Localvar.count(ordered_stack[i]) == 0)
             {
-                if(Localvar.count(ordered_stack[i])== 0){
-                Local_var var(upperpart.find_local(ordered_stack[i]).type_name, true ,original_size + i );
+                //std::cout << "matched : " << ordered_stack[i] << std::endl;
+                //if cannot find same val
+                Local_var var(upperpart.find_local(ordered_stack[i]).type_name, true, original_size + i - count_argument + 1);
                 var.offset = upperpart.find_local(ordered_stack[i]).offset;
                 Localvar.insert(make_pair(ordered_stack[i], var));
-                }
             }
+        }
     }
-    //std::cout << "stage 2 passed" << std::endl;
+     //std::cout << "stage 2 passed" << std::endl;
     Globalvar = upperpart.extract_global_var();
 }
-
 
 void Context::assign_offset_to_local_var(std::string Name, std::string Offset)
 {
     Localvar.at(Name).assign_offset(Offset);
+}
+void Context::assign_type_to_local_var(std::string Name, std::string type)
+{
+    Localvar.at(Name).assign_type(type);
 }
 
 void Context::local_var_called(std::string input)
@@ -147,19 +181,23 @@ void Context::local_var_called(std::string input)
 // this function is used to generate global Mips function
 // void Context::generate_global_var_Mips(std::string var_name, int index)
 // {
-    
-
 
 // }
 
-//print part for testing
+// print part for testing
 
+void Context::print_context()
+{
+    print_local();
+    print_global();
+}
 void Context::print_local()
 {
-    std::cout << "inside Local Var: " << std::endl;
+    std::cout <<  std::endl;
+    std::cout << "inside Local Var: Name : Type | Offset | Index | Is_called" << std::endl;
     for (std::map<std::string, Local_var>::const_iterator it = Localvar.begin(); it != Localvar.end(); ++it)
     {
-        std::cout << it->first << ": " << it->second.type_name << " | " << it->second.offset << " | " << it->second.index<< " | " << it->second.is_called << std::endl;
+        std::cout << it->first << ": " << it->second.type_name << " | " << it->second.offset << " | " << it->second.index << " | " << it->second.is_called << std::endl;
     }
 
     std::cout << "inside Local Var Waiting for Declared" << std::endl;
@@ -167,19 +205,17 @@ void Context::print_local()
     {
         std::cout << LocalVarWaitingForDeclared[i] << std::endl;
     }
+    std::cout <<  std::endl;
 }
 
-void Context::print_global(){
-
+void Context::print_global()
+{
+    std::cout <<  std::endl;
     std::cout << "inside Global Var: " << std::endl;
-    
+
     for (std::map<std::string, Global_var>::const_iterator it = Globalvar.begin(); it != Globalvar.end(); ++it)
     {
         std::cout << it->first << ": " << it->second.type_name << " | " << it->second.global_size << std::endl;
     }
-
+    std::cout <<  std::endl;
 }
-
-
-
-
