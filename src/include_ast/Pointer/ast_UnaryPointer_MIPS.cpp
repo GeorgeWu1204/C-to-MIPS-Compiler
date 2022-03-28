@@ -89,4 +89,10 @@ bool UnaryPointer_MIPS::is_Pointer() const
 std::string UnaryPointer_MIPS::get_Id() const
 {
     return branch[0]->get_Id();
+
+}
+std::string UnaryPointer_MIPS::return_expression_type(Context context)
+{
+    std::cout << "# Pointer sizing, returing int " << std::endl;
+    return "INT";
 }

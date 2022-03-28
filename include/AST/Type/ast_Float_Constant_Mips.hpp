@@ -24,6 +24,7 @@ public:
   std::string get_cloest_Id() const override;
   // int getSize() const override;
   std::string get_type() const override;
+  std::string return_expression_type(Context context) override;
 };
 
 #endif

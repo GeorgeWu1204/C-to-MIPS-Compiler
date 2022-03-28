@@ -40,3 +40,7 @@ std::string UnaryNot_MIPS::get_cloest_Id() const
 {
     return branch[0]->get_cloest_Id();
 }
+std::string UnaryNot_MIPS::return_expression_type(Context context)
+{
+    return branch[0]->return_expression_type(context);
+}

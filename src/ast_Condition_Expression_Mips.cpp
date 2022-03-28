@@ -45,13 +45,13 @@ void Condition_Expression_Mips::generateMips(std::ostream &dst, Context &context
     if (context.find_local("$DynamicContext").type_name == "NotDefined")
     {
         std::string left_ID = branch[0]->get_cloest_Id();
-        std::cout << "#"
+        std::cerr << "#"
                   << " ID: " << left_ID << std::endl;
         std::string type;
         if (context.is_Local(left_ID))
         {
             type = context.find_local(left_ID).type_name;
-            std::cout << "#"
+            std::cerr << "#"
                       << " TYPE: " << type << std::endl;
         }
         else if (context.is_Global(left_ID))
@@ -159,4 +159,12 @@ std::string Condition_Expression_Mips::get_cloest_Id() const
 bool Condition_Expression_Mips::is_Constant() const
 {
     return branch[0]->is_Constant();
+}
+std::string Condition_Expression_Mips::return_expression_type(Context context)
+{
+    return branch[0]->return_expression_type(context);
+}
+bool Condition_Expression_Mips::is_Identifier() const
+{
+    branch[0]->is_Identifier();
 }

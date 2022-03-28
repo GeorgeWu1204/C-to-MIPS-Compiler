@@ -15,6 +15,13 @@ protected:
     int current_offset;
 
 public:
+    enum Type
+    {
+        char_ = 2,
+        int_ = 4,
+        float_ = 4,
+        double_ = 8
+    };
     Arithmetic_MIPS(NodePtr leftinput, NodePtr rightinput);
     virtual void generate_left(std::ostream &dst, Context &context, int destReg, NodePtr leftnode, MakeName &make_name, int &dynamic_offset);
     virtual void generate_right(std::ostream &dst, Context &context, int destReg, NodePtr rightnode, MakeName &make_name, int &dynamic_offset);
@@ -31,6 +38,8 @@ public:
     bool is_Function_inside() const override;
     virtual std::string get_cloest_Id() const override;
     std::vector<FloatDoubleConst> get_Float_Const() override;
+    std::string return_expression_type(Context context) override;
+    int enumerator_convertor(std::string input);
 
     // virtual void assign_dynamic_offset(int offset_val);
     // virtual void pass_offset(int cur_offset, int left_size);

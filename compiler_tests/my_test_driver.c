@@ -1,9 +1,6 @@
-char *search(char *x, char c);
+unsigned f();
 
 int main()
 {
-    char *s="abcdef";
-
-    char *p=search((char*)s,'c');
-    return !(p==s+2);
+    return !(f()==11);
 }

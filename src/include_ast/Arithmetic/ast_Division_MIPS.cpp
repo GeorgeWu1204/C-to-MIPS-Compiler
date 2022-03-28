@@ -46,7 +46,7 @@ void Division_MIPS::generateMips(std::ostream &dst, Context &context, int destRe
         generate_right(dst, context, 4, branch[1], make_name, dynamic_offset); // Express
         std::cerr << "#"
                 << "Dynamic Offset: " << dynamic_offset << std::endl;
-        if (branch[0]->is_Identifier() || branch[0]->is_Constant() || branch[0]->is_Struct_Call())
+        if (branch[0]->is_Identifier() || branch[0]->is_Constant() || branch[0]->is_Struct_Call()|| branch[0]->is_Pointer())
         {
             generate_left(dst, context, 3, branch[0], make_name, dynamic_offset);
         }
@@ -55,7 +55,7 @@ void Division_MIPS::generateMips(std::ostream &dst, Context &context, int destRe
             dst << "lw "
                 << "$3," << branch[0]->return_dynamic_offset() << "($30)" << std::endl;
         }
-        if (branch[1]->is_Identifier() || branch[1]->is_Constant() || branch[0]->is_Struct_Call())
+        if (branch[1]->is_Identifier() || branch[1]->is_Constant() || branch[1]->is_Struct_Call() || branch[1]->is_Pointer())
         {
             generate_left(dst, context, 4, branch[1], make_name, dynamic_offset);
         }

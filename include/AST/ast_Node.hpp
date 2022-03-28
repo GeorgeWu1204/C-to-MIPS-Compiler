@@ -69,6 +69,7 @@ public:
     virtual bool is_Struct_Declaration() const;
     virtual bool is_Conditional_Expression() const;
     virtual bool is_Struct_Call() const;
+    virtual bool is_Type_Specified() const;
 
     virtual NodePtr get_branch(int index) const;
 
@@ -113,6 +114,7 @@ public:
 
     //for the final rush
     virtual std::string get_cloest_Id() const;
+    virtual std::string return_expression_type(Context context);
     //virtual std::map<std::string, int> return_case_address();
     // for enumerator
 };

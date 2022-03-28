@@ -97,3 +97,43 @@ std::string Arithmetic_MIPS::get_cloest_Id() const
 {
     return branch[0]->get_cloest_Id();
 }
+
+
+
+int Arithmetic_MIPS::enumerator_convertor(std::string input)
+{
+    if(input == "INT"){
+        return int_;
+    }else if(input == "DOUBLE"){
+        return double_;
+    }else if(input == "FLOAT"){
+        return float_;
+    }else if(input == "CHAR"){
+        return char_;
+    }else{
+        return int_;
+    }
+}
+
+std::string Arithmetic_MIPS::return_expression_type(Context context)
+{
+    std::string left_type = Left->return_expression_type(context);
+    std::string right_type = Right->return_expression_type(context);
+    int a = enumerator_convertor(left_type);
+    int b = enumerator_convertor(left_type);
+    int c = (a > b)? a : b;
+    switch(c){
+        case double_:
+            return "double";
+            break;
+        case float_:
+            return "float_";
+            break;
+        case char_:
+            return "CHAR";
+            break;
+        default:
+            return "INT";
+            break;
+    }
+}

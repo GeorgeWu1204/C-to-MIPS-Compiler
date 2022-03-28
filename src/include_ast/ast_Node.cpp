@@ -252,6 +252,9 @@ bool Node::is_Assignment() const
 {
     return false;
 }
+bool Node::is_Type_Specified() const{
+    return false;
+}
 
 int Node::get_arithmetic_const_val()
 {
@@ -304,4 +307,9 @@ std::string Node::get_cloest_Id() const
 
 std::vector<std::string> Node:: get_String_Const(){
     return std::vector<std::string>();
+}
+
+std::string Node::return_expression_type(Context context)
+{
+    std::cout << "#Tried to obtain not implemented overaall type " << std::endl;
 }

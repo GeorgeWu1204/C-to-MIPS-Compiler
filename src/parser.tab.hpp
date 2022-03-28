@@ -144,8 +144,7 @@ union YYSTYPE
   std::string *string;
   yytokentype token;
 
-
-#line 149 "src/parser.tab.hpp"
+#line 148 "src/parser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

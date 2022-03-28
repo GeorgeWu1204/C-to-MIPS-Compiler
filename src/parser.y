@@ -20,7 +20,6 @@
   double double_number;
   std::string *string;
   yytokentype token;
-
 }
 
 
@@ -49,7 +48,7 @@
 %type <top> Statement Compound_statement Expression_statement Jump_statemnet Labeled_statement
 %type <top> External_declaration ROOT
 %type <top> Parameter_declaration
-%type <top> Enumerator Enum_specifier
+%type <top> Enumerator Enum_specifier Abstract_declarator Type_name
 %type <top> Type_specifier Struct_specifier Struct_declaration Specifier_qualifier_list Struct_declarator Storage_class_specifier
 
 %type <int_number> INT_CONSTANT CHAR_LITERAL
@@ -59,7 +58,7 @@
 %type <string> IDENTIFIER STRING_LITERAL 
 
 %type <list> Declaration_list Init_declarator_list Initializer_list Statement_list Argument_expression_list Translation_unit Identifier_list Parameter_list Parameter_type_list Enumerator_list Struct_declaration_list 
-%type <list> Struct_declarator_list
+%type <list> Struct_declarator_list 
 
 %start ROOT
 
@@ -113,6 +112,17 @@ Type_specifier
   //| TYPE_NAME */
 	| Enum_specifier                                                    {$$ = $1;}
 	;
+
+Type_name
+  : Specifier_qualifier_list                                          {$$ = $1;}
+	//| Specifier_qualifier_list Abstract_declarator
+	;
+
+//Abstract_declarator
+	//: Pointer
+	//| Direct_abstract_declarator
+	//| Pointer Direct_abstract_declarator
+	//;
 
 Enum_specifier  
 	: ENUM '{' Enumerator_list '}'                                      {$$ = new Enum_specifier_Mips(*$3);}
@@ -297,10 +307,11 @@ Unary_expression
 	| '-' Cast_expression                                                 {$$ = new UnarySub_MIPS($2);}     
 	| '~' Cast_expression                                                 {$$ = new UnaryNor_MIPS($2);}              
 	| '!' Cast_expression                                                 {$$ = new UnaryNot_MIPS($2);}             
-  | SIZEOF Unary_expression                                             {$$ = new Sizeof_MIPS($2);}
+  | SIZEOF Unary_expression                                             {$$ = new Sizeof_MIPS($2); }
+  | SIZEOF '(' Type_name ')'                                            {$$ = new Sizeof_MIPS($3); }
   ;  
 
-  //| SIZEOF '(' Type_name ')'
+
 
 Postfix_expression
 	: Primary_expression                                                  {$$ = $1;}
@@ -319,14 +330,13 @@ Argument_expression_list
 	;
 
 Primary_expression
-	: IDENTIFIER                                                          {  $$ = new Identifier_Mips(*$1);}
-	| INT_CONSTANT                                                        {  $$ = new Int_Constant_Mips($1);}
+	: IDENTIFIER                                                          { $$ = new Identifier_Mips(*$1);}
+	| INT_CONSTANT                                                        { $$ = new Int_Constant_Mips($1);}
   | FLOAT_CONSTANT                                                      { $$ = new Float_Constant_Mips($1);}
-  | CHAR_LITERAL                                                        {$$ = new Char_Litteral_Mips($1);}
+  | CHAR_LITERAL                                                        { $$ = new Char_Litteral_Mips($1);}
   | DOUBLE_CONSTANT                                                     { $$ = new Double_Constant_Mips($1);}
-	| STRING_LITERAL                                                      {$$ = new STRING_LITTERAL_MIPS(*$1);}
-  | '(' Expression ')'                                                  {  $$ = $2;}
-  
+	| STRING_LITERAL                                                      { $$ = new STRING_LITTERAL_MIPS(*$1);}
+  | '(' Expression ')'                                                  { $$ = $2;}
 	;
 
 

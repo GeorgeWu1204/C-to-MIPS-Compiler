@@ -19,6 +19,8 @@ public:
     bool is_Constant() const override;
     int get_arithmetic_const_val() override;
     std::string get_cloest_Id() const override;
+    std::string return_expression_type(Context context) override;
+    
 };
 
 #endif

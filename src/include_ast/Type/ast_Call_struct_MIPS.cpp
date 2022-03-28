@@ -70,3 +70,17 @@ type_storage Call_struct_Mips::get_struct(NodePtr inside, Context context){
         return result.second;
     }
 }
+std::string Call_struct_Mips::return_expression_type(Context context)
+{
+    std::string type;
+    int size;
+    size = context.Type_Str.find(context.find_local(branch[0]->get_Id()).type_name)->second.struct_content.find(branch[1]->get_Id())->second.type_size;
+    if(size==4){
+        return "INT";
+    }else if(size == 8){
+        return "DOUBLE";
+    }else if(size == 1){
+        return "CHAR";
+    }
+    return type;
+}

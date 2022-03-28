@@ -21,8 +21,8 @@ public:
   std::vector<FloatDoubleConst> get_Float_Const() override;
   // int getSize() const override;
   std::string get_cloest_Id() const override;
-  
   std::string get_type() const override;
+  std::string return_expression_type(Context context) override;
 };
 
 #endif

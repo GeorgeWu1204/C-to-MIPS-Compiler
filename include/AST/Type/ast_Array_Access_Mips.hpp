@@ -21,6 +21,7 @@ public:
     int Dynamic_context_size() override;
     int return_dynamic_offset() override;
     std::string get_cloest_Id() const override;
+    std::string return_expression_type(Context context);
 
 };
 

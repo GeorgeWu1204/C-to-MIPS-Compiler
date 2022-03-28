@@ -20,5 +20,7 @@ public:
     bool is_Struct_Call() const override;
     int get_struct_variable_offset(Context context) override;
     type_storage get_struct(NodePtr inside, Context context);
+    std::string return_expression_type(Context context) override;
+    
 };
 #endif

@@ -28,6 +28,8 @@ public:
     std::vector<std::string> get_String_Const() override;
     std::string get_cloest_Id() const override;
     bool is_Constant() const override;
+    std::string return_expression_type(Context context) override;
+    bool is_Identifier() const override ;
 };
 
 #endif

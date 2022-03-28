@@ -52,3 +52,9 @@ std::string UnaryAddress_MIPS::get_Id() const
 {
     return branch[0]->get_Id();
 }
+
+std::string UnaryAddress_MIPS::return_expression_type(Context context)
+{
+    std::cout << "# ?????? plz r u serious" << std::endl;
+    return "INT";
+}

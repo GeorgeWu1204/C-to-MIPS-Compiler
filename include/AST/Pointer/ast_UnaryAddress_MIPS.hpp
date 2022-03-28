@@ -18,6 +18,7 @@ public:
     UnaryAddress_MIPS(NodePtr Expression_term_1);
     void generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset) override;
     std::string get_Id() const override;
+    std::string return_expression_type(Context context) override;
     // std::vector<std::string> return_waiting_to_declared_list() override;
     // bool is_Compound_statement() const override;
     // void build_mock_compound();

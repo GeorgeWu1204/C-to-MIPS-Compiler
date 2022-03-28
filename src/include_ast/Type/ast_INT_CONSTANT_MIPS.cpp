@@ -33,6 +33,12 @@ std::string Int_Constant_Mips::get_cloest_Id() const
 {
     return "$INT";
 }
+
+std::string Int_Constant_Mips::return_expression_type(Context context)
+{
+    return "INT";
+}
+
 // int Int_Constant_Mips::array_size() const {
 //     return int_number;
 // }

@@ -17,6 +17,7 @@ public:
     std::string get_Id() const override;
     bool is_Function_inside() const override;
     std::string get_cloest_Id() const override;
+    std::string return_expression_type(Context context);
 };
 
 #endif

@@ -168,6 +168,27 @@ std::string Identifier_Mips::get_cloest_Id() const
     return identifier_id;
 }
 
+std::string Identifier_Mips::return_expression_type(Context context)
+{
+    std::string type;
+    if(context.is_Local(identifier_id))
+    {
+        type = context.find_local(identifier_id).type_name;
+        
+    }
+    else if(context.is_Global(identifier_id))
+    {
+        type =  context.find_local(identifier_id).type_name;
+    }else
+    {
+        std::cout << "NOT FOUND" << std::endl;
+    }
+    if(type == "ENUM"){
+        type == "INT";
+    }
+    return type;
+}
+
 // void Identifier_MIPS::PrettyPrint(std::ostream &dst)
 // {
 //     dst << "Identifier: " << identifier_id << std::endl;

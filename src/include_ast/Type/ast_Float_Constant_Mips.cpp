@@ -37,6 +37,10 @@ std::string Float_Constant_Mips::get_type() const
 {
     return "FLOAT";
 }
+std::string Float_Constant_Mips::return_expression_type(Context context)
+{
+    return "FLOAT";
+}
 
 std::string Float_Constant_Mips::get_cloest_Id() const
 {

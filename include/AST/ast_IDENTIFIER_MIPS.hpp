@@ -24,6 +24,7 @@ public:
     std::string get_cloest_Id() const override;
     bool is_Identifier() const override;
     std::vector<std::string> return_waiting_to_declared_list() override;
+    std::string return_expression_type(Context context);
 };
 
 #endif

@@ -18,6 +18,7 @@ public:
     void generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset) override;
     bool is_Pointer() const override;
     std::string get_Id() const override;
+    std::string return_expression_type(Context context) override;
     // int get_context_local_size() override;
     // std::vector<std::string> return_waiting_to_declared_list() override;
     // bool is_Compound_statement() const override;

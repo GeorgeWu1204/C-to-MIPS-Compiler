@@ -187,3 +187,26 @@ std::string Array_Access_Mips::get_cloest_Id() const
 {
     return branch[0]->get_cloest_Id();
 }
+
+
+std::string Array_Access_Mips::return_expression_type(Context context)
+{
+    std::string identifier_id = branch[0]->get_Id();
+    std::string type;
+    if(context.is_Local(identifier_id))
+    {
+        type = context.find_local(identifier_id).type_name;
+        type.erase (type.end()-4, type.end()); 
+        return type;
+    }
+    else if(context.is_Global(identifier_id))
+    {
+        type = context.find_global(identifier_id).type_name;
+        type.erase (type.end()-4, type.end()); 
+        return type;
+    }else
+    {
+        std::cout << "NOT FOUND" << std::endl;
+    } 
+    
+}

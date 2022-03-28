@@ -46,6 +46,10 @@ std::string Double_Constant_Mips::get_cloest_Id() const
 {
   return "$DOUBLE";
 }
+std::string Double_Constant_Mips::return_expression_type(Context context)
+{
+    return "DOUBLE";
+}
 
 std::string Double_Constant_Mips::get_type() const
 {

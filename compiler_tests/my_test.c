@@ -1,15 +1,4 @@
-char *search(char *x, char c)
+unsigned f()
 {
-    while(*x){
-        if(*x==c){
-            return x;
-        }
-        x=x+1;
-    }
-    return 0;
+    return 11;
 }
-
-
-
-
-
