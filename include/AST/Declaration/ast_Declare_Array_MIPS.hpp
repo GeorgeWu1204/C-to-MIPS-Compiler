@@ -17,8 +17,9 @@ public:
     //  no need to generate mips here.
     std::string get_type() const override;
     std::string get_Id() const override;
-    int array_size() const override;
+    // int array_size() const override;
     bool is_Array() const override;
+    int get_arithmetic_const_val() override;
 };
 
 #endif

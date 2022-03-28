@@ -1,166 +1,64 @@
-start to test
- opening input file: 
-open successfully
-Token Type: INT VALUE:[int]
-Parser 96 int detected 
-int detected
-Token Type: INDENTIFIER VALUE:[f]
-Parser 114 IDENTIFIER
-Token Type: ( VALUE:[(]Token Type: INT VALUE:[int]
-Parser 96 int detected 
-int detected
-Token Type: INDENTIFIER VALUE:[n]
-Parser 114 IDENTIFIER
-Token Type: ) VALUE:[)]gg
-
-Parser 116 Function_Declarator_with_param
-Token Type: { VALUE:[{]gg
-Token Type: ( VALUE:[(]Token Type: INDENTIFIER VALUE:[n]
-Parser 226 IDENTIFIER
-
-Parser 213 Primary
-
-Parser 209 Unary_expression
-Token Type: INT_CONSTANT VALUE:[0]
-Parser 227 INI_CONSTANT
-
-Parser 213 Primary
-Token Type: ) VALUE:[)]
-Parser 209 Unary_expression
-
-Parser 183Assignement Expression
-Token Type: { VALUE:[{]Token Type: RETURN VALUE:[return]Token Type: INT_CONSTANT VALUE:[0]
-Parser 227 INI_CONSTANT
-
-Parser 213 Primary
-Token Type: ; VALUE:[;]
-Parser 209 Unary_expression
-
-Parser 183Assignement Expression
-
-Parser 331 RETURN EXPRESSION;
-
-Parser 179 JumpStatement
-Token Type: } VALUE:[}]
-Parser 131 Compound_statement_Statement  
-compond work
-
-Parser 175 CompoundStatement
-Token Type: RETURN VALUE:[return]
-Parser 177 SelectionStatement
-Token Type: INDENTIFIER VALUE:[n]
-Parser 226 IDENTIFIER
-
-Parser 213 Primary
-
-Parser 209 Unary_expression
-Token Type: INDENTIFIER VALUE:[f]
-Parser 226 IDENTIFIER
-
-Parser 213 Primary
-Token Type: ( VALUE:[(]Token Type: INDENTIFIER VALUE:[n]
-Parser 226 IDENTIFIER
-
-Parser 213 Primary
-
-Parser 209 Unary_expression
-Token Type: INT_CONSTANT VALUE:[1]
-Parser 227 INI_CONSTANT
-
-Parser 213 Primary
-Token Type: ) VALUE:[)]
-Parser 209 Unary_expression
-
-Parser 211 FunctionCall with Param
-Token Type: ; VALUE:[;]
-Parser 209 Unary_expression
-
-Parser 240 Addition
-
-Parser 183Assignement Expression
-
-Parser 331 RETURN EXPRESSION;
-
-Parser 179 JumpStatement
-Token Type: } VALUE:[}]
-Parser 131 Compound_statement_Statement  
-Tried to obtain not implemented content1
-Tried to obtain not implemented content1
-SelectionStatement is compound
-Tried to obtain not implemented content1
-Tried to obtain not implemented content1
-stage 5b
-Tried to obtain not implemented content1
-Tried to obtain not implemented content1
-stage 10  |  2
-compond work
-
-Parser 81 Function
-done
-lexer pass
-after parser
+.text
+.globl search
+.ent  search
+search:
+addiu $29,$29,-112
+sw $30,108($29)
+move $30,$29
+sw $4,112($30)
+move $2,$5
+sb $2,116($30)
 
 
-f :
-addiu $31, $31, -32
-sw $31, 28($31)
-sw $30, 24($31)
-move $30, $31
-sw$4,32($30)
-<---Combined Context--->
-
-inside Local Var: Name : Type | Offset | Index | Is_called
-$DynamicContext: NotDefined | 8 | 1 | 0
-$functioncall: FunctionCal | 8 | 2 | 1
-n: INT | 32 | 0 | 1
-inside Local Var Waiting for Declared
+b L_1
 
 
-inside Global Var: 
+L_2:
 
-lw $3, 32($30)
-li $4 0
-subu 2, $3, $4
-beq $ 2, $0 L_1
+lw $3,112($30)
+nop 
+lb $3,0($3)
+lb $4,116($30)
+nop
+xor $2,$3,$4
+sltu $2,$2,1
+andi $2,$2,0x00ff
+sw $2,16($30)
+sw $2,16($30)# ----------------------------------------
+beq $2,$0,L_4
 nop
 
+lw $2,112($30)
+sw $2,16($30)
+b L_0
 
-<---Combined Context--->
+L_4:
+lw $3,112($30)
+li $4,1
 
-inside Local Var: Name : Type | Offset | Index | Is_called
-$DynamicContext: NotDefined | 8 | 1 | 0
-$functioncall: FunctionCal | 8 | 3 | 1
-n: INT | 32 | 0 | 1
-inside Local Var Waiting for Declared
+nop
+addu $2,$3,$4
+sw $2,112($30)
 
+L_1: 
 
-inside Global Var: 
+lw $2,112($30)
+nop 
+lw $2,0($2)
+sw $2,16($30)# ----------------------------------------
+bne $2,$0,L_2
+nop
 
-li $2 0
+L_3: 
 
-
-L_1:
-cannot generate any MIPS code
-
-
+li $2,0
+sw $2,16($30)
+b L_0
 L_0:
-lw $3, 32($30)
-lw $3, 32($30)
-li $4 1
-sub $3 , $4 
-jal f:
-lw $3, 32($30)
-lw $4 0($30)
-NotDefined
-Dynamic Reference Type not set up
 nop
-add $2, $3, $4
-sw $2 8($30)
+move $29,$30
+lw $30,108($29)
+addiu $29,$29,112
+j $31
 nop
-move $30, $31
-lw $31, 28($31)
-lw $30, 24($31)
-addiu $31, $31, 32
-jr $31
-nop
-Generate MIPS complete
+.end  search

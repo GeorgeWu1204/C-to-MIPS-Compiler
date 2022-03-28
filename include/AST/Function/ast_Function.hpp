@@ -30,8 +30,11 @@ public:
     // void prettyPrint(std::ostream &dst) const;
     void add_argument_to_context(int index);
     bool is_Function() const override;
+    bool is_Function_Def() const override;
     std::string get_Id() const override;
     std::string get_type() const override;
+    std::vector<FloatDoubleConst> get_Float_Const() override;
+    std::vector<std::string> get_String_Const() override;
 };
 
 #endif

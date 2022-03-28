@@ -10,35 +10,45 @@ void While_Mips::generateMips(std::ostream &dst, Context &context, int destReg, 
 {
     std::string Condition_Label = make_name.makeName("L");
     std::string Evaluate_Label = make_name.makeName("L");
-    
-    dst<< "b " <<  Condition_Label << std::endl;
+    std::string End_Label = make_name.makeName("L");
+    context.Continue_Label = Condition_Label;
+    context.Break_Label = End_Label;
+    dst << "b " << Condition_Label << std::endl;
 
-    dst<<std::endl;
+    dst << std::endl;
     dst << std::endl;
     dst << Evaluate_Label << ":" << std::endl;
     branch[1]->generateMips(dst, context, destReg, make_name, dynamic_offset);
-    
+
     dst << std::endl;
     dst << std::endl;
     dst << Condition_Label << ": " << std::endl;
     branch[0]->generateMips(dst, context, destReg, make_name, dynamic_offset);
     // if equal to zero, jump to the top of the loop;
     // else jump out of the loop
-    dst << "beq " << "$" <<destReg << " 0 " << Evaluate_Label << std::endl;
+    dst << "bne "
+        << "$" << destReg << ",$0," << Evaluate_Label << std::endl;
     dst << "nop" << std::endl;
     dst << std::endl;
+    dst << End_Label << ": " << std::endl;
     dst << std::endl;
-   
 }
 
-bool While_Mips::is_Compound_statement() const{
+bool While_Mips::is_Compound_statement() const
+{
     return true;
 }
 
-int While_Mips::get_context_local_size(){
+int While_Mips::get_context_local_size()
+{
     return branch[1]->get_context_local_size();
 }
 
-std::vector<std::string> While_Mips::return_waiting_to_declared_list(){
+std::vector<std::string> While_Mips::return_waiting_to_declared_list()
+{
     return branch[1]->return_waiting_to_declared_list();
+}
+bool While_Mips::is_Loop() const
+{
+    return true;
 }

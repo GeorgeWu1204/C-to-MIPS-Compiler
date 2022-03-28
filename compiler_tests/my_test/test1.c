@@ -1,10 +1,10 @@
-int r2(int n);
-
-int r1(int n)
+int f()
 {
-    if(n==0){
-        return 1;
-    }else{
-        return r2(n-1)+r2(n-1);
+    int x;
+    int y;
+    y=0;
+    for(x=0; x<10; x=x+1){
+        y=y-1;
     }
+    return y;
 }

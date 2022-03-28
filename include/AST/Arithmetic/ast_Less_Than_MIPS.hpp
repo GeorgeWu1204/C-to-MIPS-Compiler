@@ -14,9 +14,11 @@ public:
     Less_Than_MIPS(NodePtr leftinput, NodePtr rightinput);
 
     void generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset) override;
+    //void generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type) override;
     // void prettyPrint(std::ostream &dst) const override;
     //  void generate_left() const override;
     //  void generate_right() const override;
+    int get_arithmetic_const_val() override;
 };
 
 #endif

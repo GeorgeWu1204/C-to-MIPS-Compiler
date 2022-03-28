@@ -15,16 +15,21 @@ void Post_Decrement_MIPS::generateMips(std::ostream &dst, Context &context, int 
     branch[0]->generateMips(dst, context, destReg, make_name, dynamic_offset);
     
     dst << "nop" << std::endl;
-    dst << "addiu"
-        << "$" << 3 << ", "
+    dst << "addiu "
+        << "$" << 3 << ","
         << "$" << destReg 
-        << " -1"<< std::endl;
+        << ",-1"<< std::endl;
         
-    dst << "sw" << "$" <<3 <<" " 
+    dst << "sw " << "$" <<3 <<"," 
     << context.find_local(branch[0]->get_Id()).offset 
     << "(" << "$30" << ")" << std::endl;
 }
 
 std::string Post_Decrement_MIPS::get_Id() const{
     return branch[0]->get_Id();
+}
+
+std::string Post_Decrement_MIPS::get_cloest_Id() const
+{
+    return branch[0]->get_cloest_Id();
 }

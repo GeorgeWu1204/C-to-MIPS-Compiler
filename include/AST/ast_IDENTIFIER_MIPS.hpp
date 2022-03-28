@@ -18,11 +18,11 @@ protected:
 public:
     Identifier_Mips(const std::string &input);
     void generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset) override;
+    void generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type) override;
     // void prettyPrint(std::ostream &dst) const override;
     std::string get_Id() const override;
-
+    std::string get_cloest_Id() const override;
     bool is_Identifier() const override;
-
     std::vector<std::string> return_waiting_to_declared_list() override;
 };
 

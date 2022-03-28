@@ -17,7 +17,8 @@ public:
     // void prettyPrint(std::ostream &dst) const override;
     int get_Val() const override;
     bool is_Constant() const override;
-    int array_size() const override;
+    int get_arithmetic_const_val() override;
+    std::string get_cloest_Id() const override;
 };
 
 #endif

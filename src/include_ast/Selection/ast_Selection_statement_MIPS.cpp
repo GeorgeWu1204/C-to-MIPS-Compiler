@@ -1,4 +1,3 @@
-
 #include "AST/Selection/ast_Selection_statement_MIPS.hpp"
 //#include "AST/ast_Static_Class.hpp"
 Selection_statement_Mips::Selection_statement_Mips(NodePtr condition_expression, NodePtr statement_1)
@@ -15,45 +14,22 @@ Selection_statement_Mips::Selection_statement_Mips(NodePtr condition_expression,
     branch.push_back(statement_2);
 }
 
-int Selection_statement_Mips::get_context_local_size()
-{
-    // why branch[0]没有？？？ declare in branch[0]
-    //std::cout << "Size of branch main " << branch[1]->get_context_local_size() << std::endl;
-    //std::cout << "Size of branch else " <<  branch[2]->get_context_local_size() << std::endl;
-    return branch[1]->get_context_local_size() + branch[2]->get_context_local_size();
-}
-
 void Selection_statement_Mips::generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset)
 {
-    // dst << "In Selection Statement" << std::endl;
-
-    // lw      $3,12($fp)
-
-    // li      $2,1
-    // bne     $3,$2,$L2
-    // nop
-    //
-
-    // lw      $2,12($fp)
-    // nop
-    // beq     $2,$0,$L2
-    // nop
     branch[0]->generateMips(dst, context, destReg, make_name, dynamic_offset);
-    if (branch[1]->get_size() == 0)
+    if (branch[2]->get_size() == 0)
     {
         // no else if condition is 0, skip to the end of the selection statement.
         std::string Escape_label = make_name.makeName("L");
         dst << "beq "
-            << "$ " << destReg << ", "
-            << "$0 "
+            << "$" << destReg << ","
+            << "$0,"
             << Escape_label << std::endl;
         dst << "nop" << std::endl;
-        dst << std::endl;
         dst << std::endl;
 
         branch[1]->generateMips(dst, context, destReg, make_name, dynamic_offset);
 
-        dst << std::endl;
         dst << std::endl;
         dst << Escape_label << ":" << std::endl;
     }
@@ -64,22 +40,26 @@ void Selection_statement_Mips::generateMips(std::ostream &dst, Context &context,
         std::string Escape_label = make_name.makeName("L");
         std::string Else_lable = make_name.makeName("L");
         dst << "beq "
-            << "$ " << destReg << ", "
-            << "$0 "
+            << "$" << destReg << ","
+            << "$0,"
             << Else_lable << std::endl;
         dst << "nop" << std::endl;
         dst << std::endl;
         dst << std::endl;
-
+        std::cerr << "# main: " << std::endl;
         branch[1]->generateMips(dst, context, destReg, make_name, dynamic_offset);
 
-        dst << std::endl;
+        dst << "b " << Escape_label << std::endl;
+        dst << "nop " << std::endl;
+
         dst << std::endl;
         dst << Else_lable << ":" << std::endl;
 
         // dst << "get size" << branch[2]->get_size() << std::endl;
-
+        std::cerr << "# ELSE: " << std::endl;
         branch[2]->generateMips(dst, context, destReg, make_name, dynamic_offset);
+        std::cerr << "#DEAAD" << std::endl;
+
         dst << std::endl;
         dst << std::endl;
         dst << Escape_label << ":" << std::endl;
@@ -92,20 +72,33 @@ void Selection_statement_Mips::generateMips(std::ostream &dst, Context &context,
     // dst << L << ":" << std::endl;
 }
 
+int Selection_statement_Mips::get_context_local_size()
+{
+    // why branch[0]没有？？？ declare in branch[0]
+    std::cerr << "#"
+              << "Size of branch main " << branch[1]->get_context_local_size() << std::endl;
+    std::cerr << "#"
+              << "Size of branch else " << branch[2]->get_context_local_size() << std::endl;
+    return branch[1]->get_context_local_size() + branch[2]->get_context_local_size();
+}
+
 std::vector<std::string> Selection_statement_Mips::return_waiting_to_declared_list()
 {
-    std::vector<std::string>  declared_list;
-    for(int i =0; i < branch[0]->return_waiting_to_declared_list().size() ; i++ ){
+    std::vector<std::string> declared_list;
+    for (int i = 0; i < branch[0]->return_waiting_to_declared_list().size(); i++)
+    {
         declared_list.push_back((branch[0]->return_waiting_to_declared_list())[i]);
     }
-    for(int i =0; i < branch[1]->return_waiting_to_declared_list().size() ; i++ ){
+    for (int i = 0; i < branch[1]->return_waiting_to_declared_list().size(); i++)
+    {
         declared_list.push_back((branch[1]->return_waiting_to_declared_list())[i]);
     }
-    for(int i =0; i < branch[2]->return_waiting_to_declared_list().size() ; i++ ){
-        declared_list.push_back((branch[2]->return_waiting_to_declared_list())[i]);   
+    for (int i = 0; i < branch[2]->return_waiting_to_declared_list().size(); i++)
+    {
+        declared_list.push_back((branch[2]->return_waiting_to_declared_list())[i]);
     }
     return declared_list;
-    
+
     // std::vector<std::string> Expression_B = branch[0]->return_waiting_to_declared_list();
 
     // std::vector<std::string> If_A = branch[1]->return_waiting_to_declared_list();
@@ -119,12 +112,28 @@ std::vector<std::string> Selection_statement_Mips::return_waiting_to_declared_li
     // return Expression_B;
 }
 
-
 bool Selection_statement_Mips::is_Compound_statement() const
 {
-    std::cout << "SelectionStatement is compound" << std::endl;
+    std::cerr << "#"
+              << "SelectionStatement is compound" << std::endl;
     return true;
 }
+
+int Selection_statement_Mips::Dynamic_context_size()
+{
+    if (branch[2]->get_size() == 0)
+    {
+        return branch[0]->Dynamic_context_size() + branch[1]->Dynamic_context_size();
+    }
+    else
+    {
+        return branch[0]->Dynamic_context_size() + branch[1]->Dynamic_context_size() + branch[2]->Dynamic_context_size();
+    }
+}
+// bool Selection_statement_Mips::is_Function_inside() const
+// {
+//     return branch[0]->is_Function_inside()|| branch[1]->is_Function_inside()||branch[2]->is_Function_inside();
+// }
 
 // void Selection_statement_Mips::update_local_var_waiting_for_call(Context &context)
 // {

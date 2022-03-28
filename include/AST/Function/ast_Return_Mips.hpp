@@ -10,9 +10,11 @@ public:
     Return_Mips();
     Return_Mips(NodePtr Expression);
     void generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset) override;
-    std::string get_Id() const override;
-    bool is_Function_inside() const override;
+    //void generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type) override;
+    //  std::string get_Id() const override;
+    // bool is_Function_inside() const override;
     bool is_Jump_statement() const override;
+    int Dynamic_context_size() override;
 };
 
 #endif

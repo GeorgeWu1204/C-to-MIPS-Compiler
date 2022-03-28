@@ -16,6 +16,13 @@ public:
     std::string get_type() const override;
     std::string get_Id() const override;
     int array_size() const override;
+    std::map<std::string, int> get_enumerator_list() override;
+    bool is_Enum() const override;
+    bool is_Struct() const override;
+    bool is_Struct_Declaration() const override;
+    type_storage get_type_storage() override;
+    std::vector<FloatDoubleConst> get_Float_Const() override;
+    std::vector<std::string> get_String_Const() override;
 };
 
 #endif

@@ -15,6 +15,7 @@ public:
     // void prettyPrint(std::ostream &dst) const override;
     // int get_Val() const override;
     std::string get_Id() const override;
+    std::string get_cloest_Id() const override;
 };
 
 #endif

@@ -15,6 +15,7 @@ public:
     // for case initializer is a constant;
     Init_Declarator_Mips(const NodePtr Declarator, const NodePtr Initializer);
     void generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset) override;
+    void generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type) override;
     // void prettyPrint(std::ostream &dst) const override;
     bool is_Function() const override;
     std::string get_Id() const override;
@@ -23,6 +24,10 @@ public:
     std::string get_StringVal() const override;
     bool is_init() const override;
     bool is_Array() const override;
+    bool is_Identifier() const override;
+    bool is_Pointer() const override;
+    std::vector<FloatDoubleConst> get_Float_Const() override;
+    std::vector<std::string> get_String_Const() override;
 };
 
 #endif

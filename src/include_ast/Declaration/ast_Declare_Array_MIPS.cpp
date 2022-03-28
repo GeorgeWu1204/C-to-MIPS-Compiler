@@ -27,11 +27,15 @@ std::string Declare_Array_Mips::get_type() const
     return branch[0]->get_type();
 }
 
-int Declare_Array_Mips::array_size() const
-{
-    return branch[1]->array_size();
-}
+
 std::string Declare_Array_Mips::get_Id() const
 {
     return branch[0]->get_Id();
 }
+
+int Declare_Array_Mips::get_arithmetic_const_val()
+{
+    return branch[1]->get_arithmetic_const_val();
+}
+
+

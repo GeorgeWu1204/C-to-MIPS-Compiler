@@ -15,12 +15,12 @@ void Pre_Increment_MIPS::generateMips(std::ostream &dst, Context &context, int d
     branch[0]->generateMips(dst, context, destReg, make_name, dynamic_offset);
     
     dst << "nop" << std::endl;
-    dst << "addiu"
-        << "$" << destReg << ", "
+    dst << "addiu "
+        << "$" << destReg << ","
         << "$" << destReg 
-        << " 1"<< std::endl;
+        << ",1"<< std::endl;
         
-    dst << "sw" << "$" <<destReg <<" " 
+    dst << "sw " << "$" <<destReg <<", " 
     << context.find_local(branch[0]->get_Id()).offset 
     << "(" << "$30" << ")" << std::endl;
     
@@ -28,4 +28,9 @@ void Pre_Increment_MIPS::generateMips(std::ostream &dst, Context &context, int d
 
 std::string Pre_Increment_MIPS::get_Id() const{
     return branch[0]->get_Id();
+}
+
+std::string Pre_Increment_MIPS::get_cloest_Id() const
+{
+    return branch[0]->get_cloest_Id();
 }

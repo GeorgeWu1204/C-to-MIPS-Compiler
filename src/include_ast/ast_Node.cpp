@@ -32,23 +32,24 @@ Node::Node()
 
 std::string Node::get_Id() const
 {
-    std::cout << "Tried to obtain not implemented content1" << std::endl;
+    std::cerr << "#"
+              << "Tried to obtain not implemented content1" << std::endl;
     // used for debug here
-    return "False";
+    return "#False";
 }
 std::string Node::get_StringVal() const
 {
-    std::cerr << "Tried to obtin not implemented content2" << std::endl;
-    return "False";
+    std::cerr << "#Tried to obtin not implemented content2" << std::endl;
+    return "#False";
 }
 std::string Node::get_type() const
 {
-    std::cerr << "Tried to obtin not implemented content3" << std::endl;
-    return "False";
+    std::cerr << "#Tried to obtin not implemented content3" << std::endl;
+    return "#False";
 }
 int Node::get_Val() const
 {
-    std::cerr << "Tried to obtin not implemented content4" << std::endl;
+    std::cerr << "#Tried to obtin not implemented content4" << std::endl;
     return 0;
 }
 int Node::array_size() const
@@ -63,10 +64,16 @@ bool Node::is_Ptr() const
 
 bool Node::is_Function() const
 {
+    // Function declaration and function call;
+    return false;
+}
+bool Node::is_Function_Def() const
+{
     return false;
 }
 bool Node::is_Function_inside() const
 {
+    // property of compound
     return false;
 }
 bool Node::is_init() const
@@ -114,7 +121,28 @@ bool Node::is_Mixed() const
     return false;
 }
 
-bool Node::is_Jump_statement() const{
+bool Node::is_Jump_statement() const
+{
+    return false;
+}
+
+bool Node::is_Break() const
+{
+    return false;
+}
+
+bool Node::is_Continue() const
+{
+    return false;
+}
+
+bool Node::is_Pointer() const
+{
+    return false;
+}
+
+bool Node::is_Struct() const
+{
     return false;
 }
 
@@ -136,7 +164,13 @@ int Node::get_context_local_size()
 
 void Node::generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset)
 {
-    std::cout << "cannot generate any MIPS code" << std::endl;
+    std::cerr << "#"
+              << "cannot generate any MIPS code" << std::endl;
+}
+void Node::generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type)
+{
+    std::cerr << "#"
+              << "cannot generate any MIPS code" << std::endl;
 }
 
 void Node::prettyPrint(std::ostream &dst) const
@@ -160,7 +194,10 @@ Node::~Node()
         delete branch[i];
     }
 }
-
+bool Node::is_Conditional_Expression() const
+{
+    return false;
+}
 int Node::Dynamic_context_size()
 {
     return 0;
@@ -173,13 +210,98 @@ int Node::get_argument_size()
 {
     return 0;
 }
-
-std::map<std::string, std::string> Node::get_argument_map()
+std::map<std::string, int> Node::get_enumerator_list()
 {
-    return std::map<std::string, std::string>();
+    return std::map<std::string, int>();
 }
-
+std::vector<std::pair<std::string, std::string> > Node::get_argument_map()
+{
+    return std::vector<std::pair<std::string, std::string> >();
+}
 std::vector<int> Node::return_assigned_val()
 {
     return std::vector<int>();
+}
+int Node::get_case_index()
+{
+    return 0;
+}
+// std::map<std::string, int> return_case_address(){
+//     return std::map<std::string, int> ();
+// }
+
+bool Node::is_Case() const
+{
+    return false;
+}
+bool Node::is_Switch() const
+{
+    return false;
+}
+bool Node::is_Loop() const
+{
+    return false;
+}
+
+bool Node::is_Default() const
+{
+    return false;
+}
+
+bool Node::is_Assignment() const
+{
+    return false;
+}
+
+int Node::get_arithmetic_const_val()
+{
+    return 0;
+}
+
+type_storage Node::get_type_storage()
+{
+    type_storage var("false");
+    return var;
+}
+
+bool Node::is_Struct_Declaration() const
+{
+    return false;
+}
+
+bool Node::is_Struct_Call() const
+{
+    return false;
+}
+std::vector<std::pair<std::string, std::string> > Node::read_Local_Var_Waiting_For_Sizing()
+{
+    return std::vector<std::pair<std::string, std::string> >();
+}
+
+int Node::get_struct_variable_offset(Context input)
+{
+    return 0;
+}
+std::vector<FloatDoubleConst> Node::get_Float_Const()
+{
+    return std::vector<FloatDoubleConst>();
+}
+bool Node::is_Double_Constant() const
+{
+    return false;
+}
+bool Node::is_Float_Constant() const
+{
+    return false;
+}
+double Node::get_Float() const
+{}
+
+std::string Node::get_cloest_Id() const
+{
+    return "# Tried to obtain sth not exited";
+}
+
+std::vector<std::string> Node:: get_String_Const(){
+    return std::vector<std::string>();
 }

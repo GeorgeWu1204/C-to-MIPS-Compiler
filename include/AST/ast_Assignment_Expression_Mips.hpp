@@ -17,6 +17,11 @@ public:
     // int get_Val() const override;
     std::string get_Id() const override;
     int array_size() const override;
+    bool is_Assignment() const override;
+    std::vector<FloatDoubleConst> get_Float_Const() override;
+    std::vector<std::string> get_String_Const() override;
+    std::string get_cloest_Id() const override;
+
 };
 
 #endif

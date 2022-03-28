@@ -16,6 +16,10 @@ public:
     //void generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset) override;
     // override;
     bool is_Array_Initializer() const override;
+    std::vector<FloatDoubleConst> get_Float_Const() override;
+
+    //std::vector<FloatDoubleConst> get_String_Const() override; // do we need this? sos
+    void concatenate_float(std::vector<FloatDoubleConst> &a, std::vector<FloatDoubleConst> &b);
 };
 
 #endif

@@ -17,7 +17,9 @@ public:
     bool is_Function() const override;
     std::string get_Id() const override;
     int get_argument_size() override;
-    std::map<std::string, std::string> get_argument_map() override;
+    std::vector< std::pair<std::string, std::string> >  get_argument_map() override;
+    int get_size() const override;
+    std::string get_type() const override;
 };
 
 #endif

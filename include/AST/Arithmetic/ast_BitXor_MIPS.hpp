@@ -17,6 +17,7 @@ public:
     // void prettyPrint(std::ostream &dst) const override;
     // void generate_left() const override;
     // void generate_right() const override;
+    int get_arithmetic_const_val() override;
 };
 
 #endif

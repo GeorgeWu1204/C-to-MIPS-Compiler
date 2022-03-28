@@ -21,6 +21,10 @@ void For_Mips::generateMips(std::ostream &dst, Context &context, int destReg, Ma
 {
     std::string Condition_Label = make_name.makeName("L");
     std::string Evaluate_Label = make_name.makeName("L");
+    std::string End_Label = make_name.makeName("L");
+    std::string Continue_Label = make_name.makeName("L");
+    context.replace_break_label(End_Label);
+    context.Continue_Label = Continue_Label;
     if (branch.size() == 4)
     {
         branch[0]->generateMips(dst, context, destReg, make_name, dynamic_offset);
@@ -31,15 +35,21 @@ void For_Mips::generateMips(std::ostream &dst, Context &context, int destReg, Ma
         // Evaluation part
         dst << Evaluate_Label << ":" << std::endl;
         // branch[2]->generateMips(dst, context, destReg, make_name, dynamic_offset);
-        branch[2]->generateMips(dst, context, destReg, make_name, dynamic_offset);
         branch[3]->generateMips(dst, context, destReg, make_name, dynamic_offset);
+        dst << Continue_Label << ":" << std::endl;
+        dst << "nop" << std::endl;
+
+        branch[2]->generateMips(dst, context, destReg, make_name, dynamic_offset);
         dst << std::endl;
         dst << std::endl;
         // Condition part
         dst << Condition_Label << ":" << std::endl;
         branch[1]->generateMips(dst, context, destReg, make_name, dynamic_offset);
+        dst << "bne " << "$" << destReg << ",$0" <<"," << Evaluate_Label<< std::endl;
+        dst << "nop" << std::endl;
         // back to main
         dst << std::endl;
+        dst << End_Label << ": " << std::endl; 
         dst << std::endl;
     }
     else
@@ -50,16 +60,24 @@ void For_Mips::generateMips(std::ostream &dst, Context &context, int destReg, Ma
         dst << std::endl;
         // Evaluation part
         dst << Evaluate_Label << ":" << std::endl;
+        
 
-        branch[1]->generateMips(dst, context, destReg, make_name, dynamic_offset);
         branch[2]->generateMips(dst, context, destReg, make_name, dynamic_offset);
+        
+        dst << Continue_Label << ":" << std::endl;
+        dst << "nop" << std::endl;
+        branch[1]->generateMips(dst, context, destReg, make_name, dynamic_offset);
+        
         dst << std::endl;
         dst << std::endl;
         // Condition part
         dst << Condition_Label << ":" << std::endl;
         branch[0]->generateMips(dst, context, destReg, make_name, dynamic_offset);
+        dst << "bne " << "$" << destReg << ",$0" <<"," << Evaluate_Label<< std::endl;
+        dst << "nop" << std::endl;
         //  back to main
         dst << std::endl;
+        dst << End_Label << ": " << std::endl; 
         dst << std::endl;
     }
 }
@@ -85,4 +103,7 @@ void For_Mips::build_mock_compound()
     Compound_statement_Mips *var = new Compound_statement_Mips(branch);
     local_size = var->get_context_local_size();
     return_declare_list = var->return_waiting_to_declared_list();
+}
+bool For_Mips::is_Loop() const{
+    return true;
 }
