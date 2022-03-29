@@ -30,7 +30,7 @@ void BitXor_MIPS::generateMips(std::ostream &dst, Context &context, int destReg,
             << "$4," << branch[1]->return_dynamic_offset() << "($30)" << std::endl;
     }
     std::string type = context.find_local("$DynamicContext").type_name;
-    // std::cerr << "#" << context.find_local("$DynamicContext").type_name << std::endl;
+        std::cerr << "#" << context.find_local("$DynamicContext").type_name << std::endl;
     if (type == "INT")
     {
         dynamic_offset -= 4;
@@ -41,7 +41,7 @@ void BitXor_MIPS::generateMips(std::ostream &dst, Context &context, int destReg,
     }
     else
     {
-        // std::cerr << "#" << "ADD error Dynamic Reference Type not set up" << std::endl;
+        std::cerr << "#" << "ADD error Dynamic Reference Type not set up" << std::endl;
     }
     current_offset = dynamic_offset;
     dst << "nop" << std::endl;

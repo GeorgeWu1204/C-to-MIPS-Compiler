@@ -1,4 +1,4 @@
-  CPPFLAGS += -std=c++17 -W -Wall -g -Wno-unused-parameter
+CPPFLAGS += -std=c++17 -W -Wall -g -Wno-unused-parameter
 CPPFLAGS += -I include -I src
 
 HPPFILES := $(shell find include/ -type f -name "*.hpp")

@@ -155,7 +155,7 @@ L?\"(\\.|[^\\"])*\"	    { yylval.string = new std::string(yytext);return(STRING_
 "?"			      {  return('?'); }
 
 [ \t\v\n\f]		{  }
-.			{ printf("ignore bad characters VALUE:[%s]", yytext);  }
+.			{}
 
 %%
 

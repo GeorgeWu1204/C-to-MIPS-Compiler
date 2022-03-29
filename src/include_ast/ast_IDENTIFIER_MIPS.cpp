@@ -23,26 +23,30 @@ void Identifier_Mips::generateMips(std::ostream &dst, Context &context, int dest
         }
         else
         {
-            if(type == "DOUBLE" || type == "FLOAT")
+            if (type == "DOUBLE" || type == "FLOAT")
             {
                 generateFloatMips(dst, context, destReg, make_name, dynamic_offset, type);
             }
-            else if(type == "CHAR")
+            else if (type == "CHAR")
             {
-                dst << "lb " << "$" << destReg << "," << context.find_local(identifier_id).offset << "(" << "$30" << ")" << std::endl;
+                dst << "lb "
+                    << "$" << destReg << "," << context.find_local(identifier_id).offset << "("
+                    << "$30"
+                    << ")" << std::endl;
             }
             else
             {
-                //std::cout << "adse----" <<  type << std::endl;
+                // std::cerr << "adse----" <<  type << std::endl;
                 dst << "lw "
-                << "$" << destReg << "," << context.find_local(identifier_id).offset << "("
-                << "$30"
-                << ")" << std::endl;
+                    << "$" << destReg << "," << context.find_local(identifier_id).offset << "("
+                    << "$30"
+                    << ")" << std::endl;
             }
         }
     }
     else if (context.is_Global(identifier_id))
     {
+        std::cerr << "#inside global scope" << std::endl;
         std::string type = context.find_global(identifier_id).type_name;
         if (context.find_global(identifier_id).type_name == "ENUM")
         {
@@ -52,14 +56,20 @@ void Identifier_Mips::generateMips(std::ostream &dst, Context &context, int dest
         }
         else
         {
-            if(type == "DOUBLE" || type == "FLOAT")
+            if (type == "DOUBLE" || type == "FLOAT")
             {
+                // SOSOSOSOSOSOSO
                 generateFloatMips(dst, context, destReg, make_name, dynamic_offset, type);
-            }else{
+            }
+            else
+            {
+                dst << "lui $" << destReg << ",%hi"
+                    << "(" << identifier_id << ")" << std::endl;
                 dst << "lw "
-                    << "$" << destReg << "," << context.find_global(identifier_id).offset << "("
-                    << "$30"
-                    << ")" << std::endl;
+                    << "$" << destReg << ","
+                    << "%lo"
+                    << "(" << identifier_id << ")("
+                    << "$" << destReg << ")" << std::endl;
             }
         }
     }
@@ -69,35 +79,38 @@ void Identifier_Mips::generateMips(std::ostream &dst, Context &context, int dest
     }
 }
 
-//not sure about the type param yet
-void Identifier_Mips::generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset,std::string type)
+// not sure about the type param yet
+void Identifier_Mips::generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type)
 {
     // Declaration might go here?
 
     // to check if it is in the context
     //  if in context
-    //std::cout << "<----------------------------------identifier " << type << " ------------------------------------->" << std::endl;
+    // std::cerr << "<----------------------------------identifier " << type << " ------------------------------------->" << std::endl;
     if (context.is_Local(identifier_id))
     {
-        //std::string type = context.find_local(identifier_id).type_name ;
+        // std::string type = context.find_local(identifier_id).type_name ;
         if (type == "ENUM")
         {
             // std::cerr << "in correct" << std::endl;
             dst << "li "
                 << "$" << destReg << "," << context.find_local(identifier_id).enum_val << std::endl;
         }
-        else if(type == "DOUBLE")
+        else if (type == "DOUBLE")
         {
-            dst << "lwc1 " << "$f" << destReg << "," << context.find_local(identifier_id).offset << "($30)" << std::endl;
+            dst << "lwc1 "
+                << "$f" << destReg << "," << stoi(context.find_local(identifier_id).offset) << "($30)" << std::endl;
             dst << "nop " << std::endl;
-            dst << "lwc1 " << "$f" << destReg+1 << "," << stoi(context.find_local(identifier_id).offset)-4 << "($30)" << std::endl;
+            dst << "lwc1 "
+                << "$f" << destReg + 1 << "," << stoi(context.find_local(identifier_id).offset) - 4 << "($30)" << std::endl;
         }
-        else if(type == "FLOAT")
+        else if (type == "FLOAT")
         {
-            dst << "lwc1 " << "$f" << destReg << "," << context.find_local(identifier_id).offset << "($30)" << std::endl;
+            dst << "lwc1 "
+                << "$f" << destReg << "," << context.find_local(identifier_id).offset << "($30)" << std::endl;
         }
         else
-        {  
+        {
             dst << "lw "
                 << "$" << destReg << "," << context.find_local(identifier_id).offset << "("
                 << "$30"
@@ -112,18 +125,28 @@ void Identifier_Mips::generateFloatMips(std::ostream &dst, Context &context, int
             dst << "li "
                 << "$" << destReg << "," << context.find_global(identifier_id).enum_val << std::endl;
         }
-        else if(type == "DOUBLE")
+        else if (type == "DOUBLE")
         {
-            dst << "lwc1 " << "$f" << destReg << "," << context.find_global(identifier_id).offset << "($30)" << std::endl;
+            dst << "lui "
+                << "$2,%hi(" << identifier_id << ")" << std::endl;
+            dst << "lwc1 "
+                << "$f" << destReg << ",%lo(" << identifier_id << "+4)($2)" << std::endl;
             dst << "nop " << std::endl;
-            dst << "lwc1 " << "$f" << destReg+1 << "," << stoi(context.find_local(identifier_id).offset)-4 << "($30)" << std::endl;
+            dst << "lwc1 "
+                << "$f" << destReg + 1 << ",%lo(" << identifier_id << ")($2)" << std::endl;
+            dst << "nop " << std::endl;
         }
-        else if(type == "FLOAT")
+        else if (type == "FLOAT")
         {
-            dst << "lwc1 " << "$f" << destReg << "," << context.find_global(identifier_id).offset << "($30)" << std::endl;
+
+            dst << "lui "
+                << "$2,%hi(" << identifier_id << ")" << std::endl;
+            dst << "lwc1 "
+                << "$f" << destReg << ",%lo(" << identifier_id << ")($2)" << std::endl;
+            dst << "nop " << std::endl;
         }
         else
-        {  
+        {
             dst << "lw "
                 << "$" << destReg << "," << context.find_global(identifier_id).offset << "("
                 << "$30"
@@ -145,7 +168,7 @@ std::string Identifier_Mips::get_Id() const
     //  else{
     //      return branch[0]->get_Name();
     //  }
-    //std::cout << "in get id" << identifier_id <<std::endl;
+    // std::cerr << "in get id" << identifier_id <<std::endl;
     return identifier_id;
 }
 // SOS
@@ -171,19 +194,20 @@ std::string Identifier_Mips::get_cloest_Id() const
 std::string Identifier_Mips::return_expression_type(Context context)
 {
     std::string type;
-    if(context.is_Local(identifier_id))
+    if (context.is_Local(identifier_id))
     {
         type = context.find_local(identifier_id).type_name;
-        
     }
-    else if(context.is_Global(identifier_id))
+    else if (context.is_Global(identifier_id))
     {
-        type =  context.find_local(identifier_id).type_name;
-    }else
-    {
-        std::cout << "NOT FOUND" << std::endl;
+        type = context.find_local(identifier_id).type_name;
     }
-    if(type == "ENUM"){
+    else
+    {
+        std::cerr << "NOT FOUND" << std::endl;
+    }
+    if (type == "ENUM")
+    {
         type == "INT";
     }
     return type;

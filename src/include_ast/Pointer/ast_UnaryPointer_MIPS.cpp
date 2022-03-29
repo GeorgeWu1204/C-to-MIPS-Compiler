@@ -9,15 +9,9 @@ void UnaryPointer_MIPS::generateMips(std::ostream &dst, Context &context, int de
 {
     if (context.is_Local(get_Id()))
     {
-        // if (context.find_local(get_Id()).type_name == "ENUMPtr")
-        // {
-        //     // std::cerr << "in correct" << std::endl;
-        //     dst << "li "
-        //         << "$" << destReg << "," << context.find_local(get_Id()).enum_val  << std::endl;
-        // }
-        // else
-        // {
-        if(context.find_local(get_Id()).type_name == "CHARPTR"){
+
+        if (context.find_local(get_Id()).type_name == "CHARPTR")
+        {
             dst << "lw "
                 << "$" << destReg << "," << context.find_local(get_Id()).offset << "("
                 << "$30"
@@ -28,7 +22,8 @@ void UnaryPointer_MIPS::generateMips(std::ostream &dst, Context &context, int de
                 << "0"
                 << "($" << destReg << ")" << std::endl;
         }
-        else{
+        else
+        {
             dst << "lw "
                 << "$" << destReg << "," << context.find_local(get_Id()).offset << "("
                 << "$30"
@@ -44,15 +39,9 @@ void UnaryPointer_MIPS::generateMips(std::ostream &dst, Context &context, int de
     }
     else if (context.is_Global(get_Id()))
     {
-        // if (context.find_global(get_Id()).type_name == "ENUMPtr")
-        // {
-        //     // std::cerr << "in correct" << std::endl;
-        //     dst << "li "
-        //         << "$" << destReg << "," << context.find_global(get_Id()).enum_val << std::endl;
-        // }
-        // else
-        // {
-        if(context.find_global(get_Id()).type_name == "CHARPTR"){
+
+        if (context.find_global(get_Id()).type_name == "CHARPTR")
+        {
             dst << "lw "
                 << "$" << destReg << "," << context.find_global(get_Id()).offset << "("
                 << "$30"
@@ -63,7 +52,8 @@ void UnaryPointer_MIPS::generateMips(std::ostream &dst, Context &context, int de
                 << "0"
                 << "($" << destReg << ")" << std::endl;
         }
-        else{
+        else
+        {
             dst << "lw "
                 << "$" << destReg << "," << context.find_global(get_Id()).offset << "("
                 << "$30"
@@ -74,7 +64,39 @@ void UnaryPointer_MIPS::generateMips(std::ostream &dst, Context &context, int de
                 << "0"
                 << "($" << destReg << ")" << std::endl;
         }
+    }
+    else
+    {
+        std::cerr << "This behaviour has not been defined yet" << std::endl;
+    }
+}
 
+void UnaryPointer_MIPS::generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type)
+{
+    if (context.is_Local(get_Id()))
+    {
+        dst << "lw "
+            << "$" << destReg << "," << context.find_local(get_Id()).offset << "("
+            << "$30"
+            << ")" << std::endl;
+        dst << "nop " << std::endl;
+        dst << "lwc1 "
+            << "$f" << destReg << ","
+            << "0"
+            << "($" << destReg << ")" << std::endl; // }
+    }
+    else if (context.is_Global(get_Id()))
+    {
+
+        dst << "lw "
+            << "$" << destReg << "," << context.find_global(get_Id()).offset << "("
+            << "$30"
+            << ")" << std::endl;
+        dst << "nop " << std::endl;
+        dst << "lwc1 "
+            << "$f" << destReg << ","
+            << "0"
+            << "($" << destReg << ")" << std::endl;
     }
     else
     {
@@ -89,10 +111,9 @@ bool UnaryPointer_MIPS::is_Pointer() const
 std::string UnaryPointer_MIPS::get_Id() const
 {
     return branch[0]->get_Id();
-
 }
 std::string UnaryPointer_MIPS::return_expression_type(Context context)
 {
-    std::cout << "# Pointer sizing, returing int " << std::endl;
+    std::cerr << "# Pointer sizing, returing int " << std::endl;
     return "INT";
 }

@@ -14,17 +14,17 @@ void Function::generateMips(std::ostream &dst, Context &context, int destReg, Ma
     // note the inner function stack size only depends on the body part.
     Local_var var("SUBCONTEXT", 1);
     context.insert_var_local(std::make_pair("TOPcontext", var));
-    // std::cout << "find struct " << context.Type_Str.find("STRUCTx")->second.type_size << std::endl;
+    // std::cerr << "find struct " << context.Type_Str.find("STRUCTx")->second.type_size << std::endl;
     std::vector<std::pair<std::string, std::string> > wait_for_struct_size = branch[1]->read_Local_Var_Waiting_For_Sizing();
     // read_Local_Var_Waiting_For_Sizing
-    // std::cout << "{{{" << wait_for_struct_size.size() << std::endl;
+    // std::cerr << "{{{" << wait_for_struct_size.size() << std::endl;
     for (int i = 0; i < wait_for_struct_size.size(); i++)
     {
-        // std::cout << "{{{{{" << wait_for_struct_size[i].first << " | " << wait_for_struct_size[i].second << std::endl;
+        // std::cerr << "{{{{{" << wait_for_struct_size[i].first << " | " << wait_for_struct_size[i].second << std::endl;
         if (context.Type_Str.find(wait_for_struct_size[i].first) != context.Type_Str.end())
         {
             // find in context
-            // std::cout << "<<<test" << context.Type_Str.find(wait_for_struct_size[i].first)->second.type_size << std::endl;
+            // std::cerr << "<<<test" << context.Type_Str.find(wait_for_struct_size[i].first)->second.type_size << std::endl;
             struct_upper_level_size += context.Type_Str.find(wait_for_struct_size[i].first)->second.type_size;
         }
     }
@@ -35,7 +35,7 @@ void Function::generateMips(std::ostream &dst, Context &context, int destReg, Ma
     }
     else
     {
-        // std::cout << "hihihi" << std::endl;
+        // std::cerr << "hihihi" << std::endl;
         //  std::cerr << "#" << "func_size_check" << function_stack_size<<std::endl;
         function_stack_size = 16 + branch[1]->get_context_local_size() + struct_upper_level_size;
     }
@@ -88,7 +88,7 @@ void Function::generateMips(std::ostream &dst, Context &context, int destReg, Ma
             // if less than 16, we need to store the value inside the register into the stack
             for (int m = 0; m < argmap.size(); m++)
             {
-                // std::cout << "inside loopn" << branch[0]->get_argument_map().size() << std::endl;
+                // std::cerr << "inside loopn" << branch[0]->get_argument_map().size() << std::endl;
                 // NodePtr tmp = branch[0]->get_branch(m);
                 std::string tmp_id = argmap[m].first;
                 std::string tmp_type = argmap[m].second;
@@ -122,8 +122,10 @@ void Function::generateMips(std::ostream &dst, Context &context, int destReg, Ma
                         trace_int_num += 1;
                     }
                 }
-                else if (tmp_type == "CHAR"){
-                    dst << "move $2," << "$" << trace_int_num + 4 <<std::endl;
+                else if (tmp_type == "CHAR")
+                {
+                    dst << "move $2,"
+                        << "$" << trace_int_num + 4 << std::endl;
                     dst << "sb $2," << cur_arg_offset << "($30)" << std::endl;
                     trace_int_num += 1;
                 }
@@ -139,58 +141,115 @@ void Function::generateMips(std::ostream &dst, Context &context, int destReg, Ma
         }
         else
         {
+
             // when the num of arguments exceeds 5 arguments.
-            int valid_index = 0;
+            std::vector<std::pair<std::string, std::string> > argmap = branch[0]->get_argument_map();
+            int valid_index = 1;
             int trace_fd_num = 0;
-            int trace_int_reg = 0;
+            int trace_int_num = 0;
             int cur_arg_offset = 0;
             int sup_float_reg = 0;
-            while (true)
+            for (int m = 0; m < 4; m++)
             {
-                NodePtr tmp = branch[0]->get_branch(valid_index);
-                cur_arg_offset = stoi(Argument_context.find_local(tmp->get_Id()).offset) - function_stack_size;
-                if (cur_arg_offset > 16)
+                // std::cerr << "inside loopn" << branch[0]->get_argument_map().size() << std::endl;
+                // NodePtr tmp = branch[0]->get_branch(m);
+                std::string tmp_id = argmap[m].first;
+                std::string tmp_type = argmap[m].second;
+                // dst << "#Get type function load " << tmp->get_type() << " offset " << Argument_context.find_local(tmp->get_Id()).offset<< std::end;
+                // dst << " ID " << branch[0]->get_argument_map()[m].first << std::endl;
+                // Argument_context.print_local();
+                cur_arg_offset = stoi(Argument_context.find_local(tmp_id).offset);
+                if (tmp_type == "DOUBLE" || tmp_type == "DOUBLEPTR")
                 {
-                    break;
+                    dst << "swc1 "
+                        << "$f" << 12 + trace_fd_num << ", " << cur_arg_offset << "($30)" << std::endl;
+                    trace_fd_num += 1;
+                    dst << "swc1 "
+                        << "$f" << 12 + trace_fd_num << ", " << cur_arg_offset - 4 << "($30)" << std::endl;
+                    trace_fd_num += 1;
                 }
-                else
+                else if (tmp_type == "FLOAT" || tmp_type == "FLOATPTR")
                 {
-                    if (tmp->get_type() == "DOUBLE" || tmp->get_type() == "DOUBLEPTR")
+                    if (trace_fd_num < 4)
                     {
+                        // 0  2
                         dst << "swc1 "
                             << "$f" << 12 + trace_fd_num << ", " << cur_arg_offset << "($30)" << std::endl;
-                        trace_fd_num += 1;
-                        dst << "swc1 "
-                            << "$f" << 12 + trace_fd_num << ", " << cur_arg_offset - 4 << "($30)" << std::endl;
-                        trace_fd_num += 1;
-                    }
-                    else if (tmp->get_type() == "FLOAT" || tmp->get_type() == "FLOATPTR")
-                    {
-                        if (trace_fd_num < 4)
-                        {
-                            // 0  2
-                            dst << "swc1 "
-                                << "$f" << 12 + trace_fd_num << ", " << cur_arg_offset << "($30)" << std::endl;
-                            trace_fd_num += 2;
-                        }
-                        else
-                        {
-                            dst << "sw "
-                                << "$" << 6 + sup_float_reg << "," << cur_arg_offset << "($30)" << std::endl;
-                            sup_float_reg += 1;
-                        }
+                        trace_fd_num += 2;
+                        trace_int_num += 1;
                     }
                     else
                     {
-                        dst << "sw"
-                            << " $" << trace_int_reg + 4
-                            << "," << cur_arg_offset << "($30)" << std::endl;
-                        trace_int_reg += 1;
+                        dst << "sw "
+                            << "$" << 4 + trace_int_num << "," << cur_arg_offset << "($30)" << std::endl;
+                        trace_int_num += 1;
                     }
                 }
-                valid_index += 1;
+                else if (tmp_type == "CHAR")
+                {
+                    dst << "move $2,"
+                        << "$" << trace_int_num + 4 << std::endl;
+                    dst << "sb $2," << cur_arg_offset << "($30)" << std::endl;
+                    trace_int_num += 1;
+                }
+
+                else
+                {
+                    // INT INTPTR CHARPTR
+                    dst << "sw"
+                        << " $" << trace_int_num + 4 << "," << cur_arg_offset << "($30)" << std::endl;
+                    trace_int_num += 1;
+                }
             }
         }
+        // while (true)
+        // {
+        //     NodePtr tmp = branch[0]->get_branch(valid_index);
+        //     std::cerr << "pass" << std::endl;
+        //     cur_arg_offset = stoi(Argument_context.find_local(tmp->get_Id()).offset) - function_stack_size;
+        //     std::cerr << cur_arg_offset << std::endl;
+        //     if (cur_arg_offset > 16)
+        //     {
+        //         break;
+        //     }
+        //     else
+        //     {
+        //         if (tmp->get_type() == "DOUBLE" || tmp->get_type() == "DOUBLEPTR")
+        //         {
+        //             dst << "swc1 "
+        //                 << "$f" << 12 + trace_fd_num << ", " << cur_arg_offset << "($30)" << std::endl;
+        //             trace_fd_num += 1;
+        //             dst << "swc1 "
+        //                 << "$f" << 12 + trace_fd_num << ", " << cur_arg_offset -4 << "($30)" << std::endl;
+        //             trace_fd_num += 1;
+        //         }
+        //         else if (tmp->get_type() == "FLOAT" || tmp->get_type() == "FLOATPTR")
+        //         {
+        //             if (trace_fd_num < 4)
+        //             {
+        //                 // 0  2
+        //                 dst << "swc1 "
+        //                     << "$f" << 12 + trace_fd_num << ", " << cur_arg_offset << "($30)" << std::endl;
+        //                 trace_fd_num += 2;
+        //             }
+        //             else
+        //             {
+        //                 dst << "sw "
+        //                     << "$" << 6 + sup_float_reg << "," << cur_arg_offset << "($30)" << std::endl;
+        //                 sup_float_reg += 1;
+        //             }
+        //         }
+        //         else
+        //         {
+        //             dst << "sw"
+        //                 << " $" << trace_int_reg + 4
+        //                 << "," << cur_arg_offset << "($30)" << std::endl;
+        //             trace_int_reg += 1;
+        //         }
+        //     }
+        //     valid_index += 1;
+        // }
+
         // store in memory and can be retrieved directly.
     }
 
@@ -198,9 +257,9 @@ void Function::generateMips(std::ostream &dst, Context &context, int destReg, Ma
     // argument context;
     // std::cerr << "#" << "argumentcontext" << std::endl;
     // Argument_context.print_local();
-    // std::cout << "find struct " << context.Type_Str.find("STRUCTx")->second.type_size << std::endl;
+    // std::cerr << "find struct " << context.Type_Str.find("STRUCTx")->second.type_size << std::endl;
     Func_context.sync_local_context(context, Argument_context);
-    // std::cout << "find struct 2" << Func_context.Type_Str.find("STRUCTx")->second.type_size << std::endl;
+    // std::cerr << "find struct 2" << Func_context.Type_Str.find("STRUCTx")->second.type_size << std::endl;
     std::string Function_Ending_label = make_name.makeName("L");
     Func_context.Function_Ending_Label = Function_Ending_label;
     //  std::cerr<< "#" << "done 81" << std::endl;
@@ -259,8 +318,6 @@ void Function::add_argument_to_context(int index)
         Local_var var(argmap[i].second, true, 0);
         // is called directly
         Argument_context.insert_var_local(make_pair(argmap[i].first, var));
-        // std::cout << "-------" << i << argmap[i].second << std::endl;
-        // Need to consider double double int | double int double
 
         if (argmap[i].second == "INT" || argmap[i].second == "INTPTR")
         {
@@ -270,14 +327,18 @@ void Function::add_argument_to_context(int index)
         }
         else if (argmap[i].second == "DOUBLE" || argmap[i].second == "DOUBLEPTR")
         {
-            Argument_context.assign_offset_to_local_var(argmap[i].first, std::to_string(offset));
+
             if (tot_size % 8 != 0)
             { // when int double
-                offset += 12;
+                offset += 8;
+                Argument_context.assign_offset_to_local_var(argmap[i].first, std::to_string(offset));
+                offset += 4;
             }
             else
             {
-                offset += 8;
+                offset += 4;
+                Argument_context.assign_offset_to_local_var(argmap[i].first, std::to_string(offset));
+                offset += 4;
             }
         }
         else if (argmap[i].second == "FLOAT" || argmap[i].second == "FLOATPTR")
@@ -320,4 +381,9 @@ std::vector<FloatDoubleConst> Function::get_Float_Const()
 std::vector<std::string> Function::get_String_Const()
 {
     return branch[1]->get_String_Const();
+}
+
+std::vector<InnerFDarray> Function::return_df_array_list()
+{
+    return branch[1]->return_df_array_list();
 }

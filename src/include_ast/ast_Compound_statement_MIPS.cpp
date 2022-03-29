@@ -5,20 +5,14 @@
 Compound_statement_Mips::Compound_statement_Mips(const std::vector<NodePtr> Declaration_List)
     : Node(Declaration_List)
 {
-    // std::cout << "before build 1" << std::endl;
-    //  std::cerr << "#" << "Statement_list" << Declaration_List.size() << std::endl;
+
     build_func_context();
-    // std::cerr << "#" << "build completed" << std::endl;
+
     size = find_stack_size();
-    // std::cerr << "#" << "SIZE: " << size << std::endl;
 }
 Compound_statement_Mips::Compound_statement_Mips(const std::vector<NodePtr> Declaration_List, const std::vector<NodePtr> Statement_List)
     : Node(Declaration_List, Statement_List)
 {
-    // std::cout << "before build 2" << std::endl;
-    //  std::cerr << "#" << "Statement_list" << Statement_List.size() << std::endl;
-
-    // std::cerr << "#" << "branch size " << branch.size() << std::endl;
     build_func_context();
     size = find_stack_size();
 }
@@ -33,13 +27,13 @@ Compound_statement_Mips::Compound_statement_Mips()
 
 void Compound_statement_Mips::generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset)
 {
-    std::cout << "#"
+    std::cerr << "#"
               << "inside compound_statement" << std::endl;
     // InitialBuildContext.print_local();
 
     // passing the offset from larger context to this subcontext;
     Assign_offset(context.find_local_sub_context_offset(), context);
-    std::cout << "#"
+    std::cerr << "#"
               << "stage 1" << std::endl;
 
     // std::cerr << "#" << "order variable" << ordered_variable_table.size() << std::endl;
@@ -56,14 +50,15 @@ void Compound_statement_Mips::generateMips(std::ostream &dst, Context &context, 
     //           << "stage 2" << dynamic_offset << std::endl;
 
     SubContext.sync_local_context(context, InitialBuildContext);
+
     // std::cerr << "#"
     //           << "stage 10"  << std::endl;
     Local_var var = SubContext.find_local("$DynamicContext");
     // std::cerr << "#" << "G" << std::endl;
 
     dynamic_offset = stoi(SubContext.find_local("$DynamicContext").offset);
-    // std::cout << "# After Syn Dynamic Offset " << dynamic_offset << std::endl;
-    // std::cout << "#"<< "<---Combined Context--->" << std::endl;
+    // std::cerr << "# After Syn Dynamic Offset " << dynamic_offset << std::endl;
+    // std::cerr << "#"<< "<---Combined Context--->" << std::endl;
     // SubContext.print_local();
     // SubContext.print_global();
     //  SubContext.print_local();
@@ -175,10 +170,10 @@ int Compound_statement_Mips::find_stack_size()
             {
                 count_size += inside_function_size;
             }
-            else if (it->second.type_name == "INTArray")
+            else if (it->second.type_name == "INTArray" || it->second.type_name == "DOUBLEArray" || it->second.type_name == "FLOATArray")
             {
-                std::cerr << "#"
-                          << "inside arraysize" << std::endl;
+                // std::cerr << "#"
+                //           << "inside arraysize" << arraysize[array_index] << std::endl;
                 count_size += arraysize[array_index];
                 array_index += 1;
             }
@@ -196,15 +191,12 @@ int Compound_statement_Mips::find_stack_size()
             else
             {
                 // struct
-                // std::cout << "# in struct declaration" << std::endl;
+                // std::cerr << "# in struct declaration" << std::endl;
                 if (InitialBuildContext.Type_Str.find(it->second.type_name) != InitialBuildContext.Type_Str.end())
                 {
                     // when struct is defined within the scope
                     count_size += InitialBuildContext.Type_Str.find(it->second.type_name)->second.type_size;
                 }
-                // for (std::map<std::string, type_storage>::const_iterator iti = InitialBuildContext.Type_Str.begin(); iti != InitialBuildContext.Type_Str.end(); ++iti){
-                //     std::cout << iti->first <<"--------" << std::endl;
-                // }
             }
         }
     }
@@ -285,7 +277,7 @@ void Compound_statement_Mips::build_func_context()
             {
                 // Struct DEFINE { }
                 InitialBuildContext.Type_Str.insert(std::make_pair(branch[g]->get_type(), branch[g]->get_type_storage()));
-                // std::cout << "testing" << std::endl;
+                // std::cerr << "testing" << std::endl;
                 // branch[g]->get_type_storage().print_content();
                 //  struct x {}
             }
@@ -293,12 +285,12 @@ void Compound_statement_Mips::build_func_context()
             {
 
                 // struct x y; structx
-                // std::cout << "# is_struct declaration" << std::endl;
+                // std::cerr << "# is_struct declaration" << std::endl;
                 // branch[g]
                 if (InitialBuildContext.Type_Str.find(branch[g]->get_type()) == InitialBuildContext.Type_Str.end())
                 {
                     // changes
-                    // std::cout << "# inside localvarwaitingforsizing" << std::endl;
+                    // std::cerr << "# inside localvarwaitingforsizing" << std::endl;
                     std::pair<std::string, std::string> a = std::make_pair(branch[g]->get_type(), branch[g]->get_Id());
                     InitialBuildContext.LocalVarWaitingForSizing.push_back(a);
                 }
@@ -329,7 +321,7 @@ void Compound_statement_Mips::build_func_context()
                         //  could be either with ini or not ( i.e x = 10, x[8] = {1,2,3,4} // x,u,o  )
                         if (declaration_list_element->is_init())
                         {
-                            std::cout << "#"
+                            std::cerr << "#"
                                       << "<----------------is init declaration----------------->" << std::endl;
                             //  with init
                             // std::cerr << "# Declaration with initizalized" << std::endl;
@@ -337,7 +329,7 @@ void Compound_statement_Mips::build_func_context()
                             {
                                 if (declaration_list_element->is_Identifier())
                                 {
-                                    std::cout << "#"
+                                    std::cerr << "#"
                                               << "<----------------is identifier init declaration----------------->" << std::endl;
                                     std::vector<FloatDoubleConst> a = branch[g]->get_Float_Const();
                                     std::vector<std::string> b = declaration_list_element->get_String_Const();
@@ -358,43 +350,38 @@ void Compound_statement_Mips::build_func_context()
                                 }
                                 else if (declaration_list_element->is_Array())
                                 {
-                                    // sos   sos sos sos string vector how
-                                    std::cout << "#"
-                                              << "<----------------is array init declaration----------------->" << std::endl;
-                                    std::vector<FloatDoubleConst> a = branch[g]->get_Float_Const();
-                                    for (int i = 0; i < a.size(); i++)
-                                    {
-                                        Float_Const_of_this_compound.push_back(a[i]);
-                                    }
+                                    // x[5] = {1, 3, 5, 22, 69};
 
+                                    // sos   sos sos sos string vector how
+                                    std::cerr << "#"
+                                              << "<----------------is array init declaration----------------->" << std::endl;
+                                    // sos
+                                    // std::cerr << "ARRAY SIZE" << std::endl;
                                     // std::cerr << "#" << "stage 3" << "  |  " << g << "  |  " << d << declaration_list_element->get_Id() << std::endl;
                                     std::string conc = declaration_type + "Array";
                                     Local_var var(conc, true, stack_index);
+
                                     // when the array of certain size is declared, it is always called.
                                     // std::cerr << "#" << "arraysize" << declaration_list_element->array_size();
-                                    // int x, x[m]={xxxxx};
-                                    // {     }
-                                    for (int d = 1; d < branch[g]->get_size(); d++)
-                                    {
-                                        // std::cerr << "Array Declaration With Initialized" << std::endl;
-                                        // std::cerr << "array size" << declaration_list_element->array_size() << std::endl;
-                                        arraysize.push_back(declaration_list_element->array_size());                                   //? Node now has array_size() FAIL and array size is a int vector array_size now in the scope not linked
-                                        InitialBuildContext.insert_var_local(std::make_pair(declaration_list_element->get_Id(), var)); //? get_Id()  two array with in one compound
-                                        stack_index += 1;
-                                    }
+                                    // arraysize.push_back(declaration_list_element->array_size());
+                                    arraysize.push_back(declaration_list_element->get_arithmetic_const_val() * 4);
+
+                                    // std::cerr <<"SSS " <<declaration_list_element->get_arithmetic_const_val() << std::endl;                                   //? Node now has array_size() FAIL and array size is a int vector array_size now in the scope not linked
+                                    InitialBuildContext.insert_var_local(std::make_pair(declaration_list_element->get_Id(), var)); //? get_Id()  two array with in one compound
+                                    stack_index += 1;
                                 }
 
                                 // Pointer
                                 else if (declaration_list_element->is_Pointer())
                                 {
-                                    std::cout << "#"
+                                    std::cerr << "#"
                                               << "<----------------is pointer init declaration----------------->" << std::endl;
                                     std::vector<std::string> b = declaration_list_element->get_String_Const();
                                     for (int i = 0; i < b.size(); i++)
                                     {
                                         String_Const_of_this_compound.push_back(b[i]);
                                     }
-                                    // std::cout << "#ggggggg" << declaration_list_element->get_Id()<< std::endl;
+                                    // std::cerr << "#ggggggg" << declaration_list_element->get_Id()<< std::endl;
                                     Pointer_type = declaration_type + "PTR";
                                     Local_var var(Pointer_type, true, stack_index); //? not always the case
                                     // ordered_variable_table.push_back(branch[g]->get_Id());
@@ -407,10 +394,11 @@ void Compound_statement_Mips::build_func_context()
                                 std::vector<FloatDoubleConst> a = declaration_list_element->get_Float_Const();
                                 for (int i = 0; i < a.size(); i++)
                                 {
-                                    std::cout << "#float vector return " << a[i].value << std::endl;
+                                    std::cerr << "#float vector return " << a[i].value << std::endl;
                                     Float_Const_of_this_compound.push_back(a[i]);
                                 }
-                                std::cout << "#float vector done" << std::endl;
+                                std::cerr << "#float vector done" << std::endl;
+
                                 if (declaration_list_element->get_branch(1)->is_Constant())
                                 {
                                     double float_number = declaration_list_element->get_branch(1)->get_Float();
@@ -419,10 +407,31 @@ void Compound_statement_Mips::build_func_context()
                                 }
                                 else if (declaration_list_element->is_Identifier())
                                 {
-                                    // std::cerr<< "#" << "<----------------is identifier init declaration----------------->" << std::endl;
-                                    // std::cerr << "# Variable Declaration with initizalized" << std::endl;
-                                    Local_var var(declaration_type, true, stack_index); //? not always the case
-                                    // ordered_variable_table.push_back(branch[g]->get_Id());
+                                    Local_var var(declaration_type, true, stack_index);                                            //? not always the case
+                                    InitialBuildContext.insert_var_local(std::make_pair(declaration_list_element->get_Id(), var)); //? make pair
+                                    stack_index += 1;
+                                }
+                                else if (declaration_list_element->is_Array())
+                                {
+                                    InnerFDarray array_instance(declaration_list_element->get_Id(), "FLOAT", declaration_list_element->construct_double_const_list());
+                                    Df_Array_List_of_this_compound.push_back(array_instance);
+                                    std::cerr << "#"
+                                              << "<----------------is array float declaration----------------->" << std::endl;
+
+                                    std::string conc = declaration_type + "Array";
+                                    Local_var var(conc, true, stack_index);
+
+                                    arraysize.push_back(declaration_list_element->get_arithmetic_const_val() * 4);
+                                    // std::cerr <<"SSS " <<declaration_list_element->get_arithmetic_const_val() << std::endl;
+                                    InitialBuildContext.insert_var_local(std::make_pair(declaration_list_element->get_Id(), var));
+                                    stack_index += 1;
+                                }
+                                else if (declaration_list_element->is_Pointer())
+                                {
+                                    std::cerr << "#"
+                                              << "<----------------is pointer init declaration----------------->" << std::endl;
+                                    Pointer_type = declaration_type + "PTR";
+                                    Local_var var(Pointer_type, true, stack_index);
                                     InitialBuildContext.insert_var_local(std::make_pair(declaration_list_element->get_Id(), var)); //? make pair
                                     stack_index += 1;
                                 }
@@ -449,6 +458,26 @@ void Compound_statement_Mips::build_func_context()
                                     InitialBuildContext.insert_var_local(std::make_pair(declaration_list_element->get_Id(), var)); //? make pair
                                     stack_index += 1;
                                 }
+                                else if (declaration_list_element->is_Array())
+                                {
+                                    InnerFDarray array_instance(declaration_list_element->get_Id(), "DOUBLE", declaration_list_element->construct_double_const_list());
+                                    Df_Array_List_of_this_compound.push_back(array_instance);
+                                    std::cerr << "#"
+                                              << "<----------------is array init declaration----------------->" << std::endl;
+                                    // sos
+                                    // std::cerr << "ARRAY SIZE" << std::endl;
+                                    // std::cerr << "#" << "stage 3" << "  |  " << g << "  |  " << d << declaration_list_element->get_Id() << std::endl;
+                                    std::string conc = declaration_type + "Array";
+                                    Local_var var(conc, true, stack_index);
+
+                                    // when the array of certain size is declared, it is always called.
+                                    // std::cerr << "#" << "arraysize" << declaration_list_element->array_size();
+                                    // arraysize.push_back(declaration_list_element->array_size());
+                                    arraysize.push_back(declaration_list_element->get_arithmetic_const_val() * 8);
+                                    // std::cerr <<"SSS " <<declaration_list_element->get_arithmetic_const_val() << std::endl;
+                                    InitialBuildContext.insert_var_local(std::make_pair(declaration_list_element->get_Id(), var));
+                                    stack_index += 1;
+                                }
                             }
                             else if (declaration_type == "CHAR")
                             {
@@ -456,7 +485,7 @@ void Compound_statement_Mips::build_func_context()
 
                                 if (declaration_list_element->is_Identifier())
                                 {
-                                    std::cout << "#"
+                                    std::cerr << "#"
                                               << "<----------------is identifier init declaration----------------->" << std::endl;
                                     std::vector<std::string> b = declaration_list_element->get_String_Const();
                                     for (int i = 0; i < b.size(); i++)
@@ -470,8 +499,8 @@ void Compound_statement_Mips::build_func_context()
                                 }
                                 else if (declaration_list_element->is_Array())
                                 {
-                                    // sos   sos sos sos string vector how
-                                    std::cout << "#"
+                                    // sos  sos sos sos string vector how
+                                    std::cerr << "#"
                                               << "<----------------is array init declaration----------------->" << std::endl;
                                     // std::cerr << "#" << "stage 3" << "  |  " << g << "  |  " << d << declaration_list_element->get_Id() << std::endl;
                                     std::string conc = declaration_type + "Array";
@@ -480,7 +509,7 @@ void Compound_statement_Mips::build_func_context()
                                     {
                                         // std::cerr << "Array Declaration With Initialized" << std::endl;
                                         // std::cerr << "array size" << declaration_list_element->array_size() << std::endl;
-                                        arraysize.push_back(declaration_list_element->array_size());                                   //? Node now has array_size() FAIL and array size is a int vector array_size now in the scope not linked
+                                        arraysize.push_back(declaration_list_element->get_arithmetic_const_val());                     //? Node now has array_size() FAIL and array size is a int vector array_size now in the scope not linked
                                         InitialBuildContext.insert_var_local(std::make_pair(declaration_list_element->get_Id(), var)); //? get_Id()  two array with in one compound
                                         stack_index += 1;
                                     }
@@ -489,7 +518,7 @@ void Compound_statement_Mips::build_func_context()
                                 // Pointer
                                 else if (declaration_list_element->is_Pointer())
                                 {
-                                    std::cout << "#"
+                                    std::cerr << "#"
                                               << "<----------------is pointer init declaration----------------->" << std::endl;
                                     std::vector<std::string> b = declaration_list_element->get_String_Const();
                                     for (int i = 0; i < b.size(); i++)
@@ -512,7 +541,7 @@ void Compound_statement_Mips::build_func_context()
                             // if just declare below
                             if (declaration_list_element->is_Identifier())
                             {
-                                // std::cout << "# pip " << declaration_list_element->get_Id() << std::endl;
+                                // std::cerr << "# pip " << declaration_list_element->get_Id() << std::endl;
                                 if (branch[g]->is_Struct_Declaration())
                                 {
                                     Local_var var(branch[g]->get_type(), true, stack_index);
@@ -565,32 +594,26 @@ void Compound_statement_Mips::build_func_context()
         {
             // statement
             // statement list { y =1; }
-            // for (int m = 0; m < branch[g]->get_size(); m++)
-            //{
-            // std::cerr << "#" << "BRanch-G size" << branch[g]->get_size() << std::endl;
-
-            // function call f();
-            // x[1] = {f(),j()}
-            //std::cout << "# <------------------------------ statment ----------------------> " << std::endl;
+            // std::cerr << "# <------------------------------ statment ----------------------> " << std::endl;
             if (branch[g]->is_Function_inside() == true)
             {
-                // double for func argument size;
-                //  function call
-
-                //std::cout << "#"<< "stage 5"<< "  |  "<< "Return function name" << branch[g]->get_Id() << std::endl;
+                std::cerr << "#"
+                          << "stage 5"
+                          << "  |  "
+                          << "Return function name" << branch[g]->get_Id() << std::endl;
                 function_inside = true;
                 // need to get type of argument
                 // depends on the argument type
                 // what if GLOBAL INTO FUNC ARGUMENT SOSOSOSOSOSSO
                 tmp_func_size = 0;
-
+                // currently at conditional so we need to go down one layer
                 NodePtr Function_call = branch[g]->get_branch(0);
                 for (int i = 1; i < Function_call->get_size(); i++)
                 {
-                    //std::cout << "endter" << std::endl;
-                    // count the num of arguments
+                    // std::cerr << "endter" << std::endl;
+                    //  count the num of arguments
                     NodePtr tmp = Function_call->get_branch(i);
-                    //std::cout << "testnnnnn" << tmp->get_Id() << std::endl;
+                    // std::cerr << "testnnnnn" << tmp->get_Id() << std::endl;
                     if (InitialBuildContext.is_Local(tmp->get_Id()) == true)
                     {
                         if (InitialBuildContext.find_local(tmp->get_Id()).type_name == "DOUBLE")
@@ -605,8 +628,8 @@ void Compound_statement_Mips::build_func_context()
                     }
                     else
                     {
-                        //std::cout << "&&& is inside else branch" << std::endl;
-                        // const
+                        // std::cerr << "&&& is inside else branch" << std::endl;
+                        //  const
                         if (tmp->is_Constant())
                         {
                             if (tmp->get_type() == "INT" || tmp->get_type() == "STRING" || tmp->get_type() == "FLOAT")
@@ -622,11 +645,11 @@ void Compound_statement_Mips::build_func_context()
                         tmp_func_size += 4;
                     }
                     // for float  sos do we need this ? what about for string
-                    //std::cout << "# <--------------------------float_const---------------------------> " << std::endl;
+                    // std::cerr << "# <--------------------------float_const---------------------------> " << std::endl;
                     std::vector<FloatDoubleConst> a = tmp->get_Float_Const();
-                    //std::cout << "# <-------------------------string_const---------------------------> " << std::endl;
+                    // std::cerr << "# <-------------------------string_const---------------------------> " << std::endl;
                     std::vector<std::string> b = tmp->get_String_Const();
-                    //std::cout << "# <------------------------------ string_const size: " << b.size() << "----------------------> " << std::endl;
+                    // std::cerr << "# <------------------------------ string_const size: " << b.size() << "----------------------> " << std::endl;
                     for (int i = 0; i < a.size(); i++)
                     {
                         Float_Const_of_this_compound.push_back(a[i]);
@@ -722,42 +745,63 @@ void Compound_statement_Mips::build_func_context()
             // need to consider the statement when the branch size is 1
             else if (branch[g]->is_Jump_statement())
             {
-                // return expression
-                NodePtr next_branch_0 = branch[g]->get_branch(0);
-                // for float and for string
-                std::vector<FloatDoubleConst> a = branch[g]->get_Float_Const();
-                std::vector<std::string> b = branch[g]->get_String_Const();
-                for (int i = 0; i < a.size(); i++)
-                {
-                    Float_Const_of_this_compound.push_back(a[i]);
-                }
-                for (int i = 0; i < b.size(); i++)
-                {
-                    String_Const_of_this_compound.push_back(b[i]);
-                }
+                std::cerr << "# retuning -------------->" << std::endl;
+                // for retrun;
 
-                for (int d = 0; d < next_branch_0->get_size(); d++)
+                NodePtr conditional = branch[g]->get_branch(0);
+                if (conditional->get_type() != "VOID")
                 {
-
-                    if (next_branch_0->get_branch(d)->is_Function_inside() == true)
+                    NodePtr next_branch_0 = conditional->get_branch(0);
+                    std::cerr << "# retuning 1 -------------->" << std::endl;
+                    // for float and for string
+                    std::vector<FloatDoubleConst> a = branch[g]->get_Float_Const();
+                    std::cerr << "# retuning 2 -------------->" << std::endl;
+                    std::vector<std::string> b = branch[g]->get_String_Const();
+                    std::cerr << "# retuning 3 -------------->" << std::endl;
+                    for (int i = 0; i < a.size(); i++)
                     {
-                        // return f();
-                        // std::cerr << "#"
-                        //<< "stage 5b" << std::endl;
+                        Float_Const_of_this_compound.push_back(a[i]);
+                    }
+                    std::cerr << "# retuning 4 -------------->" << std::endl;
+                    for (int i = 0; i < b.size(); i++)
+                    {
+                        String_Const_of_this_compound.push_back(b[i]);
+                    }
+                    //(f1+f2)
+                    std::cerr << "# how mang functions inside " << next_branch_0->get_size() << "-------------->" << std::endl;
+                    if (next_branch_0->is_Function_inside())
+                    {
+
+                        function_inside = true;
                         tmp_func_size = 0;
-                        for (int i = 0; i < branch[g]->get_size() - 1; i++)
+                        // 1
+                        for (int i = 1; i < next_branch_0->get_size(); i++)
                         {
-                            NodePtr tmp = branch[g]->get_branch(i);
-                            if (InitialBuildContext.find_local(tmp->get_Id()).type_name == "DOUBLE")
+                            // f1 (a, b, c, d)     LOOPING a b c d
+                            std::cerr << "# how mang param in function  :" << next_branch_0->get_size() - 1 << "-------------->" << std::endl;
+                            NodePtr tmp = next_branch_0->get_branch(i);
+
+                            // std::cerr << tmp->get_cloest_Id() << "   |    " << tmp->get_Id() << std::endl;
+                            if (InitialBuildContext.is_Local(tmp->get_cloest_Id()))
                             {
-                                tmp_func_size += 8;
+                                if (InitialBuildContext.find_local(tmp->get_cloest_Id()).type_name == "DOUBLE")
+                                {
+                                    tmp_func_size += 8;
+                                }
+                                else
+                                {
+                                    // FLOAT + INt
+                                    tmp_func_size += 4;
+                                    std::cerr << "inside" << std::endl;
+                                }
                             }
                             else
                             {
-                                // FLOAT + INt
-                                tmp_func_size += 4;
+                                tmp_func_size += 8;
+                                InitialBuildContext.insert_local_var_waiting_for_declared(tmp->get_cloest_Id());
                             }
                         }
+
                         if (tmp_func_size < 16)
                         {
                             tmp_func_size = 16;
@@ -767,38 +811,91 @@ void Compound_statement_Mips::build_func_context()
                         {                                         // ???
                             inside_function_size = tmp_func_size; //
                         }
-                        // function does not need to be stored in ordered_varaible table
                     }
-                    else if (next_branch_0->is_Constant())
+                    else
                     {
-                        // do nothing here
-                    }
-                    else if (InitialBuildContext.extract_local_var().count(next_branch_0->get_Id()) != 0) // found local variable then set it as called
-                    {
-                        // std::cerr << "#"
-                        //<< "stage 6"
-                        //<< "  |  " << g << std::endl;
-                        // std::cerr << "#"
-                        //<< "Found ID in current real context" << branch[g]->get_Id() << std::endl;
-                        InitialBuildContext.local_var_called(next_branch_0->get_Id());
-                    }
-                    else // not found marked as wait to declared
-                    {
-                        // std::cerr << "#"
-                        //<< "stage 7"
-                        //<< "  |  " << std::endl;
-                        // std::cerr << "#"
-                        //<< "Not Found  " << branch[g]->get_Id() << std::endl;
-                        InitialBuildContext.insert_local_var_waiting_for_declared(next_branch_0->get_Id());
+                        for (int d = 0; d < next_branch_0->get_size(); d++) // targeting return {}
+                        {
+                            // f1
+                            std::cerr << "# f1  " << d << "-------------->" << std::endl;
+                            NodePtr func = next_branch_0->get_branch(d);
+                            if (func->is_Function_inside() == true)
+                            {
+                                std::cerr << "# is function inside " << d << "-------------->" << std::endl;
+                                function_inside = true;
+                                tmp_func_size = 0;
+                                // 1
+                                for (int i = 1; i < func->get_size(); i++)
+                                {
+                                    // f1 (a, b, c, d)     LOOPING a b c d
+                                    std::cerr << "# how mang param in function " << d << " :" << func->get_size() - 1 << "-------------->" << std::endl;
+                                    NodePtr tmp = func->get_branch(i);
+
+                                    // std::cerr << tmp->get_cloest_Id() << "   |    " << tmp->get_Id() << std::endl;
+                                    if (InitialBuildContext.is_Local(tmp->get_cloest_Id()))
+                                    {
+                                        if (InitialBuildContext.find_local(tmp->get_cloest_Id()).type_name == "DOUBLE")
+                                        {
+                                            tmp_func_size += 8;
+                                        }
+                                        else
+                                        {
+                                            // FLOAT + INt
+                                            tmp_func_size += 4;
+                                            std::cerr << "inside" << std::endl;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        tmp_func_size += 8;
+                                        InitialBuildContext.insert_local_var_waiting_for_declared(tmp->get_cloest_Id());
+                                    }
+                                }
+
+                                if (tmp_func_size < 16)
+                                {
+                                    tmp_func_size = 16;
+                                }
+                                // do we need to deal with the size of that function if it is just a call
+                                if (tmp_func_size > inside_function_size)
+                                {                                         // ???
+                                    inside_function_size = tmp_func_size; //
+                                }
+                                // function does not need to be stored in ordered_varaible table
+                            }
+                            else if (next_branch_0->is_Constant())
+                            {
+                                // do nothing here
+                            }
+                            else if (InitialBuildContext.extract_local_var().count(next_branch_0->get_Id()) != 0) // found local variable then set it as called
+                            {
+                                // std::cerr << "#"
+                                //<< "stage 6"
+                                //<< "  |  " << g << std::endl;
+                                // std::cerr << "#"
+                                //<< "Found ID in current real context" << branch[g]->get_Id() << std::endl;
+                                InitialBuildContext.local_var_called(next_branch_0->get_Id());
+                            }
+                            else // not found marked as wait to declared
+                            {
+                                std::cerr << "# f2 " << d << "-------------->" << std::endl;
+                                // std::cerr << "#"
+                                //<< "stage 7"
+                                //<< "  |  " << std::endl;
+                                // std::cerr << "#"
+                                //<< "Not Found  " << branch[g]->get_Id() << std::endl;
+                                InitialBuildContext.insert_local_var_waiting_for_declared(next_branch_0->get_Id());
+                                std::cerr << "# f3 " << d << "-------------->" << std::endl;
+                            }
+                        }
                     }
                 }
+
+                // std::cerr << "# retuning done -------------->" << std::endl;
             }
             else if (branch[g]->is_Compound_statement()) // Not function call; Not basic assignment;  Compound statement IF WHILE ..
             {
 
-                // std::cerr << "#" << "IN side statement" << std::endl;
-                // std::cerr << "#" << "stage 8"
-                //           << "  |  " << g << branch[g]->get_context_local_size() << std::endl;
                 std::vector<FloatDoubleConst> a = branch[g]->get_Float_Const();
                 std::vector<std::string> b = branch[g]->get_String_Const();
                 for (int i = 0; i < a.size(); i++)
@@ -823,14 +920,22 @@ void Compound_statement_Mips::build_func_context()
                         for (int i = 0; i < branch[g]->get_size() - 1; i++)
                         {
                             NodePtr tmp = branch[g]->get_branch(i);
-                            if (InitialBuildContext.find_local(tmp->get_Id()).type_name == "DOUBLE")
+                            if (InitialBuildContext.is_Local(tmp->get_cloest_Id()))
                             {
-                                tmp_func_size += 8;
+                                if (InitialBuildContext.find_local(tmp->get_cloest_Id()).type_name == "DOUBLE")
+                                {
+                                    tmp_func_size += 8;
+                                }
+                                else
+                                {
+                                    // FLOAT + INt
+                                    tmp_func_size += 4;
+                                }
                             }
                             else
                             {
-                                // FLOAT + INt
-                                tmp_func_size += 4;
+                                tmp_func_size += 8;
+                                InitialBuildContext.insert_local_var_waiting_for_declared(tmp->get_cloest_Id());
                             }
                         }
                         if (tmp_func_size < 16)
@@ -875,12 +980,14 @@ void Compound_statement_Mips::build_func_context()
         // right side of the "=" leads to dynamic local size
 
         tmp_dynamic_size = branch[g]->Dynamic_context_size() + 1; // this is initial size 4 for x+4;
+        std::cerr << "########################## dynamic computation " << tmp_dynamic_size << std::endl;
         // std::cerr << "#TMP DYNAMIC SIZE: " << tmp_dynamic_size << std::endl;
         //  std::cerr << "#" << "Tmp Dynamic Size identification" << dynamic_context_size << std::endl;
 
         // SOS
         // if (branch[g]->get_type() == "INT")
         //{
+
         tmp_dynamic_size = tmp_dynamic_size * 8;
         //}
         if (tmp_dynamic_size > dynamic_context_size)
@@ -891,6 +998,7 @@ void Compound_statement_Mips::build_func_context()
             //           << "Dynamic Size identification" << dynamic_context_size << std::endl;
             //  std::cerr << "#" << " COMM " << dynamic_context_size << std::endl;
         }
+        // std::cerr << "build complete3 "<< std::endl;
         // std::cerr << "#" << "<<---- check functioninside ---->>" << function_inside << std::endl;
     }
     // std::cerr << "#Final DYNAMIC SIZE: " << dynamic_context_size << std::endl;
@@ -901,12 +1009,12 @@ void Compound_statement_Mips::build_func_context()
     InitialBuildContext.insert_var_local(std::make_pair("$DynamicContext", vard));
     stack_index += 1;
     //}
-
+    // std::cerr << "build complete111 "<< std::endl;
     //        std::cerr << "#" << "<<---- check functioninside ---->>" << function_inside << "  |  " << inside_function_size << std::endl;
     if (function_inside == true)
     {
-        // std::cerr << "#"
-        //<< "stage 10"
+        std::cerr << "#"
+                  << "stage 10" << std::endl;
         //<< "  |  " << stack_index << std::endl;
         //        std::cerr << "#" << "inside function call" << std::endl;
         // after declaring the dynamic context, we have the context space for the function call argument.
@@ -915,6 +1023,8 @@ void Compound_statement_Mips::build_func_context()
         InitialBuildContext.insert_var_local(std::make_pair("$functioncall", var));
         stack_index += 1;
     }
+    std::cerr << "#"
+              << "build complete fully" << std::endl;
 }
 
 void Compound_statement_Mips::Assign_offset(int index, Context input)
@@ -960,9 +1070,10 @@ void Compound_statement_Mips::Assign_offset(int index, Context input)
         }
         else if (it->first == "$DynamicContext")
         {
+            std::cerr << "##------------------- ASA dynamic offset  " << dynamic_context_size << std::endl;
             offset_arrangement[it->second.index - 1] = dynamic_context_size;
         }
-        else if (it->second.type_name == "INTArray")
+        else if (it->second.type_name == "INTArray" || it->second.type_name == "DOUBLEArray" || it->second.type_name == "FLOATArray")
         {
             offset_arrangement[it->second.index - 1] = arraysize[array_index];
             array_index += 1;
@@ -975,21 +1086,21 @@ void Compound_statement_Mips::Assign_offset(int index, Context input)
         else
         {
             // struct
-            // std::cout << "#test" << it->second.type_name << std::endl;
+            // std::cerr << "#test" << it->second.type_name << std::endl;
             if (InitialBuildContext.Type_Str.find(it->second.type_name) != InitialBuildContext.Type_Str.end())
             {
                 offset_arrangement[it->second.index - 1] = InitialBuildContext.Type_Str.find(it->second.type_name)->second.type_size;
             }
             else
             {
-                // std::cout << "anabab" << std::endl;
+                // std::cerr << "anabab" << std::endl;
                 if (input.Type_Str.find(it->second.type_name) != InitialBuildContext.Type_Str.end())
                 {
                     offset_arrangement[it->second.index - 1] = input.Type_Str.find(it->second.type_name)->second.type_size;
-                    // std::cout << "#inside (" << input.Type_Str.find(it->second.type_name)->second.type_size << ")" << std::endl;
+                    // std::cerr << "#inside (" << input.Type_Str.find(it->second.type_name)->second.type_size << ")" << std::endl;
                 }
                 // offset_arrangement[it->second.index - 1] = input.Type_Str.find(it->second.type_name)->second.type_size;
-                // std::cout << "gg" << std::endl;
+                // std::cerr << "gg" << std::endl;
             }
         }
     }
@@ -1040,7 +1151,10 @@ std::vector<std::string> Compound_statement_Mips::get_String_Const()
 {
     return String_Const_of_this_compound;
 }
-
+std::vector<InnerFDarray> Compound_statement_Mips::return_df_array_list()
+{
+    return Df_Array_List_of_this_compound;
+}
 /*<--------store variable used in input argument index 0-------->*/
 /*<-------store variable used within context--------->*/
 /*<-------store variable used within context for dynamic context--------->*/

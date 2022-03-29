@@ -15,10 +15,7 @@ void Array_Access_Mips::generateMips(std::ostream &dst, Context &context, int de
     // get address for the array
     int size_type = 0;
     int array_offset = 0;
-    branch[1]->generateMips(dst, context, 3, make_name, dynamic_offset);
-    int result_address = branch[1]->return_dynamic_offset();
-    dst << "lw "
-        << "$" << destReg << "," << result_address << "($30)" << std::endl;
+
     if (context.is_Local(branch[0]->get_Id()))
     {
 
@@ -110,57 +107,146 @@ void Array_Access_Mips::generateMips(std::ostream &dst, Context &context, int de
                 << "$" << destReg << "," << current_offset << "($30)"
                 << std::endl;
         }
-
+        else if (tmp.type_name == "DOUBLEArray")
+        {
+            dst << "sll "
+                << "$5,"
+                << "$5,"
+                << "3" << std::endl;
+            dst << "li "
+                << "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << std::endl;
+            dst << "subu "
+                << "$5"
+                << ","
+                << "$" << destReg << ","
+                << "$5" << std::endl;
+            dst << "addu "
+                << "$5,"
+                << "$5,"
+                << "$30" << std::endl;
+            // need to store them into the memory or use 5
+            dst << "lw "
+                << "$" << destReg << ","
+                << "0"
+                << "($5)" << std::endl;
+            // sos
+            current_offset = dynamic_offset;
+            dst << "sw "
+                << "$" << destReg << "," << current_offset << "($30)"
+                << std::endl;
+        }
+        else if (tmp.type_name == "DOUBLEPTR")
+        {
+            dst << "lw "
+                << "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << "($30)" << std::endl;
+            dst << "nop " << std::endl;
+            dst << "sll "
+                << "$5,"
+                << "$5,"
+                << "3" << std::endl;
+            dst << "addu "
+                << "$5,"
+                << "$" << destReg << ",$5" << std::endl;
+            dst << "lw "
+                << "$" << destReg << ", 0"
+                << "($5)" << std::endl;
+            current_offset = dynamic_offset;
+            dst << "sw "
+                << "$" << destReg << "," << current_offset << "($30)"
+                << std::endl;
+        }
+        else if (tmp.type_name == "FLOATArray")
+        {
+            dst << "sll "
+                << "$5,"
+                << "$5,"
+                << "2" << std::endl;
+            dst << "li "
+                << "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << std::endl;
+            dst << "subu "
+                << "$5"
+                << ","
+                << "$" << destReg << ","
+                << "$5" << std::endl;
+            dst << "addu "
+                << "$5,"
+                << "$5,"
+                << "$30" << std::endl;
+            // need to store them into the memory or use 5
+            dst << "lw "
+                << "$" << destReg << ","
+                << "0"
+                << "($5)" << std::endl;
+            // sos
+            current_offset = dynamic_offset;
+            dst << "sw "
+                << "$" << destReg << "," << current_offset << "($30)"
+                << std::endl;
+        }
+        else if (tmp.type_name == "FLOATPTR")
+        {
+            dst << "lw "
+                << "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << "($30)" << std::endl;
+            dst << "nop " << std::endl;
+            dst << "sll "
+                << "$5,"
+                << "$5,"
+                << "2" << std::endl;
+            dst << "addu "
+                << "$5,"
+                << "$" << destReg << ",$5" << std::endl;
+            dst << "lw "
+                << "$" << destReg << ", 0"
+                << "($5)" << std::endl;
+            current_offset = dynamic_offset;
+            dst << "sw "
+                << "$" << destReg << "," << current_offset << "($30)"
+                << std::endl;
+        }
         // <--------------------------------------------------------------Previous----------------------------------------------------------------->
     }
     else
     {
+        branch[1]->generateMips(dst, context, destReg, make_name, dynamic_offset);
+        int result_address = branch[1]->return_dynamic_offset();
+        dst << "lw "
+            << "$5"
+            << "," << result_address << "($30)" << std::endl;
+        // default
+        size_type = 2;
         // the accessed array is declared globally; SOS
         dst << "lui "
             << "$" << destReg << ","
             << "%hi"
             << "(" << branch[0]->get_Id() << ")" << std::endl;
-        dst << "addu "
+        dst << "addiu "
             << "$" << destReg << ","
             << "$" << destReg << ","
             << "%lo"
             << "(" << branch[0]->get_Id() << ")" << std::endl;
-        if (context.find_local(branch[0]->get_Id()).type_name == "INTArray")
+        context.print_global();
+        if (context.is_Global(branch[0]->get_Id()))
         {
-            size_type = 4;
+            // std::cerr << "is in global access" << std::endl;
+            if (context.find_global(branch[0]->get_Id()).type_name == "INTArray")
+            {
+                size_type = 2;
+            }
         }
-        dst << "li "
-            << "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << std::endl;
 
         dst << "sll "
             << "$5,"
             << "$5," << size_type << std::endl;
         // // destReg address towards array[0]
 
-        dst << "addu"
+        dst << "addu "
             << "$5"
             << ","
-            << "$5 " << destReg << ","
+            << "$5,"
             << "$" << destReg << std::endl;
-
-        array_offset = size_type * branch[1]->get_arithmetic_const_val();
-        dst << "lw "
-            << "$" << destReg << "," << array_offset << "("
-            << "$5"
-            << ")" << std::endl;
+        dst << "lw $" << destReg << ","
+            << "0($5)" << std::endl;
     }
-
-    // lui     $2,%hi(x)
-    // addiu   $2,$2,%lo(x)
-    // lw      $2,8($2)
-    // nop
-
-    // need to store them into the memory or use 5
-    // dst << "lw "
-    //     << " $" <<
-    // load from dynamic part
-
-    //
 }
 
 bool Array_Access_Mips::is_Array() const
@@ -188,25 +274,24 @@ std::string Array_Access_Mips::get_cloest_Id() const
     return branch[0]->get_cloest_Id();
 }
 
-
 std::string Array_Access_Mips::return_expression_type(Context context)
 {
     std::string identifier_id = branch[0]->get_Id();
     std::string type;
-    if(context.is_Local(identifier_id))
+    if (context.is_Local(identifier_id))
     {
         type = context.find_local(identifier_id).type_name;
-        type.erase (type.end()-4, type.end()); 
+        type.erase(type.end() - 4, type.end());
         return type;
     }
-    else if(context.is_Global(identifier_id))
+    else if (context.is_Global(identifier_id))
     {
         type = context.find_global(identifier_id).type_name;
-        type.erase (type.end()-4, type.end()); 
+        type.erase(type.end() - 4, type.end());
         return type;
-    }else
+    }
+    else
     {
-        std::cout << "NOT FOUND" << std::endl;
-    } 
-    
+        std::cerr << "NOT FOUND" << std::endl;
+    }
 }

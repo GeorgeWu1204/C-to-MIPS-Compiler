@@ -9,11 +9,9 @@ Global_Declaration_Mips::Global_Declaration_Mips(const NodePtr declaration)
 
 void Global_Declaration_Mips::generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset)
 {
-    // int x[9],p,q[10];
-    // enum x{};
-    // branch[0] points to the new Declaration
+
     
-        std::vector<int> var; // this is use to store array constant if exited
+            std::vector<int> var; // this is use to store array constant if exited
             std::string type = branch[0]->get_type();
             int identifier_size;
             if (type == "INT")
@@ -35,27 +33,53 @@ void Global_Declaration_Mips::generateMips(std::ostream &dst, Context &context, 
                 NodePtr point_to_list_element = branch[0]->get_branch(m);
                 if (point_to_list_element->is_init())
                 {
-            // dst << point_to_list_element->get_Id() << ":" << std::endl;
-            //  std::cerr << "#" << "Inside Init" << std::endl;
                     if (point_to_list_element->is_Array())
                     {
                         var = point_to_list_element->return_assigned_val();
                         dst << ".globl " << point_to_list_element->get_Id() << std::endl;
                         dst << ".data " << std::endl;
                         dst << ".size " << point_to_list_element->get_Id() << "," << identifier_size * point_to_list_element->get_arithmetic_const_val() << std::endl;
-
-                        // x[7] ={};
-                        //  std::cerr << "#" << "Inside Array" << std::endl;
-                        NodePtr Array_Init = point_to_list_element->get_branch(1);
-                        if (Array_Init->is_Array_Initializer())
-                        {
-                            //    std::cerr << "#" << "Inside is_Array_Initializer" << std::endl;
-                            for (int r = 0; r < Array_Init->get_size(); r++)
+                        if(type == "INT"){
+                            dst << point_to_list_element->get_Id() << ":" << std::endl;
+                            NodePtr Array_Init = point_to_list_element->get_branch(1);
+                            if (Array_Init->is_Array_Initializer())
                             {
-                                dst << "        .word"
-                                    << " " << Array_Init->get_branch(r)->get_Val() << std::endl;
+                                //    std::cerr << "#" << "Inside is_Array_Initializer" << std::endl;
+                                for (int r = 0; r < Array_Init->get_size(); r++)
+                                {
+                                    dst << "        .word"
+                                        << " " << Array_Init->get_branch(r)->get_Val() << std::endl;
+                                }
                             }
                         }
+                        else if (type == "DOUBLE"){
+                            dst << point_to_list_element->get_Id() << ":" << std::endl;
+                            NodePtr Array_Init = point_to_list_element->get_branch(1);
+                            if (Array_Init->is_Array_Initializer())
+                            {
+                                //    std::cerr << "#" << "Inside is_Array_Initializer" << std::endl;
+                                for (int r = 0; r < Array_Init->get_size(); r++)
+                                {
+                                    dst << "        .double"
+                                        << " " << Array_Init->get_branch(r)->get_Float() << std::endl;
+                                }
+                            }
+                        }
+                        else if (type == "FLOAT"){
+                            dst << point_to_list_element->get_Id() << ":" << std::endl;
+                            NodePtr Array_Init = point_to_list_element->get_branch(1);
+                            if (Array_Init->is_Array_Initializer())
+                            {
+                                //    std::cerr << "#" << "Inside is_Array_Initializer" << std::endl;
+                                for (int r = 0; r < Array_Init->get_size(); r++)
+                                {
+                                    dst << "        .float"
+                                        << " " << (float)Array_Init->get_branch(r)->get_Float() << std::endl;
+                                }
+                            }
+                        }
+                        
+                        
                     }
                 else if (point_to_list_element->is_Identifier())
                 {
@@ -71,8 +95,17 @@ void Global_Declaration_Mips::generateMips(std::ostream &dst, Context &context, 
                         dst << "        .word"
                             << " " << Init->get_branch(0)->get_Val() << std::endl;
                     }
-                    else
+                    else if(type == "FLOAT")
                     {
+                        dst << "        .float"
+                            << " " << Init->get_Float() << std::endl;
+                    }
+                    else if(type == "DOUBLE"){
+                        dst << "        .double"
+                            << " " << Init->get_Float() << std::endl;
+                    }
+                    else{
+                        //INT 
                         dst << "        .word"
                             << " " << Init->get_Val() << std::endl;
                     }
@@ -104,13 +137,6 @@ void Global_Declaration_Mips::generateMips(std::ostream &dst, Context &context, 
                     dst << ".space " << identifier_size * point_to_list_element->get_arithmetic_const_val() << std::endl;
                 }
             }
-            // branch[0] Declaration
-            // Type Init_Declarator_list      int x[9] = {1, 2},y[] = {6,7,8} , p[9] , u = 9;
-            // Declarator Declarator = Initializer
-            // x         = { Initializer_list ',' }
-
-            // to get every element inside the Init_declarator list int x, x = 9, int y = 8;
-            // note here we assume we only assign to the last element declared in the variable.
             if (point_to_list_element->get_Val())
             {
                 //{1, 2, 3 }
@@ -168,4 +194,13 @@ std::vector<FloatDoubleConst> Global_Declaration_Mips::get_Float_Const(){
 }
 std::vector<std::string> Global_Declaration_Mips::get_String_Const(){
     return branch[0]->get_String_Const();
+}
+
+bool Global_Declaration_Mips::is_Array() const
+{
+    return branch[0]->is_Array();
+}
+
+bool Global_Declaration_Mips::is_init() const{
+    return branch[0]->is_init();
 }

@@ -13,7 +13,7 @@ void Condition_Expression_Mips::generateMips(std::ostream &dst, Context &context
     std::string Largest_Type;
     int tmp_size, max_size;
     std::string tmp_type;
-    // std::cout << "teseeese" << std::endl;
+    // std::cerr << "teseeese" << std::endl;
     //  for (int i = 0; i < branch[0]->get_size(); i++)
     //  {
 
@@ -41,12 +41,12 @@ void Condition_Expression_Mips::generateMips(std::ostream &dst, Context &context
     //     break;
     // }
     // std::cerr <<"# ----------------------------------------" << std::endl;
-
+    context.print_local();
     if (context.find_local("$DynamicContext").type_name == "NotDefined")
     {
         std::string left_ID = branch[0]->get_cloest_Id();
-        std::cerr << "#"
-                  << " ID: " << left_ID << std::endl;
+        std::cerr << "#<--------------------------"
+                  << "Condition_Expression ID: " << left_ID << "-------------------------->" << std::endl;
         std::string type;
         if (context.is_Local(left_ID))
         {
@@ -64,30 +64,46 @@ void Condition_Expression_Mips::generateMips(std::ostream &dst, Context &context
             {
                 type = "DOUBLE";
             }
-            else if (left_ID == "FLOAT")
+            else if (left_ID == "$FLOAT")
             {
                 type = "FLOAT";
             }
-            else if (left_ID == "INT")
+            else if (left_ID == "$INT")
             {
                 type = "INT";
             }
         }
+        if (type.length() > 6)
+        {
+            if (type.substr(type.length() - 3) == "PTR")
+            {
+                type = type.erase(type.length() - 3, type.length());
+            }
+            else if (type.substr(type.length() - 5) == "Array")
+            {
+                type = type.erase(type.length() - 5, type.length());
+            }
+            else
+            {
+                std::cerr << "# struct ? i dont understand" << std::endl;
+            }
+        }
 
-        std::cout << "#"
-                  << "Condition Expression TYPE: " << Largest_Type << std::endl;
+        std::cerr << "#"
+                  << "Condition Expression TYPE: " << type << std::endl;
 
         context.assign_type_to_local_var("$DynamicContext", type);
     }
-    // std::cout << "tes1234eeee" << std::endl;
+    // std::cerr << "tes1234eeee" << std::endl;
     if (branch[0]->is_Constant() || branch[0]->is_Identifier())
     {
-        // std::cout << "teseeee" << std::endl;
+        // std::cerr << "teseeee" << std::endl;
         current_offset = dynamic_offset;
-        // std::cout << "teseeee234" << std::endl;
+        // std::cerr << "teseeee234" << std::endl;
         branch[0]->generateMips(dst, context, destReg, make_name, dynamic_offset);
         dst << "sw "
-            << "$" << destReg << "," << current_offset << "($30)" << std::endl;
+            << "$" << destReg << "," << current_offset << "($30)"
+            << "# ----------------------------------------" << std::endl;
     }
     else
     {
@@ -102,7 +118,7 @@ void Condition_Expression_Mips::generateMips(std::ostream &dst, Context &context
 
 void Condition_Expression_Mips::generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type)
 {
-    // std::cout << "<----------------------------------Condition_Expression_Mips " << type << " ------------------------------------->" << std::endl;
+    // std::cerr << "<----------------------------------Condition_Expression_Mips " << type << " ------------------------------------->" << std::endl;
     branch[0]->generateFloatMips(dst, context, destReg, make_name, dynamic_offset, type);
 }
 
@@ -139,12 +155,18 @@ int Condition_Expression_Mips::return_dynamic_offset()
 
 std::string Condition_Expression_Mips::get_Id() const
 {
-    // std::cout << "# this is a tmp solution" << std::endl;
+    // std::cerr << "# this is a tmp solution" << std::endl;
     return branch[0]->get_Id();
 }
 std::vector<FloatDoubleConst> Condition_Expression_Mips::get_Float_Const()
 {
+    // std::cerr << " # Im inside conditional" << std::endl;
     return branch[0]->get_Float_Const();
+}
+double Condition_Expression_Mips::get_Float() const
+{
+    // std::cerr << " # Im inside conditional" << std::endl;
+    return branch[0]->get_Float();
 }
 
 std::vector<std::string> Condition_Expression_Mips::get_String_Const()
@@ -164,7 +186,13 @@ std::string Condition_Expression_Mips::return_expression_type(Context context)
 {
     return branch[0]->return_expression_type(context);
 }
+
 bool Condition_Expression_Mips::is_Identifier() const
 {
-    branch[0]->is_Identifier();
+    return branch[0]->is_Identifier();
+}
+
+int Condition_Expression_Mips::get_Val() const
+{
+    return branch[0]->get_Val();
 }

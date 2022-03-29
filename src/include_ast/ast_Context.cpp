@@ -119,7 +119,7 @@ void Context::sync_local_context(Context upperpart, Context initialpart)
     std::map<std::string, Local_var> UPPER = upperpart.extract_local_var();
     std::map<std::string, type_storage> UPPER_TYPE = upperpart.Type_Str;
     Type_Str = initialpart.Type_Str;
-    // std::cout << "current size sync$" << Type_Str.find("STRUCTx")->second.type_size << std::endl;
+    // std::cerr << "current size sync$" << Type_Str.find("STRUCTx")->second.type_size << std::endl;
     //  place all the content inside the upperpart into vector ordered by index.
     for (std::map<std::string, Local_var>::const_iterator it = UPPER.begin(); it != UPPER.end(); ++it)
     {
@@ -212,6 +212,7 @@ void Context::sync_local_context(Context upperpart, Context initialpart)
     Function_Ending_Label = upperpart.Function_Ending_Label;
     Float_const_str = upperpart.Float_const_str;
     String_str = upperpart.String_str;
+    DFinnerarray_Str = upperpart.DFinnerarray_Str;
 }
 
 // std::vector<std::string> Context::extract_break_label(){
@@ -285,21 +286,21 @@ void Context::print_context()
 }
 void Context::print_local()
 {
-    std::cout << "#" << std::endl;
-    std::cout << "#"
+    std::cerr << "#" << std::endl;
+    std::cerr << "#"
               << "inside Local Var: Name : Type | Offset | Index | Is_called | Enum val" << std::endl;
     for (std::map<std::string, Local_var>::const_iterator it = Localvar.begin(); it != Localvar.end(); ++it)
     {
-        std::cout << "#" << it->first << ": " << it->second.type_name << " | " << it->second.offset << " | " << it->second.index << " | " << it->second.is_called << " | " << it->second.enum_val << std::endl;
+        std::cerr << "#" << it->first << ": " << it->second.type_name << " | " << it->second.offset << " | " << it->second.index << " | " << it->second.is_called << " | " << it->second.enum_val << std::endl;
     }
 
-    std::cout << "#"
+    std::cerr << "#"
               << "inside Local Var Waiting for Declared" << std::endl;
     for (int i = 0; i < LocalVarWaitingForDeclared.size(); i++)
     {
-        std::cout << "#" << LocalVarWaitingForDeclared[i] << std::endl;
+        std::cerr << "#" << LocalVarWaitingForDeclared[i] << std::endl;
     }
-    std::cout << "#" << std::endl;
+    std::cerr << "#" << std::endl;
 }
 
 void Context::print_global()

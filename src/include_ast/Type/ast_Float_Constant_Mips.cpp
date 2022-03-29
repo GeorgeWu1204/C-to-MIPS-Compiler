@@ -17,6 +17,19 @@ void Float_Constant_Mips::generateFloatMips(std::ostream &dst, Context &context,
         << ",%lo($" << context.Float_const_str.find(float_number)->second.Label_val << ")($2)" << std::endl;
   }
 }
+void Float_Constant_Mips::generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset)
+{
+  if (context.Float_const_str.find(float_number) != context.Float_const_str.end())
+  {
+    dst << "lui "
+        << "$2,"
+        << "%hi"
+        << "($" << context.Float_const_str.find(float_number)->second.Label_val << ")" << std::endl;
+    dst << "lwc1 "
+        << "$f0"
+        << ",%lo($" << context.Float_const_str.find(float_number)->second.Label_val << ")($2)" << std::endl;
+  }
+}
 
 double Float_Constant_Mips::get_Float() const
 {

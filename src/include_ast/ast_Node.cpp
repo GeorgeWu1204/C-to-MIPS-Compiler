@@ -200,6 +200,7 @@ bool Node::is_Conditional_Expression() const
 }
 int Node::Dynamic_context_size()
 {
+    // std::cerr << "# This is a empty slope " << std::endl;
     return 0;
 }
 int Node::return_dynamic_offset()
@@ -252,7 +253,8 @@ bool Node::is_Assignment() const
 {
     return false;
 }
-bool Node::is_Type_Specified() const{
+bool Node::is_Type_Specified() const
+{
     return false;
 }
 
@@ -298,18 +300,27 @@ bool Node::is_Float_Constant() const
     return false;
 }
 double Node::get_Float() const
-{}
+{
+}
 
 std::string Node::get_cloest_Id() const
 {
     return "# Tried to obtain sth not exited";
 }
 
-std::vector<std::string> Node:: get_String_Const(){
+std::vector<std::string> Node::get_String_Const()
+{
     return std::vector<std::string>();
 }
-
 std::string Node::return_expression_type(Context context)
 {
-    std::cout << "#Tried to obtain not implemented overaall type " << std::endl;
+    std::cerr << "#Tried to obtain not implemented overaall type " << std::endl;
+}
+std::vector<double> Node::construct_double_const_list()
+{
+    return std::vector<double>();
+}
+std::vector<InnerFDarray> Node::return_df_array_list()
+{
+    return std::vector<InnerFDarray>();
 }

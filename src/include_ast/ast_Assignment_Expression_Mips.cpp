@@ -23,7 +23,6 @@ std::string Assignment_Expression_Mips::get_Id() const
 
 void Assignment_Expression_Mips::generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset)
 {
-
     std::cerr << "#"
               << "In assignment expressiono" << std::endl;
     std::cerr << "#"
@@ -33,67 +32,125 @@ void Assignment_Expression_Mips::generateMips(std::ostream &dst, Context &contex
     // sos
     if (context.find_local("$DynamicContext").type_name == "NotDefined")
     {
-        std::cerr << "#"
-                  << "Assignment Expression TYPE: " << branch[0]->get_type() << std::endl;
-        context.assign_type_to_local_var("$DynamicContext", context.find_local(branch[0]->get_Id()).type_name);
-    }
-    // unary expression assignment expression
+        // std::cerr << "#"
+        //           << "Assignment Expression TYPE: " << branch[0]->return_expression_type(context) << std::endl;
+        // context.assign_type_to_local_var("$DynamicContext", branch[0]->return_expression_type(context));
 
-    // stored in register
-
-    // note that int x, y, z  = 9; only assign value to the last variable.
-    if (branch[0]->is_Identifier() && context.is_Local(branch[0]->get_Id()))
-    {
-        // std::cerr << "#" << "In assignment local identifier" << std::endl;
-        Local_var tmp = context.find_local(branch[0]->get_Id());
-        if (tmp.type_name == "DOUBLE" || tmp.type_name == "FLOAT")
+        std::string tmp_type = "NotDefined";
+        if (context.is_Local(branch[0]->get_Id()))
         {
-            std::cout << "#check double" << std::endl;
-            branch[1]->generateFloatMips(dst, context, destReg, make_name, dynamic_offset, tmp.type_name); // check
-            int higher_offset = stoi(context.find_local(branch[0]->get_Id()).offset);
-            if (tmp.type_name == "DOUBLE")
+            tmp_type = context.find_local(branch[0]->get_Id()).type_name;
+        }
+        else if (context.is_Global(branch[0]->get_Id()))
+        {
+            tmp_type = context.find_global(branch[0]->get_Id()).type_name;
+        }
+        std::cerr << "# <--------------------------------------- dynamic type " << tmp_type << " ---------------------------------------> " << std::endl;
+        if (tmp_type.length() > 6)
+        {
+            if (tmp_type.substr(tmp_type.length() - 3) == "PTR")
             {
-
-                // sos not sure if default f0/f1 is gonna work
-                std::cout << "swc1 "
-                          << "$f" << destReg << "," << higher_offset << "("
-                          << "$30"
-                          << ")" << std::endl;
-                std::cout << "swc1 "
-                          << "$f" << destReg + 1 << "," << higher_offset - 4 << "("
-                          << "$30"
-                          << ")" << std::endl;
+                tmp_type = tmp_type.erase(tmp_type.length() - 3, tmp_type.length());
+            }
+            else if (tmp_type.substr(tmp_type.length() - 5) == "Array")
+            {
+                tmp_type = tmp_type.erase(tmp_type.length() - 5, tmp_type.length());
             }
             else
             {
-                std::cout << "swc1 "
-                          << "$f" << destReg << "," << higher_offset << "("
-                          << "$30"
-                          << ")" << std::endl;
+                std::cerr << "# struct ? i dont understand" << std::endl;
             }
-            // store to the stack
-            // dst << "sw"
-            //     << " $" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << "("
-            //     << "$30"
-            //     << ")" << std::endl;
         }
-        else if(tmp.type_name == "CHAR")
+        std::cerr << "# <--------------------------------------- dynamic type after " << tmp_type << " ---------------------------------------> " << std::endl;
+        context.assign_type_to_local_var("$DynamicContext", tmp_type);
+        // INTARRAY
+        // SOSOSOSOOSOSOSOSOSOSOSOSO
+    }
+    std::cerr << "# dynamic done" << std::endl;
+    // unary expression assignment expression
+    // stored in register
+    // note that int x, y, z  = 9; only assign value to the last variable.
+    if (branch[0]->is_Identifier())
+    {
+
+        if (context.is_Local(branch[0]->get_Id()))
         {
-            branch[1]->generateMips(dst, context, destReg, make_name, dynamic_offset); // check
-            dst << "sb " << "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset <<"($30)" << std::endl;
+            // std::cerr << "#" << "In assignment local identifier" << std::endl;
+            Local_var tmp = context.find_local(branch[0]->get_Id());
+            if (tmp.type_name == "DOUBLE" || tmp.type_name == "FLOAT")
+            {
+                std::cerr << "#check double" << std::endl;
+                branch[1]->generateFloatMips(dst, context, destReg, make_name, dynamic_offset, tmp.type_name); // check
+                int higher_offset = stoi(context.find_local(branch[0]->get_Id()).offset);
+                if (tmp.type_name == "DOUBLE")
+                {
+
+                    // sos not sure if default f0/f1 is gonna work
+                    std::cerr << "swc1 "
+                              << "$f" << destReg << "," << higher_offset << "("
+                              << "$30"
+                              << ")" << std::endl;
+                    std::cerr << "swc1 "
+                              << "$f" << destReg + 1 << "," << higher_offset - 4 << "("
+                              << "$30"
+                              << ")" << std::endl;
+                }
+                else
+                {
+                    std::cerr << "swc1 "
+                              << "$f" << destReg << "," << higher_offset << "("
+                              << "$30"
+                              << ")" << std::endl;
+                }
+                // store to the stack
+                // dst << "sw"
+                //     << " $" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << "("
+                //     << "$30"
+                //     << ")" << std::endl;
+            }
+            else if (tmp.type_name == "CHAR")
+            {
+                branch[1]->generateMips(dst, context, destReg, make_name, dynamic_offset); // check
+                dst << "sb "
+                    << "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << "($30)" << std::endl;
+            }
+            else
+            {
+
+                branch[1]->generateMips(dst, context, destReg, make_name, dynamic_offset); // check
+                dst << "sw"
+                    << " $" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << "("
+                    << "$30"
+                    << ")" << std::endl;
+            }
         }
-        else
+        else if (context.is_Global(branch[0]->get_Id()))
         {
 
-            branch[1]->generateMips(dst, context, destReg, make_name, dynamic_offset); // check
-            dst << "sw"
-                << " $" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << "("
-                << "$30"
-                << ")" << std::endl;
+            Global_var tmp = context.find_global(branch[0]->get_Id());
+            if (tmp.type_name == "DOUBLE" || tmp.type_name == "FLOAT")
+            { // SOS not cover yet
+            }
+            else if (tmp.type_name == "CHAR")
+            {
+            }
+            else
+            {
+                // INT
+                branch[1]->generateMips(dst, context, 3, make_name, dynamic_offset); // check
+                // Left Side
+                dst << "lui "
+                    << "$" << destReg << ",%hi(" << branch[0]->get_Id() << ")" << std::endl;
+                dst << "sw "
+                    << "$3"
+                    << ",%lo(" << branch[0]->get_Id() << ")("
+                    << "$" << destReg << ")" << std::endl;
+            }
         }
     }
     else if (branch[0]->is_Pointer())
     {
+
         std::cerr << "# is Pointer Assignment" << std::endl;
         dst << "lw "
             << "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << "("
@@ -109,8 +166,8 @@ void Assignment_Expression_Mips::generateMips(std::ostream &dst, Context &contex
             << ")" << std::endl;
     }
     else if (branch[0]->is_Array())
-    {   
-        
+    {
+        // std::cerr << "inside assi" << std::endl;
 
         // std::cerr << "#" << "In assignment array could be global or local" << std::endl;
         //  x[0]
@@ -118,36 +175,36 @@ void Assignment_Expression_Mips::generateMips(std::ostream &dst, Context &contex
         // std::cerr << "#" << "<----check content___." << std::endl;
         // context.print_context();
 
-/*
-        branch[1]->generateMips(dst, context, destReg, make_name, dynamic_offset);
-        int result_address = branch[1]->return_dynamic_offset();
-        dst << "lw "
-            << "$5," << result_address << "($30)" << std::endl;
-        dst << "nop " << std::endl;
+        /*
+                branch[1]->generateMips(dst, context, destReg, make_name, dynamic_offset);
+                int result_address = branch[1]->return_dynamic_offset();
+                dst << "lw "
+                    << "$5," << result_address << "($30)" << std::endl;
+                dst << "nop " << std::endl;
 
-        Local_var tmp = context.find_local(branch[0]->get_Id());
-        if (tmp.type_name == "CHARPTR")
-        {
-            dst << "lw"
-                << "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << "($30)" << std::endl;
-            // dst << "li "<< "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << std::endl;
-            dst << "subu $5,"
-                << "$" << destReg << ", $5" << std::endl;
-            dst << "lbu "
-                << "$" << destReg << ",$5($30)" << std::endl;
-        }
+                Local_var tmp = context.find_local(branch[0]->get_Id());
+                if (tmp.type_name == "CHARPTR")
+                {
+                    dst << "lw"
+                        << "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << "($30)" << std::endl;
+                    // dst << "li "<< "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << std::endl;
+                    dst << "subu $5,"
+                        << "$" << destReg << ", $5" << std::endl;
+                    dst << "lbu "
+                        << "$" << destReg << ",$5($30)" << std::endl;
+                }
 
-        else if (tmp.type_name == "CHARArray")
-        {
-            dst << "li "
-                << "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << std::endl;
-            dst << "subu $5,"
-                << "$" << destReg << ", $5" << std::endl;
-            dst << "lbu "
-                << "$" << destReg << ",$5($30)" << std::endl;
-        }
-*/
-
+                else if (tmp.type_name == "CHARArray")
+                {
+                    dst << "li "
+                        << "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << std::endl;
+                    dst << "subu $5,"
+                        << "$" << destReg << ", $5" << std::endl;
+                    dst << "lbu "
+                        << "$" << destReg << ",$5($30)" << std::endl;
+                }
+        */
+        // std::cerr << "#inside assignmenet" << std::endl;
         if (context.is_Local(branch[0]->get_Id()))
         {
             Local_var tmp = context.find_local(branch[0]->get_Id());
@@ -166,7 +223,9 @@ void Assignment_Expression_Mips::generateMips(std::ostream &dst, Context &contex
                 dst << "subu $5,"
                     << "$" << destReg << ", $5" << std::endl;
                 branch[1]->generateMips(dst, context, 3, make_name, dynamic_offset);
-                dst << "sb " << "$3"<< ",$5($30)" << std::endl;
+                dst << "sb "
+                    << "$3"
+                    << ",$5($30)" << std::endl;
             }
             else
             {
@@ -176,9 +235,10 @@ void Assignment_Expression_Mips::generateMips(std::ostream &dst, Context &contex
                         << "$5,"
                         << "$5,"
                         << "2" << std::endl;
-                }else if(context.find_local(branch[0]->get_Id()).type_name == "CHARArray")
-                {  
-                    //do nothing
+                }
+                else if (context.find_local(branch[0]->get_Id()).type_name == "CHARArray")
+                {
+                    // do nothing
                 }
                 dst << "li "
                     << "$" << destReg << "," << context.find_local(branch[0]->get_Id()).offset << std::endl;
@@ -211,7 +271,7 @@ void Assignment_Expression_Mips::generateMips(std::ostream &dst, Context &contex
                 << "$" << destReg << ","
                 << "%hi"
                 << "(" << branch[0]->get_Id() << ")" << std::endl;
-            dst << "addu "
+            dst << "addiu "
                 << "$" << destReg << ","
                 << "$" << destReg << ","
                 << "%lo"
@@ -225,12 +285,17 @@ void Assignment_Expression_Mips::generateMips(std::ostream &dst, Context &contex
             dst << "lw "
                 << "$5"
                 << "," << result_address << "($30)" << std::endl;
-            if (context.find_global(branch[0]->get_Id()).type_name == "INTArray")
+            context.print_global();
+            if (context.is_Global(branch[0]->get_Id()))
             {
-                dst << "sll "
-                    << "$5,"
-                    << "$5,"
-                    << "2" << std::endl;
+                // std::cerr << "is in global" << std::endl;
+                if (context.find_global(branch[0]->get_Id()).type_name == "INTArray")
+                {
+                    dst << "sll "
+                        << "$5,"
+                        << "$5,"
+                        << "2" << std::endl;
+                }
             }
             // multiply by 4 and add to the array 0 offset address
             //  calculate array index
@@ -255,15 +320,16 @@ void Assignment_Expression_Mips::generateMips(std::ostream &dst, Context &contex
     }
     else if (branch[0]->is_Struct_Call())
     {
-        // std::cout << "#in struct call" << std::endl;
+
+        // std::cerr << "#in struct call" << std::endl;
         if (context.is_Local(branch[0]->get_Id()))
         {
             int tmp_offset = stoi(context.find_local(branch[0]->get_Id()).offset);
-            // std::cout << "check 1" << tmp_offset <<std::endl;
+            // std::cerr << "check 1" << tmp_offset <<std::endl;
             // x.y.z = ((x.y).z).g
             tmp_offset -= branch[0]->get_struct_variable_offset(context);
             // context.Type_Str.find(context.find_local(branch[0]->get_Id()).type_name)->second.struct_content.find(branch[1]->get_Id())->second.offset;
-            // std::cout << "check 2" << tmp_offset << std::endl;
+            // std::cerr << "check 2" << tmp_offset << std::endl;
             branch[1]->generateMips(dst, context, 3, make_name, dynamic_offset);
             dst << "sw"
                 << " $3," << tmp_offset << "($30)" << std::endl;
@@ -271,7 +337,7 @@ void Assignment_Expression_Mips::generateMips(std::ostream &dst, Context &contex
         }
         else if (context.is_Global(branch[0]->get_Id()))
         { // global
-            // std::cout << "#inside global" << std::endl;
+            // std::cerr << "#inside global" << std::endl;
             int tmp_offset = stoi(context.find_global(branch[0]->get_Id()).offset);
             // tmp_offset += context.Type_Str.find(branch[0]->get_type())->second.struct_content.find(branch[1]->get_Id())->second.offset;
             branch[1]->generateMips(dst, context, 3, make_name, dynamic_offset);

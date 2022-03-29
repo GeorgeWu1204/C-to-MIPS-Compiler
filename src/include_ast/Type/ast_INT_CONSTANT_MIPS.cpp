@@ -11,6 +11,15 @@ void Int_Constant_Mips::generateMips(std::ostream &dst, Context &context, int de
         << "$" << destReg << "," << get_Val() << std::endl;
     // assign the val to a register? allocate register
 }
+
+
+
+void Int_Constant_Mips::generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type)
+{
+    dst << "li "
+            << "$" << destReg << "," << get_Val() << std::endl;
+}
+
 // void Int_Constant_Mips::prettyPrint(std::ostream &dst)
 // {
 //     dst << "Integer = " << int_number << std::endl;

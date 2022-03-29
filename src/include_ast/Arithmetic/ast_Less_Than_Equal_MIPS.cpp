@@ -65,7 +65,6 @@ void Less_Than_Equal_MIPS::generateMips(std::ostream &dst, Context &context, int
     dst << "sw "
         << "$" << destReg << "," << current_offset << "($30)" << std::endl;
 
-    // less than, if $3 < $4
 }
 int Less_Than_Equal_MIPS::get_arithmetic_const_val()
 {

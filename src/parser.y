@@ -441,7 +441,7 @@ Iteration_statement
   ;
 
 Jump_statemnet
-  : RETURN  ';'                                                          { $$ = new Return_Mips();}
+  : RETURN  ';'                                                          { $$ = new Return_Mips(new Type_Mips("VOID"));}
   | BREAK ';'                                                            { $$ = new Break_Mips();}
   | CONTINUE ';'                                                         { $$ = new Continuous_Mips();}
   | RETURN Expression ';'                                                { $$ = new Return_Mips($2);}
@@ -454,9 +454,9 @@ Jump_statemnet
 
 NodePtr g_root;
 
-const NodePtr parseAST(std::string filename)
+/* const NodePtr parseAST(char* filename)
 {
-  yyin = fopen(filename.c_str(), "r");
+  yyin = fopen(filename, "r");
   std::cerr << "#" << " opening input file: " << std::endl;
   if(yyin == NULL){
     std::cerr << "#Couldn't open input file: " << filename << std::endl;
@@ -468,6 +468,18 @@ const NodePtr parseAST(std::string filename)
 
   std::cerr <<"#lexer pass" << std::endl;
   return g_root;
+} */
+
+
+const NodePtr parseAST()
+{
+
+  g_root=NULL;
+
+  yyparse();
+
+  return g_root;
+
 }
 
 /*

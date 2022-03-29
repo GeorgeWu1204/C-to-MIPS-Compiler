@@ -28,6 +28,8 @@ public:
     bool is_Pointer() const override;
     std::vector<FloatDoubleConst> get_Float_Const() override;
     std::vector<std::string> get_String_Const() override;
+    std::vector<double> construct_double_const_list() override;
+    int get_arithmetic_const_val() override;
 };
 
 #endif

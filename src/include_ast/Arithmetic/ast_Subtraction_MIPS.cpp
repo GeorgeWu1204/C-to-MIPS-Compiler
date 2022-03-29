@@ -8,13 +8,10 @@ Subtraction_MIPS::Subtraction_MIPS(NodePtr leftinput, NodePtr rightinput)
 void Subtraction_MIPS::generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset)
 {
     std::string left_ID = branch[0]->get_cloest_Id();
-    std::cout << "#<--------------------------------------Cloest ID " << left_ID << "---------------------------------->" << std::endl;
-    std::cout << "#<--------------------------------------Context---------------------------------->" << std::endl;
     std::string type;
     if (context.is_Local(left_ID))
     {
         type = context.find_local(left_ID).type_name;
-        std::cout << "#<--------------------------------------type " << type << "---------------------------------->" << std::endl;
     }
     else if (context.is_Global(left_ID))
     {
@@ -45,8 +42,8 @@ void Subtraction_MIPS::generateMips(std::ostream &dst, Context &context, int des
         generate_left(dst, context, 3, branch[0], make_name, dynamic_offset);  // Identifier
         generate_right(dst, context, 4, branch[1], make_name, dynamic_offset); // Express
         std::cerr << "#"
-                << "Dynamic Offset: " << dynamic_offset << std::endl;
-        if (branch[0]->is_Identifier() || branch[0]->is_Constant() || branch[0]->is_Struct_Call()|| branch[0]->is_Pointer())
+                  << "Dynamic Offset: " << dynamic_offset << std::endl;
+        if (branch[0]->is_Identifier() || branch[0]->is_Constant() || branch[0]->is_Struct_Call() || branch[0]->is_Pointer())
         {
             generate_left(dst, context, 3, branch[0], make_name, dynamic_offset);
         }
@@ -64,6 +61,7 @@ void Subtraction_MIPS::generateMips(std::ostream &dst, Context &context, int des
             dst << "lw "
                 << "$4," << branch[1]->return_dynamic_offset() << "($30)" << std::endl;
         }
+        std::cerr << "# found 1" << std::endl;
         std::string type = context.find_local("$DynamicContext").type_name;
         // std::cerr << "#" << context.find_local("$DynamicContext").type_name << std::endl;
         if (type == "INT")
@@ -79,41 +77,122 @@ void Subtraction_MIPS::generateMips(std::ostream &dst, Context &context, int des
             // std::cerr << "#" << "ADD error Dynamic Reference Type not set up" << std::endl;
         }
         current_offset = dynamic_offset;
-        dst << "nop" << std::endl;
-        // greater than
-        dst << "subu "
-            << "$" << destReg
-            << ",$3"
-            << ","
-            << "$4" << std::endl;
+
+        bool leftpointer = false;
+        bool rightpointer = false;
+        std::string stringtest;
+        if (context.is_Local(Left->get_Id()))
+        {
+            stringtest = context.find_local(Left->get_Id()).type_name;
+            if (stringtest.length() > 3 && stringtest != "CHARPTR")
+            {
+                if (stringtest.substr(stringtest.length() - 3) == "PTR")
+                {
+                    leftpointer = true;
+                }
+            }
+        }
+        else if (context.is_Global(Left->get_Id()))
+        {
+            stringtest = context.find_global(Left->get_Id()).type_name;
+            if (stringtest.length() > 3 && stringtest != "CHARPTR")
+            {
+                if (stringtest.substr(stringtest.length() - 3) == "PTR")
+                {
+                    leftpointer = true;
+                }
+            }
+        }
+        if (context.is_Local(Right->get_Id()))
+        {
+            stringtest = context.find_local(Right->get_Id()).type_name;
+            if (stringtest.length() > 3 && stringtest != "CHARPTR")
+            {
+                if (stringtest.substr(stringtest.length() - 3) == "PTR")
+                {
+                    rightpointer = true;
+                }
+            }
+        }
+        else if (context.is_Global(Right->get_Id()))
+        {
+            stringtest = context.find_global(Right->get_Id()).type_name;
+            if (stringtest.length() > 3 && stringtest != "CHARPTR")
+            {
+                if (stringtest.substr(stringtest.length() - 3) == "PTR")
+                {
+                    rightpointer = true;
+                }
+            }
+        }
+
+        if (leftpointer && rightpointer)
+        {
+            dst << "nop" << std::endl;
+            // greater than
+            dst << "subu "
+                << "$" << destReg
+                << ",$4"
+                << ","
+                << "$3" << std::endl;
+            dst << "sra "
+                << "$" << destReg << ",$" << destReg << ",2" << std::endl;
+        }
+
+        else if (leftpointer == true && rightpointer == false)
+        {
+            // offset + a - 4 = myoffset - a - 4 gg
+            dst << "nop" << std::endl;
+            dst << "sll $4, 2" << std::endl;
+            dst << "nop" << std::endl;
+            // greater than
+            dst << "subu "
+                << "$" << destReg
+                << ",$3"
+                << ","
+                << "$4" << std::endl;
+        }
+        else if (leftpointer == true && rightpointer == false)
+        {
+            dst << "nop" << std::endl;
+            dst << "sll $4, 2" << std::endl;
+            dst << "nop" << std::endl;
+            // greater than
+            dst << "subu "
+                << "$" << destReg
+                << ",$3"
+                << ","
+                << "$4" << std::endl;
+        }
+        else
+        {
+            dst << "nop" << std::endl;
+
+            // greater than
+            dst << "subu "
+                << "$" << destReg
+                << ",$3"
+                << ","
+                << "$4" << std::endl;
+        }
 
         dst << "sw "
             << "$" << destReg << "," << current_offset << "($30)" << std::endl;
-    // need to decide whether shift left logical or shift left logical variable?
-    // assume only use registers for all instructions
+        // need to decide whether shift left logical or shift left logical variable?
+        // assume only use registers for all instructions
 
-    // decide whether to use srav?
+        // decide whether to use srav?
     }
 }
 void Subtraction_MIPS::generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type)
 {
-    // lwc1    $f2,8($fp)
-    // lwc1    $f0,24($fp)
-    // nop
-    // add.s   $f0,$f2,$f0
-    // swc1    $f0,8($fp)
-
-    std::cout << "#<--------------------------------------Left " << destReg << "---------------------------------->" << std::endl;
     generateFloat_left(dst, context, 2, branch[0], make_name, dynamic_offset, type);
-    std::cout << "#<--------------------------------------Right " << destReg << "---------------------------------->" << std::endl;
     generateFloat_right(dst, context, 4, branch[1], make_name, dynamic_offset, type);
-    
 
     if (branch[0]->is_Identifier() || branch[0]->is_Struct_Call() || branch[0]->is_Constant())
     {
-        std::cout << "# Generate Left Start " << std::endl;
+
         generateFloat_left(dst, context, 2, branch[0], make_name, dynamic_offset, type); // Identifier
-        std::cout << "# Generate Left Done" << std::endl;
     }
     else
     {
@@ -150,10 +229,9 @@ void Subtraction_MIPS::generateFloatMips(std::ostream &dst, Context &context, in
                 << "$f4," << branch[0]->return_dynamic_offset() << "($30)" << std::endl;
         }
     }
-    // type = context.find_local("$DynamicContext").type_name;
+
     std::cerr << "#"
               << "type: " << type << std::endl;
-    // std::cerr << "#" << context.find_local("$DynamicContext").type_name << std::endl;
     if (type == "FLOAT")
     {
         std::cerr << "#"
@@ -195,8 +273,6 @@ void Subtraction_MIPS::generateFloatMips(std::ostream &dst, Context &context, in
             << "$f" << destReg + 1 << "," << current_offset << "($30)" << std::endl;
     }
 }
-// dst << "mflo " << destReg << std::endl;
-// SOS why we only consider mflo here？
 
 int Subtraction_MIPS::get_arithmetic_const_val()
 

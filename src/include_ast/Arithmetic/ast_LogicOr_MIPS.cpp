@@ -11,7 +11,7 @@ void LogicOr_MIPS::generateMips(std::ostream &dst, Context &context, int destReg
     generate_right(dst, context, 4, branch[1], make_name, dynamic_offset); // Express
     // std::cerr << "#"
     //           << "Dynamic Offset: " << dynamic_offset << std::endl;
-    if (branch[0]->is_Identifier() || branch[0]->is_Constant() || branch[0]->is_Struct_Call()|| branch[0]->is_Pointer())
+    if (branch[0]->is_Identifier() || branch[0]->is_Constant() || branch[0]->is_Struct_Call() || branch[0]->is_Pointer())
     {
         generate_left(dst, context, 3, branch[0], make_name, dynamic_offset);
     }
@@ -58,6 +58,7 @@ void LogicOr_MIPS::generateMips(std::ostream &dst, Context &context, int destReg
     dst << "beq "
         << "$4,"
         << "$0," << false_position << std::endl;
+    dst << suc_position << ":" << std::endl;
     dst << "nop " << std::endl;
     dst << "li "
         << "$2," << 1 << std::endl;
@@ -71,6 +72,7 @@ void LogicOr_MIPS::generateMips(std::ostream &dst, Context &context, int destReg
     dst << jump_out << ":" << std::endl;
     dst << "sw "
         << "$" << destReg << "," << current_offset << "($30)" << std::endl;
+
     // greater than
 }
 

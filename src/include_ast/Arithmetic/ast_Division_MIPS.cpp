@@ -8,13 +8,13 @@ Division_MIPS::Division_MIPS(NodePtr leftinput, NodePtr rightinput)
 void Division_MIPS::generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset)
 {
     std::string left_ID = branch[0]->get_cloest_Id();
-    std::cout << "#<--------------------------------------Cloest ID " << left_ID << "---------------------------------->" << std::endl;
-    std::cout << "#<--------------------------------------Context---------------------------------->" << std::endl;
+    std::cerr << "#<--------------------------------------Cloest ID " << left_ID << "---------------------------------->" << std::endl;
+    std::cerr << "#<--------------------------------------Context---------------------------------->" << std::endl;
     std::string type;
     if (context.is_Local(left_ID))
     {
         type = context.find_local(left_ID).type_name;
-        std::cout << "#<--------------------------------------type " << type << "---------------------------------->" << std::endl;
+        std::cerr << "#<--------------------------------------type " << type << "---------------------------------->" << std::endl;
     }
     else if (context.is_Global(left_ID))
     {
@@ -45,8 +45,8 @@ void Division_MIPS::generateMips(std::ostream &dst, Context &context, int destRe
         generate_left(dst, context, 3, branch[0], make_name, dynamic_offset);  // Identifier
         generate_right(dst, context, 4, branch[1], make_name, dynamic_offset); // Express
         std::cerr << "#"
-                << "Dynamic Offset: " << dynamic_offset << std::endl;
-        if (branch[0]->is_Identifier() || branch[0]->is_Constant() || branch[0]->is_Struct_Call()|| branch[0]->is_Pointer())
+                  << "Dynamic Offset: " << dynamic_offset << std::endl;
+        if (branch[0]->is_Identifier() || branch[0]->is_Constant() || branch[0]->is_Struct_Call() || branch[0]->is_Pointer())
         {
             generate_left(dst, context, 3, branch[0], make_name, dynamic_offset);
         }
@@ -96,23 +96,15 @@ void Division_MIPS::generateMips(std::ostream &dst, Context &context, int destRe
 
 void Division_MIPS::generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type)
 {
-    // lwc1    $f2,8($fp)
-    // lwc1    $f0,24($fp)
-    // nop
-    // add.s   $f0,$f2,$f0
-    // swc1    $f0,8($fp)
 
-    std::cout << "#<--------------------------------------Left " << destReg << "---------------------------------->" << std::endl;
     generateFloat_left(dst, context, 2, branch[0], make_name, dynamic_offset, type);
-    std::cout << "#<--------------------------------------Right " << destReg << "---------------------------------->" << std::endl;
     generateFloat_right(dst, context, 4, branch[1], make_name, dynamic_offset, type);
-    
 
     if (branch[0]->is_Identifier() || branch[0]->is_Struct_Call() || branch[0]->is_Constant())
     {
-        std::cout << "# Generate Left Start " << std::endl;
+        std::cerr << "# Generate Left Start " << std::endl;
         generateFloat_left(dst, context, 2, branch[0], make_name, dynamic_offset, type); // Identifier
-        std::cout << "# Generate Left Done" << std::endl;
+        std::cerr << "# Generate Left Done" << std::endl;
     }
     else
     {
@@ -149,10 +141,6 @@ void Division_MIPS::generateFloatMips(std::ostream &dst, Context &context, int d
                 << "$f4," << branch[0]->return_dynamic_offset() << "($30)" << std::endl;
         }
     }
-    // type = context.find_local("$DynamicContext").type_name;
-    std::cerr << "#"
-              << "type: " << type << std::endl;
-    // std::cerr << "#" << context.find_local("$DynamicContext").type_name << std::endl;
     if (type == "FLOAT")
     {
         std::cerr << "#"
@@ -195,11 +183,6 @@ void Division_MIPS::generateFloatMips(std::ostream &dst, Context &context, int d
     }
 }
 
-
-
-// void Binary_Mul::PrettyPrint(std::ostream &dst){
-//     dst << "Identifier: " << identifier_id <<std::endl;
-// }
 int Division_MIPS::get_arithmetic_const_val()
 {
     return branch[0]->get_arithmetic_const_val() / branch[1]->get_arithmetic_const_val();

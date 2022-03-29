@@ -54,10 +54,7 @@ void Right_Shift_MIPS::generateMips(std::ostream &dst, Context &context, int des
 
     dst << "sw "
         << "$" << destReg << "," << current_offset << "($30)" << std::endl;
-    // need to decide whether shift left logical or shift left logical variable?
-    // assume only use registers for all instructions
 
-    // decide whether to use srav?
 }
 
 int Right_Shift_MIPS::get_arithmetic_const_val()

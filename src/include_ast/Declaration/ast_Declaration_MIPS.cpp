@@ -31,46 +31,37 @@ void Declaration_Mips::generateMips(std::ostream &dst, Context &context, int des
     // int a(){} new Function definition( new Declaration(), compo)
     // int f(){ int g = 0;} new function
     // int a()
-    std::cout << "# <---------------------- Declaration ------------------>" << std::endl;
+    std::cerr << "# <---------------------- Declaration ------------------>" << std::endl;
     for (int i = 1; i < branch.size(); i++)
     {
         if (branch[i]->is_Function())
         {
             dst << ".text" << std::endl;
             dst << ".globl " << branch[i]->get_Id() << std::endl;
-            // . ent f
             dst << ".ent  " << branch[i]->get_Id() << std::endl;
-            // //.type	f, @function
-            // dst << ".type  " << branch[i]->get_Id() << ", @function" << std::endl;
+
             dst << branch[i]->get_Id() << ":" << std::endl;
-            // expect rewriting content for params
         }
         else
         {
-            // expect a variable declaration
-            //std::cout << "# <---------------------- Declaration Type " << branch[0]->get_type() << "------------------>" << std::endl;
             std::string type = branch[0]->get_type();
 
             if (branch[i]->is_init())
             {
-                std::cout << "# declaration is init" << std::endl;
+                std::cerr << "# declaration is init" << std::endl;
                 if (type == "DOUBLE" || type == "FLOAT")
                 {
-                    std::cout << "# declaration in float" << std::endl;
+                    std::cerr << "# declaration in floatergth" << std::endl;
                     branch[i]->generateFloatMips(dst, context, destReg, make_name, dynamic_offset, type);
                 }
                 else
                 {
-                    std::cout << "# declaration NOT in float" << std::endl;
+                    std::cerr << "# declaration NOT in float" << std::endl;
                     branch[i]->generateMips(dst, context, destReg, make_name, dynamic_offset); // check
                 }
-                // when the branch type is INT
             }
             else
             {
-                //std::cout << "# <---------------------- Declaration Not init ------------------>" << std::endl;
-                // int x or struct x;
-                // do nothing for generate mips
             }
         }
     }

@@ -89,5 +89,6 @@
 #include "AST/Control/ast_Break_Mips.hpp"
 #include "AST/Control/ast_Continuous_Mips.hpp"
 
-extern const NodePtr parseAST(std::string filename);
+//extern const NodePtr parseAST(char* filename);
+extern const NodePtr parseAST();
 #endif

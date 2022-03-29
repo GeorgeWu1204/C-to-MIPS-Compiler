@@ -65,6 +65,9 @@ public:
     std::vector<FloatDoubleConst> Float_Const_of_this_compound;
     std::vector<std::string> get_String_Const() override;
     std::vector<std::string> String_Const_of_this_compound;
+    std::vector<InnerFDarray> return_df_array_list() override;
+    std::vector<InnerFDarray> Df_Array_List_of_this_compound;
+    
     // void add_to_InitialBuildContext(std::map<std::string, std::string> input, int &stack_index);
     // void enable_call_in_InitialBuildcontext(std::vector<std::string> input);
     //  this function is used to build a new sub context in order to pass is to the next level;

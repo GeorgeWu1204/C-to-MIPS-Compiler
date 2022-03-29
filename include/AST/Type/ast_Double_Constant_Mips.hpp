@@ -15,6 +15,7 @@ private:
 public:
   Double_Constant_Mips(double value);
   void generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type) override;
+  void generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset) override;
 
   double get_Float() const override;
   bool is_Double_Constant() const override;
@@ -23,6 +24,7 @@ public:
   std::string get_cloest_Id() const override;
   std::string get_type() const override;
   std::string return_expression_type(Context context) override;
+  
 };
 
 #endif

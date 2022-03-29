@@ -65,11 +65,3 @@ bool Enum_specifier_Mips::is_Enum() const
 {
     return true;
 }
-// bool Enum_specifier_Mips::is_Declaration() const
-// {
-//     return true;
-// }
-// enum k { RED, GREEN = 10, BLUE} a, k ,i; // declared enumerator as well as a, k, i as int;
-// enum k u; //work count as just a simple declaration , p , k;
-// enum k { RED, GREEN = 10, BLUE} p; //not going to work count as redeclaration
-// enum { RED, GREEN = 10, BLUE} p; // declared enumerator as well as p as int;

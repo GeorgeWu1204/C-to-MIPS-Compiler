@@ -16,6 +16,7 @@ public:
     //Compound_statement_Mips csm(const std::vector<NodePtr> Declaration_List, const std::vector<NodePtr> Statement_List);
     UnaryPointer_MIPS(NodePtr cast_expression);
     void generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset) override;
+    void generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type) override;
     bool is_Pointer() const override;
     std::string get_Id() const override;
     std::string return_expression_type(Context context) override;

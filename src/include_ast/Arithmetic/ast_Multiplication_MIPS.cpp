@@ -8,13 +8,10 @@ Multiplication_MIPS::Multiplication_MIPS(NodePtr leftinput, NodePtr rightinput)
 void Multiplication_MIPS::generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset)
 {
     std::string left_ID = branch[0]->get_cloest_Id();
-    std::cout << "#<--------------------------------------Cloest ID " << left_ID << "---------------------------------->" << std::endl;
-    std::cout << "#<--------------------------------------Context---------------------------------->" << std::endl;
     std::string type;
     if (context.is_Local(left_ID))
     {
         type = context.find_local(left_ID).type_name;
-        std::cout << "#<--------------------------------------type " << type << "---------------------------------->" << std::endl;
     }
     else if (context.is_Global(left_ID))
     {
@@ -46,7 +43,7 @@ void Multiplication_MIPS::generateMips(std::ostream &dst, Context &context, int 
         generate_right(dst, context, 4, branch[1], make_name, dynamic_offset); // Express
         std::cerr << "#"
                   << "Dynamic Offset: " << dynamic_offset << std::endl;
-        if (branch[0]->is_Identifier() || branch[0]->is_Constant() || branch[0]->is_Struct_Call()|| branch[0]->is_Pointer())
+        if (branch[0]->is_Identifier() || branch[0]->is_Constant() || branch[0]->is_Struct_Call() || branch[0]->is_Pointer())
         {
             generate_left(dst, context, 3, branch[0], make_name, dynamic_offset);
         }
@@ -91,26 +88,20 @@ void Multiplication_MIPS::generateMips(std::ostream &dst, Context &context, int 
         dst << "sw "
             << "$" << destReg << "," << current_offset << "($30)" << std::endl;
     }
-    // SOS why we only consider mflo here？
 }
 void Multiplication_MIPS::generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type)
 {
-    // lwc1    $f2,8($fp)
-    // lwc1    $f0,24($fp)
-    // nop
-    // add.s   $f0,$f2,$f0
-    // swc1    $f0,8($fp)
 
-    std::cout << "#<--------------------------------------Left " << destReg << "---------------------------------->" << std::endl;
+    std::cerr << "#<--------------------------------------Left " << destReg << "---------------------------------->" << std::endl;
     generateFloat_left(dst, context, 2, branch[0], make_name, dynamic_offset, type);
-    std::cout << "#<--------------------------------------Right " << destReg << "---------------------------------->" << std::endl;
+    std::cerr << "#<--------------------------------------Right " << destReg << "---------------------------------->" << std::endl;
     generateFloat_right(dst, context, 4, branch[1], make_name, dynamic_offset, type);
 
     if (branch[0]->is_Identifier() || branch[0]->is_Struct_Call() || branch[0]->is_Constant())
     {
-        std::cout << "# Generate Left Start " << std::endl;
+        std::cerr << "# Generate Left Start " << std::endl;
         generateFloat_left(dst, context, 2, branch[0], make_name, dynamic_offset, type); // Identifier
-        std::cout << "# Generate Left Done" << std::endl;
+        std::cerr << "# Generate Left Done" << std::endl;
     }
     else
     {
@@ -153,6 +144,7 @@ void Multiplication_MIPS::generateFloatMips(std::ostream &dst, Context &context,
     // std::cerr << "#" << context.find_local("$DynamicContext").type_name << std::endl;
     if (type == "FLOAT")
     {
+
         std::cerr << "#"
                   << "Dynamic Offset: " << dynamic_offset << std::endl;
         dynamic_offset -= 4;
@@ -192,9 +184,6 @@ void Multiplication_MIPS::generateFloatMips(std::ostream &dst, Context &context,
             << "$f" << destReg + 1 << "," << current_offset << "($30)" << std::endl;
     }
 }
-// void Binary_Mul::PrettyPrint(std::ostream &dst){
-//     dst << "Identifier: " << identifier_id <<std::endl;
-// }
 
 int Multiplication_MIPS::get_arithmetic_const_val()
 {

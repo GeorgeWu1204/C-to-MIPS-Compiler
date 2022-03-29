@@ -20,6 +20,8 @@ public:
     bool is_Enum() const override;
     bool is_Struct() const override;
     bool is_Struct_Declaration() const override;
+    bool is_init() const override;
+    bool is_Array() const override;
     type_storage get_type_storage() override;
     std::vector<FloatDoubleConst> get_Float_Const() override;
     std::vector<std::string> get_String_Const() override;

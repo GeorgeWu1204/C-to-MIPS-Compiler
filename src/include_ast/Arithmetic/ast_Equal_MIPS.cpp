@@ -8,13 +8,10 @@ Equal_MIPS::Equal_MIPS(NodePtr leftinput, NodePtr rightinput)
 void Equal_MIPS::generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset)
 {
     std::string left_ID = branch[0]->get_cloest_Id();
-    std::cout << "#<--------------------------------------Cloest ID " << left_ID << "---------------------------------->" << std::endl;
-    std::cout << "#<--------------------------------------Context---------------------------------->" << std::endl;
     std::string type;
     if (context.is_Local(left_ID))
     {
         type = context.find_local(left_ID).type_name;
-        std::cout << "#<--------------------------------------type " << type << "---------------------------------->" << std::endl;
     }
     else if (context.is_Global(left_ID))
     {
@@ -99,22 +96,12 @@ void Equal_MIPS::generateMips(std::ostream &dst, Context &context, int destReg, 
 }
 void Equal_MIPS::generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type)
 {
-    // lwc1    $f2,8($fp)
-    // lwc1    $f0,24($fp)
-    // nop
-    // add.s   $f0,$f2,$f0
-    // swc1    $f0,8($fp)
-
-    std::cout << "#<--------------------------------------Left " << destReg << "---------------------------------->" << std::endl;
     generateFloat_left(dst, context, 2, branch[0], make_name, dynamic_offset, type);
-    std::cout << "#<--------------------------------------Right " << destReg << "---------------------------------->" << std::endl;
     generateFloat_right(dst, context, 4, branch[1], make_name, dynamic_offset, type);
 
     if (branch[0]->is_Identifier() || branch[0]->is_Struct_Call() || branch[0]->is_Constant())
     {
-        std::cout << "# Generate Left Start " << std::endl;
         generateFloat_left(dst, context, 2, branch[0], make_name, dynamic_offset, type); // Identifier
-        std::cout << "# Generate Left Done" << std::endl;
     }
     else
     {
@@ -186,10 +173,6 @@ void Equal_MIPS::generateFloatMips(std::ostream &dst, Context &context, int dest
             << "$f2"
             << ",$f0" << std::endl;
         dst << "mfc1 $" << destReg << ", $fcc0" << std::endl;
-        // dst << "swc1 "
-        //     << "$f" << destReg << "," << current_offset + 4 << "($30)" << std::endl;
-        // dst << "swc1 "
-        //     << "$f" << destReg + 1 << "," << current_offset << "($30)" << std::endl;
     }
 }
 
@@ -197,16 +180,3 @@ int Equal_MIPS::get_arithmetic_const_val()
 {
     return branch[0]->get_arithmetic_const_val() == branch[1]->get_arithmetic_const_val();
 }
-
-//         li      $2,1                        # 0x1
-//         lwc1    $f2,8($fp)
-//         lwc1    $f0,12($fp)
-//         nop
-//         c.eq.s  $f2,$f0
-//         nop
-//         bc1t    $L2
-//         nop
-
-//         move    $2,$0
-// $L2:
-//         andi    $2,$2,0x00ff

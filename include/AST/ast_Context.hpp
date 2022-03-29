@@ -75,7 +75,6 @@ public:
         index = index_input;
         enum_val = 0;
     }
-    
 
     void assign_enum_val(int input)
     {
@@ -102,95 +101,123 @@ public:
 
 class type_storage
 {
-    //INT DOUBLE Specific type
+    // INT DOUBLE Specific type
 private:
     int index;
-public: 
+
+public:
     int type_size;
     bool is_struct;
     int offset;
     std::map<std::string, type_storage> struct_content;
-    
-    type_storage(std::string input){
-        if(input == "INT"){
+
+    type_storage(std::string input)
+    {
+        if (input == "INT")
+        {
             type_size = 4;
             is_struct = false;
         }
-        else if(input == "DOUBLE"){
+        else if (input == "DOUBLE")
+        {
             type_size = 8;
             is_struct = false;
         }
     }
-    type_storage(){
+    type_storage()
+    {
     }
 
-    void build_struct(){
+    void build_struct()
+    {
         is_struct = true;
         offset = 0;
         index = 0;
         type_size = 0;
     }
 
-    void add_content (std::string name, type_storage input){
+    void add_content(std::string name, type_storage input)
+    {
         // inside the struct, we need name -------type--------offset
         // if there is substruct name  ------ substruct
         //
-        //std::cout << " #received" << name << " | " << input.type_size << std::endl;
+        // std::cerr << " #received" << name << " | " << input.type_size << std::endl;
         is_struct = true;
         //                                        name --- type --- offset the offset should be
         index += 1;
         type_storage tmp = input;
         tmp.offset = type_size;
-        if(tmp.is_struct == true){
+        if (tmp.is_struct == true)
+        {
             tmp.re_arrange_offset(type_size);
         }
         struct_content.insert(std::make_pair(name, tmp));
         type_size += input.type_size;
-        //std::cout << "#final type size" << name << " | " << type_size << std::endl;
+        // std::cerr << "#final type size" << name << " | " << type_size << std::endl;
     }
 
-    void re_arrange_offset (int input_offset){
+    void re_arrange_offset(int input_offset)
+    {
         // not sure
-        for (std::map<std::string, type_storage>::iterator it = struct_content.begin(); it != struct_content.end(); ++it){
-            it->second.offset += input_offset; 
-        } 
+        for (std::map<std::string, type_storage>::iterator it = struct_content.begin(); it != struct_content.end(); ++it)
+        {
+            it->second.offset += input_offset;
+        }
     }
-    void print_content(){
-            std::cout << "#name" << " | " << "typesize" << " | " << "offset" << std::endl;
-            for (std::map<std::string, type_storage>::const_iterator it = struct_content.begin(); it != struct_content.end(); ++it)
-            {
+    void print_content()
+    {
+        std::cerr << "#name"
+                  << " | "
+                  << "typesize"
+                  << " | "
+                  << "offset" << std::endl;
+        for (std::map<std::string, type_storage>::const_iterator it = struct_content.begin(); it != struct_content.end(); ++it)
+        {
 
-                std::cout << it->first << " | " << it->second.type_size << " | " << it->second.offset << std::endl;
-            }
-            std::cout << "#end of content" << std::endl;
+            std::cerr << it->first << " | " << it->second.type_size << " | " << it->second.offset << std::endl;
+        }
+        std::cerr << "#end of content" << std::endl;
     }
-
 };
 
 class FloatDoubleConst
 {
-    public:
+public:
     std::string type;
     std::string Label_val;
     double value;
 
-    FloatDoubleConst(std::string type_input){
+    FloatDoubleConst(std::string type_input)
+    {
         type = type_input;
-        
     }
-    FloatDoubleConst(std::string type_input, double val_input){
+    FloatDoubleConst(std::string type_input, double val_input)
+    {
         type = type_input;
         value = val_input;
     }
 
-
-    void assign_label(MakeName &input){
+    void assign_label(MakeName &input)
+    {
         Label_val = input.makeName("LC");
     }
-
 };
 
+class InnerFDarray
+{
+public:
+    std::string type;
+    std::vector<double> vals;
+    std::string name;
+    InnerFDarray(std::string nameinput, std::string typeinput, std::vector<double> valinput)
+    {
+        name = nameinput;
+        type = typeinput;
+        vals = valinput;
+    }
+};
 
+// return_df_array_list()
 
 class Context
 {
@@ -205,14 +232,14 @@ protected:
     std::vector<std::string> LocalVarWaitingForDeclared;
     // type name offset (global or local)
 public:
-    //for struct sizing
-    std::map <double, FloatDoubleConst> Float_const_str;
-    //if double vals are the same, goes to the same place as items in map are unique 
-    std::vector< std::pair<std::string,std::string> > LocalVarWaitingForSizing;
-    std::map <std::string, std::string > String_str;
-    std::map <std::string, type_storage> Type_Str;
+    // for struct sizing
+    std::map<double, FloatDoubleConst> Float_const_str;
+    // if double vals are the same, goes to the same place as items in map are unique
+    std::vector<std::pair<std::string, std::string> > LocalVarWaitingForSizing;
+    std::map<std::string, std::string> String_str;
+    std::map<std::string, type_storage> Type_Str;
+    std::map<std::string, std::string> DFinnerarray_Str;
     std::vector<std::string> Jump_Label;
-
 
     std::string Break_Label;
     std::string Continue_Label;
@@ -240,8 +267,6 @@ public:
     void insert_local_var_waiting_for_declared(std::string name);
     std::vector<std::string> read_whole_local_var_type_waiting_for_declared();
 
-    
-
     void sync_local_context(Context upperpart, Context initialpart);
     void assign_offset_to_local_var(std::string Name, std::string Offset);
     void assign_type_to_local_var(std::string Name, std::string type);
@@ -254,12 +279,7 @@ public:
     // std::string get_function_ending_label();
     void insert_Jump_Label(std::string j_label);
     std::string extract_Jump_Label(int index);
-    
-    // void generate_global_var_Mips(std::string var_name, int index);
-    // find the size taken for the variable inside
-    //  void find_block_size_global(std::string input);
-    //  void find_block_size_local();
-    // print
+
     void assign_label_float_const_str(MakeName &input);
     void print_global();
     void print_local();

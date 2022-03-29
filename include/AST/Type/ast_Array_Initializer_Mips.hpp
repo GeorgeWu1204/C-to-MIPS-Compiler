@@ -20,6 +20,7 @@ public:
 
     //std::vector<FloatDoubleConst> get_String_Const() override; // do we need this? sos
     void concatenate_float(std::vector<FloatDoubleConst> &a, std::vector<FloatDoubleConst> &b);
+    std::vector<double> construct_double_const_list() override;
 };
 
 #endif

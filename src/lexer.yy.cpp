@@ -1400,7 +1400,7 @@ YY_RULE_SETUP
 case 92:
 YY_RULE_SETUP
 #line 158 "src/lexer.flex"
-{ printf("ignore bad characters VALUE:[%s]", yytext);  }
+{}
 	YY_BREAK
 case 93:
 YY_RULE_SETUP

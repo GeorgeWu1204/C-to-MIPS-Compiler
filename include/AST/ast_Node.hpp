@@ -65,7 +65,7 @@ public:
     virtual bool is_Continue() const;
     virtual bool is_Default() const;
     virtual bool is_Assignment() const;
-    virtual bool is_Struct () const;
+    virtual bool is_Struct() const;
     virtual bool is_Struct_Declaration() const;
     virtual bool is_Conditional_Expression() const;
     virtual bool is_Struct_Call() const;
@@ -93,30 +93,31 @@ public:
     virtual int return_dynamic_offset();
     virtual int get_argument_size();
 
-    virtual std::vector< std::pair<std::string, std::string> > get_argument_map();
+    virtual std::vector<std::pair<std::string, std::string> > get_argument_map();
     virtual std::map<std::string, int> get_enumerator_list();
+
     // for array
     virtual std::vector<int> return_assigned_val();
     virtual int get_case_index();
     virtual type_storage get_type_storage();
     virtual int get_arithmetic_const_val();
-    virtual std::vector< std::pair<std::string,std::string> > read_Local_Var_Waiting_For_Sizing();
+    virtual std::vector<std::pair<std::string, std::string> > read_Local_Var_Waiting_For_Sizing();
     virtual int get_struct_variable_offset(Context input);
 
-    //for float
+    // for float
     virtual double get_Float() const;
-    virtual std::vector<FloatDoubleConst> get_Float_Const(); 
+    virtual std::vector<FloatDoubleConst> get_Float_Const();
     virtual bool is_Double_Constant() const;
     virtual bool is_Float_Constant() const;
     virtual std::vector<std::string> get_String_Const();
-    
 
-
-    //for the final rush
+    // for the final rush
     virtual std::string get_cloest_Id() const;
     virtual std::string return_expression_type(Context context);
-    //virtual std::map<std::string, int> return_case_address();
-    // for enumerator
+    virtual std::vector<double> construct_double_const_list();
+    virtual std::vector<InnerFDarray> return_df_array_list();
+    // virtual std::map<std::string, int> return_case_address();
+    //  for enumerator
 };
 
 #endif

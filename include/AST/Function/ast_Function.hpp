@@ -35,6 +35,9 @@ public:
     std::string get_type() const override;
     std::vector<FloatDoubleConst> get_Float_Const() override;
     std::vector<std::string> get_String_Const() override;
+    std::vector<InnerFDarray> return_df_array_list() override;
+
+    
 };
 
 #endif

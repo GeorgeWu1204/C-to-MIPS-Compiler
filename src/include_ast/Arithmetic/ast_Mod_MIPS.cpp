@@ -55,15 +55,8 @@ void Mod_MIPS::generateMips(std::ostream &dst, Context &context, int destReg, Ma
 
     dst << "sw "
         << "$" << destReg << "," << current_offset << "($30)" << std::endl;
-    // greater than
 
-    // SOS why we only consider mflo here？
-    //  here we consider the remainder
 }
-
-// void Binary_Mul::PrettyPrint(std::ostream &dst){
-//     dst << "Identifier: " << identifier_id <<std::endl;
-// }
 
 int Mod_MIPS::get_arithmetic_const_val()
 {
