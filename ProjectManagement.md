@@ -92,46 +92,46 @@ Organising the structure of the compiler.\
 	Time consumption: Average 5 hours per day
 
 # WEEK 3
-Mar6-12
+### Mar6-12
 	· Goal
 	1. Implementation of all the int type 3 operand arthmetic operation ( 3-4 hours )
-	* arithmetic and logical expressions
+		* arithmetic and logical expressions
 	2. Implementation of control flow ( 3-4 hours )
-	* if-then-else statements
-* while loops
+		* if-then-else statements
+		* while loops
 	3. Implementation of Functions (15 hours)
-	* Function arguments ( including situation where there are more than 4 arguments)
-	*Multiple functions that call each other.
-	*recursive function call
-	*calling externally-defined functions 
+		* Function arguments ( including situation where there are more than 4 arguments)
+		*Multiple functions that call each other.
+		*recursive function call
+		*calling externally-defined functions 
 	4. Add extra dynamic context to solve the problem of using different variables at the same time. ( 8-9 hours)
------------------------------------------------------------------------------------------------------------------------------------------------
-3/6 (George && Jeffrey)
-Finish the local int variable declaration and call. Follow the dynamic stack size.
-	- Dynamic stack: idea form previously. Used for arithmetic calculation. Size is deduced during formation of AST tree.
-		- At this point we are taking "efficiency" into account. We believed all the information could be retrieve during the formation of the AST tree.
-(Update #date#) wrong decision had been made here 
-	- Efficiency: This is way more complicated than what we thought. The idea of deducing dynamic stack size during the formation of tree couldn’t cover cases of Struct and so on… ( information at that point is not completed i.e. the size of the type remain unknow till certain point.
-	- which complicated the following code and structure and limited the design decision we could made. 
-Finish all the basic binary and unary arithmetic operation parts.
-3/7  (George && Jeffrey)
-Build If-then-else statements. While loops.
-Finish the basic features part.
-3/8 (George && Jeffrey)
-Start to build Functions but only finished part of it.
-3/9-3/10  (George && Jeffrey)
-Stopped doing coursework and moved to information processing courework.
-3/11-3/12
-Finnish Function part (George)
-Do some simple testing. Start to write dynamic context to temporarily store the register value. This is used to avoid covering useful values in the registers during multi variable calculation. (Jeffrey)
------------------------------------------------------------------------------------------------------------------------------------------------
-1st Milestone
-Completed all the basic features in the requirement.
-Goal Completion status:
-Completed:
- Implemented a basic context, successfully generate simple addition code.
-Generally meet our expectation
-Time consumption: Average 7hours per day
+
+	3/6 (George && Jeffrey)
+	Finish the local int variable declaration and call. Follow the dynamic stack size.
+		- Dynamic stack: idea form previously. Used for arithmetic calculation. Size is deduced during formation of AST tree.
+			- At this point we are taking "efficiency" into account. We believed all the information could be retrieve during the formation of the AST tree.
+	(Update #date#) wrong decision had been made here 
+		- Efficiency: This is way more complicated than what we thought. The idea of deducing dynamic stack size during the formation of tree couldn’t cover cases of Struct and so on… ( information at that point is not completed i.e. the size of the type remain unknow till certain point.
+		- which complicated the following code and structure and limited the design decision we could made. 
+	Finish all the basic binary and unary arithmetic operation parts.
+	3/7  (George && Jeffrey)
+	Build If-then-else statements. While loops.
+	Finish the basic features part.
+	3/8 (George && Jeffrey)
+	Start to build Functions but only finished part of it.
+	3/9-3/10  (George && Jeffrey)
+	Stopped doing coursework and moved to information processing courework.
+	3/11-3/12
+	Finnish Function part (George)
+	Do some simple testing. Start to write dynamic context to temporarily store the register value. This is used to avoid covering useful values in the registers during multi variable calculation. (Jeffrey)
+
+	1st Milestone
+	Completed all the basic features in the requirement.
+	Goal Completion status:
+	Completed:
+	 Implemented a basic context, successfully generate simple addition code.
+	Generally meet our expectation
+	Time consumption: Average 7hours per day
 
 # WEEK 4
 Mar13-19
