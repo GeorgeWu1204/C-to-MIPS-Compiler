@@ -3,14 +3,14 @@
 
 # WEEK 0 
 
-Feb 19 （Right After Midterm）\
+### Feb 19 （Right After Midterm）\
 Organising the structure of the compiler.\
 	• Stack\
 	• Lexer Parser\
 
 # WEEK 1 
 
-Feb 20-26\
+### Feb 20-26\
 	• Goal:\
 	1. Have a general view on the overall structure of compiler. ( Context, Paser, Lexer …) （5 hours)\
 	2. Have a clear view on StackFrame design. This is marked as a milestone as it is not included in the previous labs.\ Many instructions are context related hence having stackframe taken in early consider would make the progress go more smoothly)  (7 hours)\
