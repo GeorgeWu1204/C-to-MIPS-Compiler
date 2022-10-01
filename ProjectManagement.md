@@ -6,7 +6,7 @@
 ### Feb 19 （Right After Midterm）
 Organising the structure of the compiler.\
 	• Stack\
-	• Lexer Parser\
+	• Lexer Parser
 
 # WEEK 1 
 
@@ -16,28 +16,27 @@ Organising the structure of the compiler.\
 	2. Have a clear view on StackFrame design. This is marked as a milestone as it is not included in the previous labs.\ Many instructions are context related hence having stackframe taken in early consider would make the progress go more smoothly)  (7 hours)\
 	3. Implementation of Parser and Lexer.  (7 hours)\
 
--------------------------------------------------------------------------------------------------------------------------------
 
-2/21  (George && Jeffrey)\
-Function of the stack frame pointer.\
-Start to do research on the stack frame\
+	2/21  (George && Jeffrey)\
+	Function of the stack frame pointer.\
+	Start to do research on the stack frame\
 
-2/23  (George && Jeffrey)\
-Size of the stack frame\
-Tried exploring potential rules about the stack frame size according to the Godbolt. How it related types, whether or not function call is within the scope… so on.\
-We head into this approach bc don’t know where to start.\
-(Update #date#) wrong decision had been made here
-(What would be a proper direction? ), the stack frame size varies depends on tons of others factors : type…)\
-	
-2/25  (George && Jeffrey)\
-An idea formed and according to the rules we observed from Godbolt. \
-Investigate on C(90) standard parser and lexer.\
+	2/23  (George && Jeffrey)\
+	Size of the stack frame\
+	Tried exploring potential rules about the stack frame size according to the Godbolt. How it related types, whether or not function call is within the scope… so on.\
+	We head into this approach bc don’t know where to start.\
+	(Update #date#) wrong decision had been made here
+	(What would be a proper direction? ), the stack frame size varies depends on tons of others factors : type…)\
 
-2/26 (George && Jeffrey)\
-Built the parser and lexer.\
-We disable most of the parser part and only keep simplest addition for simplicity.
+	2/25  (George && Jeffrey)\
+	An idea formed and according to the rules we observed from Godbolt. \
+	Investigate on C(90) standard parser and lexer.\
 
--------------------------------------------------------------------------------------------------------------------------------
+	2/26 (George && Jeffrey)\
+	Built the parser and lexer.\
+	We disable most of the parser part and only keep simplest addition for simplicity.
+
+	-------------------------------------------------------------------------------------------------------------------------------
 
 Goal Completed status:\
 Completed:\
