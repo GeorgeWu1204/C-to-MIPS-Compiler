@@ -9,7 +9,7 @@ Organising the structure of the compiler.
 
 # WEEK 1 
 Feb20-26
-	• Goal: 
+	#Goal: 
 	1. Have a general view on the overall structure of compiler. ( Context, Paser, Lexer …) （5 hours)
 	2. Have a clear view on StackFrame design. This is marked as a milestone as it is not included in the previous labs. Many instructions are context related hence having stackframe taken in early consider would make the progress go more smoothly)  (7 hours)
 	3. Implementation of Parser and Lexer.  (7 hours)
