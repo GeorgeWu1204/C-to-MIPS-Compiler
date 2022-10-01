@@ -10,7 +10,7 @@ Organising the structure of the compiler.\
 
 # WEEK 1 
 
-### Feb 20-26
+### Feb 20-Feb 26
 	## Goal:
 	1. Have a general view on the overall structure of compiler. ( Context, Paser, Lexer …) （5 hours)
 	2. Have a clear view on StackFrame design. This is marked as a milestone as it is not included in the previous labs. Many instructions are context related hence having stackframe taken in early consider would make the progress go more smoothly)  (7 hours)
@@ -44,7 +44,7 @@ Organising the structure of the compiler.\
 	Time consumption: Average 5 hours per day
 
 # WEEK 2
-### Feb27-Mar5
+### Feb 27-Mar 5
 	##Goal: 
 	1. Implementation of Context ( 10 hours )
 	2. Base Class for AST (declaration component statement) ( 10 hours )
@@ -92,7 +92,7 @@ Organising the structure of the compiler.\
 	Time consumption: Average 5 hours per day
 
 # WEEK 3
-### Mar6-12
+### Mar 6-Mar 12
 	##Goal
 	1. Implementation of all the int type 3 operand arthmetic operation ( 3-4 hours )
 		* arithmetic and logical expressions
@@ -138,7 +138,7 @@ Organising the structure of the compiler.\
 	Time consumption: Average 7hours per day
 
 # WEEK 4
-### Mar13-19
+### Mar 13-Mar 19
 	##Goal:
 	1. Implementation of Array type (globally and locally) (10 hours)
 		*Array declaration (globally and locally) 
@@ -175,7 +175,7 @@ Organising the structure of the compiler.\
 	Time consumption: Average 8hours per day
 
 # WEEK 5
-### Mar20-26
+### Mar 20-Mar 26
 	##Goal:
 		1. Implementation of the Struct type (5 hours)
 		2. Implementation of the Pointer type (including pointer to local and global type)  (10 hours)
@@ -207,7 +207,7 @@ Organising the structure of the compiler.\
 	Time consumption: more than 8 hours on average per day
 
 # WEEK 6
-### Mar28-29
+### Mar 28-Mar 29
 	##Goal:
 	Implementation of all types of variables ( + 10 hours)
 	Implementation of 'sizeof' function (1hour)
