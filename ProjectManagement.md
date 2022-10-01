@@ -35,64 +35,61 @@ Organising the structure of the compiler.\
 	2/26 (George && Jeffrey)\
 	Built the parser and lexer.\
 	We disable most of the parser part and only keep simplest addition for simplicity.
-
-	-------------------------------------------------------------------------------------------------------------------------------
-
-Goal Completed status:\
-Completed:\
-	· Implemented the Parser and Lexer within expected time. (Both)\
-	· Formed a basic idea on designing the structure of the Stack Frame.\
-Generally meet our expectation\
-Time consumption: Average 5 hours per day\
+	
+	Goal Completed status:\
+	Completed:\
+		· Implemented the Parser and Lexer within expected time. (Both)\
+		· Formed a basic idea on designing the structure of the Stack Frame.\
+	Generally meet our expectation\
+	Time consumption: Average 5 hours per day\
 
 # WEEK 2
-Feb27-Mar5
-	· Goal: 
-	1. Implementation of Context ( 10 hours )
-	2. Base Class for AST (declaration component statement) ( 10 hours )
-	* a file containing just a single function with no arguments 
-* variables of `int` type 
-* local variables
-	3. Generate some basic MIPS code. ( 10 hours )
-	4. Implementation of INT type and local variables. ( 5 hours)
-	5. Configure the structure of the stack and decide how the stack and context are related and used during compiling.
------------------------------------------------------------------------------------------------------------------------------------------------
-2/27  (George && Jeffrey)
-Base on the information collected from last week we started to write the Context and Node part (Visitor Design). 
-Implementation of Node Part
-We want the following classes related to different Parser’s layers to inherit from the general Node. 
-Implementation of Declaration and Component statement. (Half completed)
-Implementation of Context
-We decided to build and pass the context during the GeneratingMips process. 
-The other method would be building up the context alone side with the formation of AST tree.
-We couldn’t tell the difference at this point. The point we have considered by far is that both method required to go through the tree at least twice. Hence, there shouldn’t be a much difference in term of performance.
-(Update #date#) wrong decision had been made here
- it significantly complicates our programme in the following part.
+### Feb27-Mar5
+	· Goal: \
+	1. Implementation of Context ( 10 hours )\
+	2. Base Class for AST (declaration component statement) ( 10 hours )\
+	* a file containing just a single function with no arguments\
+	* variables of `int` type \
+	* local variables\
+		3. Generate some basic MIPS code. ( 10 hours )\
+		4. Implementation of INT type and local variables. ( 5 hours)\
+		5. Configure the structure of the stack and decide how the stack and context are related and used during compiling.\
 
-2/28  (George && Jeffrey)
-At this point, we are aiming for implementation of the framework first, hence lots of details had being missing.
-Notice more situations in the size of the function stack. 
-For example, if a variable is declared but not be called, a function called inside a function would add 16 to the function stack size, etc. 
-At this point we realized there might be more implicited rules for specifying the stack size, we didn’t dig inside as we decided to finish the basic function first and all these rules should be enough.
+	2/27  (George && Jeffrey)\
+	Base on the information collected from last week we started to write the Context and Node part (Visitor Design). \
+	Implementation of Node Part\
+	We want the following classes related to different Parser’s layers to inherit from the general Node.\
+	Implementation of Declaration and Component statement. (Half completed)\
+	Implementation of Context\
+	We decided to build and pass the context during the GeneratingMips process.\ 
+	The other method would be building up the context alone side with the formation of AST tree.\
+	We couldn’t tell the difference at this point. The point we have considered by far is that both method required to go through the tree at least twice. Hence, there shouldn’t be a much difference in term of performance.\
+	(Update #date#) wrong decision had been made here and it significantly complicates our programme in the following part.\
 
-3/1-3/2  (George && Jeffrey)
-Stopped compiler because of the other course work. (Inform processing) 
+	2/28  (George && Jeffrey)\
+	At this point, we are aiming for implementation of the framework first, hence lots of details had being missing.\
+	Notice more situations in the size of the function stack. \
+	For example, if a variable is declared but not be called, a function called inside a function would add 16 to the function stack size, etc. \
+	At this point we realized there might be more implicited rules for specifying the stack size, we didn’t dig inside as we decided to finish the basic function first and all these rules should be enough.\
 
-3/3  (George && Jeffrey)
-Finished up building the context and Node part.
-Integrating context formation into Node part.
-Leave space for the double and char type.
-Implement a simple function, choose to build the context within the function.
+	3/1-3/2  (George && Jeffrey)\
+	Stopped compiler because of the other course work. (Inform processing) \
 
-3/4  (George && Jeffrey)
-Implementation of addtion arithmetic operation.
-Successfully generating mips for simple functions with only addition inside.
------------------------------------------------------------------------------------------------------------------------------------------------
-Goal Completed status:
-Completed:
-	·  Implemented a basic context, successfully generate simple addition code.
-Generally meet our expectation
-Time consumption: Average 5 hours per day
+	3/3  (George && Jeffrey)\
+	Finished up building the context and Node part.\
+	Integrating context formation into Node part.\
+	Leave space for the double and char type.\
+	Implement a simple function, choose to build the context within the function.\
+
+	3/4  (George && Jeffrey)\
+	Implementation of addtion arithmetic operation.\
+	Successfully generating mips for simple functions with only addition inside.\
+
+	Goal Completed status:\
+	Completed:\
+		·  Implemented a basic context, successfully generate simple addition code.\
+	Generally meet our expectation\
+	Time consumption: Average 5 hours per day\
 
 # WEEK 3
 Mar6-12
