@@ -21,7 +21,7 @@ public:
     std::vector<std::string> return_waiting_to_declared_list() override;
     bool is_Compound_statement() const override;
     void build_mock_compound();
-    bool is_Loop() const override;
+    
     
 };
 

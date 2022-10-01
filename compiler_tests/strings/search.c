@@ -8,8 +8,3 @@ char *search(char *x, char c)
     }
     return 0;
 }
-
-
-
-
-

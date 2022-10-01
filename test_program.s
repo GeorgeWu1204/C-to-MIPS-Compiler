@@ -1,64 +1,199 @@
-.text
-.globl search
-.ent  search
-search:
-addiu $29,$29,-112
-sw $30,108($29)
-move $30,$29
-sw $4,112($30)
-move $2,$5
-sb $2,116($30)
+start to test
+ opening input file: 
+open successfully
+Token Type: INT VALUE:[int]
+Parser 93int detected
+int detected
+Token Type: INDENTIFIER VALUE:[f]
+Parser 114 IDENTIFIER
+Token Type: ( VALUE:[(]Token Type: ) VALUE:[)]
+Parser 116 Function_Declarator
+Token Type: { VALUE:[{]gg
+Token Type: INT VALUE:[int]
+Parser 93int detected
+int detected
+Token Type: INDENTIFIER VALUE:[u]
+Parser 114 IDENTIFIER
+gg
+Token Type: INT_CONSTANT VALUE:[0]
+Parser 227 INI_CONSTANT
+
+Parser 213 Primary
+Token Type: ; VALUE:[;]
+Parser 209 Unary_expression
+
+Parser 158 Init_Declarator
+Token Type: INT VALUE:[int]
+Parser 93int detected
+int detected
+Token Type: INDENTIFIER VALUE:[x]
+Parser 114 IDENTIFIER
+gg
+Token Type: INT_CONSTANT VALUE:[9]
+Parser 227 INI_CONSTANT
+
+Parser 213 Primary
+Token Type: ; VALUE:[;]
+Parser 209 Unary_expression
+
+Parser 158 Init_Declarator
+Token Type: FOR VALUE:[for]Token Type: ( VALUE:[(]Token Type: INDENTIFIER VALUE:[u]
+Parser 226 IDENTIFIER
+
+Parser 213 Primary
+
+Parser 209 Unary_expression
+Token Type: INT_CONSTANT VALUE:[0]
+Parser 227 INI_CONSTANT
+
+Parser 213 Primary
+Token Type: ; VALUE:[;]
+Parser 209 Unary_expression
+
+Parser 186 Assignment
+
+Parser 183 Expression
+
+Parser 314 Expression;
+Token Type: INDENTIFIER VALUE:[u]
+Parser 226 IDENTIFIER
+
+Parser 213 Primary
+
+Parser 209 Unary_expression
+Token Type: INT_CONSTANT VALUE:[0]
+Parser 227 INI_CONSTANT
+
+Parser 213 Primary
+Token Type: ; VALUE:[;]
+Parser 209 Unary_expression
+
+Parser 285 Smaller Than
+done
+
+Parser 183 Expression
+
+Parser 314 Expression;
+Token Type: INDENTIFIER VALUE:[u]
+Parser 226 IDENTIFIER
+
+Parser 213 Primary
+
+Parser 209 Unary_expression
+Token Type: INDENTIFIER VALUE:[u]
+Parser 226 IDENTIFIER
+
+Parser 213 Primary
+
+Parser 209 Unary_expression
+Token Type: INT_CONSTANT VALUE:[1]
+Parser 227 INI_CONSTANT
+
+Parser 213 Primary
+Token Type: ) VALUE:[)]
+Parser 209 Unary_expression
+
+Parser 240 Addition
+
+Parser 186 Assignment
+
+Parser 183 Expression
+Token Type: { VALUE:[{]Token Type: INDENTIFIER VALUE:[x]
+Parser 226 IDENTIFIER
+
+Parser 213 Primary
+
+Parser 209 Unary_expression
+Token Type: INDENTIFIER VALUE:[x]
+Parser 226 IDENTIFIER
+
+Parser 213 Primary
+
+Parser 209 Unary_expression
+Token Type: INT_CONSTANT VALUE:[1]
+Parser 227 INI_CONSTANT
+
+Parser 213 Primary
+Token Type: ; VALUE:[;]
+Parser 209 Unary_expression
+
+Parser 240 Addition
+
+Parser 186 Assignment
+
+Parser 183 Expression
+
+Parser 314 Expression;
+
+Parser 176 ExpressionStatement
+Token Type: } VALUE:[}]
+Parser 131 Compound_statement_Statement  
+compond work
+
+Parser 175 CompoundStatement
+
+Parser 344 FOR(Expression_statement Expression_statement Expression)
+
+Parser 178 IterationStatement
+Token Type: } VALUE:[}]
+Parser 133 Compound_statement_Declaration_AND_Statement
+compond work
+
+Parser 77 Function
+lexer pass
+after parser
 
 
-b L_1
+f :
+addiu $31, $31, -24
+sw $30, 20($31)
+move $30, $31
+inside Local Var: 
+2Subcontext: SUBCONTEXT | 16 | 2 | 0
+u: INT | 8 | 0 | 1
+x: INT | 12 | 1 | 1
+inside Local Var Waiting for Declared
+li $2 0
+sw $2, 8($30)
+li $2 9
+sw $2, 12($30)
+hI
+li $2 0
+inside is identifier
+sw $2, 8($30)
+b  L_0
 
 
-L_2:
-
-lw $3,112($30)
-nop 
-lb $3,0($3)
-lb $4,116($30)
+L_1:
+hI
+lw $3 8($30)
+li $4 1
 nop
-xor $2,$3,$4
-sltu $2,$2,1
-andi $2,$2,0x00ff
-sw $2,16($30)
-sw $2,16($30)# ----------------------------------------
-beq $2,$0,L_4
+add $2, $3, $4
+inside is identifier
+sw $2, 8($30)
+inside Local Var: 
+inside Local Var Waiting for Declared
+hI
+lw $3 12($30)
+li $4 1
 nop
+add $2, $3, $4
+inside is identifier
+sw $2, 12($30)
 
-lw $2,112($30)
-sw $2,16($30)
-b L_0
 
-L_4:
-lw $3,112($30)
-li $4,1
-
-nop
-addu $2,$3,$4
-sw $2,112($30)
-
-L_1: 
-
-lw $2,112($30)
-nop 
-lw $2,0($2)
-sw $2,16($30)# ----------------------------------------
-bne $2,$0,L_2
-nop
-
-L_3: 
-
-li $2,0
-sw $2,16($30)
-b L_0
 L_0:
+LESS THAMN
+lw $3 8($30)
+li $4 0
+slt 2, $3, $4
+
+
 nop
-move $29,$30
-lw $30,108($29)
-addiu $29,$29,112
-j $31
+move $30, $31
+lw $30, 20($31)
+addiu $31, $31, 24
+jr $31
 nop
-.end  search
+Generate MIPS complete

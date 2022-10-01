@@ -14,14 +14,9 @@ protected:
 public:
     Int_Constant_Mips(const int input);
     void generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset) override;
-    void generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type) override;
     // void prettyPrint(std::ostream &dst) const override;
     int get_Val() const override;
     bool is_Constant() const override;
-    int get_arithmetic_const_val() override;
-    std::string get_cloest_Id() const override;
-    std::string return_expression_type(Context context) override;
-    
 };
 
 #endif

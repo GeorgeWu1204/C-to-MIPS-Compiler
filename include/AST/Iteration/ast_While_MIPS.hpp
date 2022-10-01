@@ -15,7 +15,6 @@ public:
     int get_context_local_size() override;
     std::vector<std::string> return_waiting_to_declared_list() override;
     bool is_Compound_statement() const override;
-    bool is_Loop() const override;
 };
 
 #endif

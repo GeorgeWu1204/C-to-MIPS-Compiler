@@ -17,7 +17,6 @@ public:
     // void prettyPrint(std::ostream &dst) const override;
     // void generate_left(std::ostream &dst, Context &context, int destReg, NodePtr leftnode);
     // void generate_right(std::ostream &dst, Context &context, int destReg, NodePtr rightnode);
-    int get_arithmetic_const_val() override;
 };
 
 #endif

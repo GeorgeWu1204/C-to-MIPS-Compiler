@@ -13,13 +13,11 @@ public:
     // Declaration_Mips(const std::string specifier, NodePtr declarator);
     Declare_Array_Mips(const NodePtr header, const NodePtr size);
     Declare_Array_Mips(const NodePtr header);
-    // void generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset) override;
-    //  no need to generate mips here.
+    //void generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset) override;
+    // no need to generate mips here.
     std::string get_type() const override;
     std::string get_Id() const override;
-    // int array_size() const override;
-    bool is_Array() const override;
-    int get_arithmetic_const_val() override;
+    int array_size() const override;
 };
 
 #endif

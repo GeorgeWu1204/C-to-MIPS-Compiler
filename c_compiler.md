@@ -51,19 +51,19 @@ Here is a list of intermediate features that you might like to implement once th
 
 Here is a list of more advanced features like you might like to implement once the basic and intermediate features are working.
 
-* ------variables of `double`, `float`, `char`, `unsigned`, structs, and pointer types
-* (not sure) calling externally-defined functions (i.e. the file being compiled declares a function, but its definition is provided in a different file that is linked in later on)
-* done functions that take more than four parameters
-* done mutually recursive function calls
-* done locally scoped veclaraariable dtions (e.g. a variable that is declared inside the body of a while loop, such as `while(...) { int x = ...; ... }`.
-* ------the `typedef` keyword
-* done the `sizeof(...)` function (which takes either a type or a variable)
-* done taking the address of a variable using the `&` operator
-* done dereferencing a pointer-variable using the `*` operator
-* done pointer arithmetic
-* -------character literals, including escape sequences like `\n`
-* -------strings (as NULL-terminated character arrays)
-* done declaration and use of structs
+* variables of `double`, `float`, `char`, `unsigned`, structs, and pointer types
+* calling externally-defined functions (i.e. the file being compiled declares a function, but its definition is provided in a different file that is linked in later on)
+* functions that take more than four parameters
+* mutually recursive function calls
+* locally scoped veclaraariable dtions (e.g. a variable that is declared inside the body of a while loop, such as `while(...) { int x = ...; ... }`.
+* the `typedef` keyword
+* the `sizeof(...)` function (which takes either a type or a variable)
+* taking the address of a variable using the `&` operator
+* dereferencing a pointer-variable using the `*` operator
+* pointer arithmetic
+* character literals, including escape sequences like `\n`
+* strings (as NULL-terminated character arrays)
+* declaration and use of structs
 
 Your compiler will be assessed using test inputs that exercise the above features. No feature not listed above will be tested. 
 Here is a (partial) list of features that will not be tested.

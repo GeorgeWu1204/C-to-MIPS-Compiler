@@ -31,13 +31,13 @@ IS			(u|U|l|L)*
 "enum"			  { return(ENUM); }
 "extern"		  { return(EXTERN); }
 "float"			  { return(FLOAT); }
-"for"			    { return(FOR); }
+"for"			    { printf("Token Type: FOR VALUE:[%s]", yytext); return(FOR); }
 "goto"			  { return(GOTO); }
 "if"			    { return(IF); }
-"int"			    { return(INT); }
+"int"			    { printf("Token Type: INT VALUE:[%s]", yytext); return(INT); }
 "long"			  { return(LONG); }
 "register"		{ return(REGISTER); }
-"return"		  { return(RETURN); }
+"return"		  { printf("Token Type: RETURN VALUE:[%s]", yytext); return(RETURN); }
 "short"			  { return(SHORT); }
 "signed"		  { return(SIGNED); }
 "sizeof"		  { return(SIZEOF); }
@@ -49,63 +49,19 @@ IS			(u|U|l|L)*
 "unsigned"		{ return(UNSIGNED); }
 "void"			  { return(VOID); }
 "volatile"		{ return(VOLATILE); }
-"while"			  { return(WHILE); }
+"while"			  { printf("Token Type: WHILE VALUE:[%s]", yytext);return(WHILE); }
 
-{L}({L}|{D})*		        { yylval.string = new std::string(yytext);
-                          return IDENTIFIER; 
-                        }
-
+{L}({L}|{D})*		        { printf("Token Type: INDENTIFIER VALUE:[%s]", yytext); yylval.string = new std::string(yytext);  return IDENTIFIER; }
 0[xX]{H}+{IS}?		      { return(CONSTANT); }
 0{D}+{IS}?		          {  return(CONSTANT); }
-{D}+{IS}?		            {  yylval.int_number = (int)strtol(yytext, NULL, 0); return(INT_CONSTANT); }
+{D}+{IS}?		            {  printf("Token Type: INT_CONSTANT VALUE:[%s]", yytext);yylval.int_number = (int)strtol(yytext, NULL, 0); return(INT_CONSTANT); }
+L?'(\\.|[^\\'])+'	      {  return(INT_CONSTANT); }
 
+{D}+{E}{FS}?		        {  return(FLOAT_CONSTANT); }
+{D}*"."{D}+({E})?{FS}?	{  return(FLOAT_CONSTANT); }
+{D}+"."{D}*({E})?{FS}?	{  return(FLOAT_CONSTANT); }
 
-{D}+{E}     		        {  yylval.double_number = strtod(yytext, NULL); return(DOUBLE_CONSTANT); }
-{D}+{E}{FS}             {  yylval.float_number  = strtod(yytext, NULL); return(FLOAT_CONSTANT); }
-{D}*"."{D}+({E})?     	{  yylval.double_number = strtod(yytext, NULL); return(DOUBLE_CONSTANT); }
-{D}*"."{D}+({E})?{FS}   {  yylval.float_number  = strtod(yytext, NULL); return(FLOAT_CONSTANT); }
-{D}+"."{D}*({E})?     	{  yylval.double_number = strtod(yytext, NULL); return(DOUBLE_CONSTANT); }
-{D}+"."{D}*({E})?{FS}   {  yylval.float_number  = strtod(yytext, NULL); return(FLOAT_CONSTANT); }
-
-L?\"(\\.|[^\\"])*\"	    { yylval.string = new std::string(yytext);return(STRING_LITERAL); }
-
-'(\\.|[^'\\])' {  std::string tmp(yytext);
-                  if(tmp.size() == 3)
-                  {
-                    yylval.int_number=(int)tmp[1]; 
-                  }
-                  else
-                  {
-                    switch(tmp[2])
-                    {
-                      case '0': yylval.int_number=0x00;
-                      break;
-                      case '\'': yylval.int_number=0x27;
-                      break;
-                      case '"': yylval.int_number=0x22;
-                      break;
-                      case '?': yylval.int_number=0x3f;
-                      break;
-                      case '\\': yylval.int_number=0x5c;
-                      break;
-                      case 'a': yylval.int_number=0x07;
-                      break;
-                      case 'b': yylval.int_number=0x08;
-                      break;
-                      case 'f': yylval.int_number=0x0c;
-                      break;
-                      case 'n': yylval.int_number=0x0a;
-                      break;
-                      case 'r': yylval.int_number=0x0d;
-                      break;
-                      case 't': yylval.int_number=0x09;
-                      break;
-                      case 'v': yylval.int_number=0x0b;
-                      break;
-                      default: std::cerr << "ERROR: I'm not sure how to manage escaped char" << std::endl;
-                    }
-                  }
-                  return CHAR_LITERAL; }
+L?\"(\\.|[^\\"])*\"	    {  return(STRING_LITERAL); }
 
 "..."			    {  return(ELLIPSIS); }
 ">>="			    {  return(RIGHT_ASSIGN); }
@@ -129,14 +85,14 @@ L?\"(\\.|[^\\"])*\"	    { yylval.string = new std::string(yytext);return(STRING_
 ">="			    {  return(GE_OP); }
 "=="			    {  return(EQ_OP); }
 "!="			    {  return(NE_OP); }
-";"			      {  return(';'); }
-("{"|"<%")		{  return('{'); }
-("}"|"%>")		{  return('}'); }
+";"			      {  printf("Token Type: ; VALUE:[%s]", yytext); return(';'); }
+("{"|"<%")		{  printf("Token Type: { VALUE:[%s]", yytext); return('{'); }
+("}"|"%>")		{  printf("Token Type: } VALUE:[%s]", yytext); return('}'); }
 ","			      {  return(','); }
 ":"			      {  return(':'); }
 "="			      {  return('='); }
-"("			      {  return('('); }
-")"			      {  return(')'); }
+"("			      {  printf("Token Type: ( VALUE:[%s]", yytext); return('('); }
+")"			      {  printf("Token Type: ) VALUE:[%s]", yytext); return(')'); }
 ("["|"<:")		{  return('['); }
 ("]"|":>")		{  return(']'); }
 "."			      {  return('.'); }
@@ -155,7 +111,7 @@ L?\"(\\.|[^\\"])*\"	    { yylval.string = new std::string(yytext);return(STRING_
 "?"			      {  return('?'); }
 
 [ \t\v\n\f]		{  }
-.			{}
+.			{ printf("ignore bad characters VALUE:[%s]", yytext);  }
 
 %%
 

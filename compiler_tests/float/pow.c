@@ -8,5 +8,3 @@ float f(float x, int n)
     }
     return acc;
 }
-
-

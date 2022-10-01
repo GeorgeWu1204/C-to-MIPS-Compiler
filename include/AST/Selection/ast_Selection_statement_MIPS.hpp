@@ -20,9 +20,6 @@ public:
 
     bool is_Compound_statement() const override;
     // void prettyPrint(std::ostream &dst) const override;
-    int Dynamic_context_size() override;
-    //bool is_Function_inside() const override;
-
 };
 
 #endif

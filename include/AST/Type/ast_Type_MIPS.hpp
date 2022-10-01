@@ -15,7 +15,6 @@ public:
     // void generateMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset) const override;
     // void prettyPrint(std::ostream &dst) const override;
     std::string get_type() const override;
-    bool is_Type_Specified() const override;
 };
 
 #endif
