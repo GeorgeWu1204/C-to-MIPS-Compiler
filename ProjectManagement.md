@@ -231,5 +231,3 @@ Time consumption: Average 24 hours per day
 Addition implementation
 Declaration of variable, array, function of the same type within one code.
 Double pointer.
-![image](https://user-images.githubusercontent.com/52784523/193428711-30bf3c84-9e88-4062-9d7c-a57c5ae5cf52.png)
-
