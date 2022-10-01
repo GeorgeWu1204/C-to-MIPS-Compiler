@@ -93,7 +93,7 @@ Organising the structure of the compiler.\
 
 # WEEK 3
 ### Mar6-12
-	· Goal
+	##Goal
 	1. Implementation of all the int type 3 operand arthmetic operation ( 3-4 hours )
 		* arithmetic and logical expressions
 	2. Implementation of control flow ( 3-4 hours )
@@ -114,13 +114,17 @@ Organising the structure of the compiler.\
 		- Efficiency: This is way more complicated than what we thought. The idea of deducing dynamic stack size during the formation of tree couldn’t cover cases of Struct and so on… ( information at that point is not completed i.e. the size of the type remain unknow till certain point.
 		- which complicated the following code and structure and limited the design decision we could made. 
 	Finish all the basic binary and unary arithmetic operation parts.
+	
 	3/7  (George && Jeffrey)
 	Build If-then-else statements. While loops.
 	Finish the basic features part.
+	
 	3/8 (George && Jeffrey)
 	Start to build Functions but only finished part of it.
+	
 	3/9-3/10  (George && Jeffrey)
 	Stopped doing coursework and moved to information processing courework.
+	
 	3/11-3/12
 	Finnish Function part (George)
 	Do some simple testing. Start to write dynamic context to temporarily store the register value. This is used to avoid covering useful values in the registers during multi variable calculation. (Jeffrey)
@@ -134,102 +138,106 @@ Organising the structure of the compiler.\
 	Time consumption: Average 7hours per day
 
 # WEEK 4
-Mar13-19
-	· Goal:
+### Mar13-19
+	##Goal:
 	1. Implementation of Array type (globally and locally) (10 hours)
-	*Array declaration (globally and locally) 
-	*Reading and writing elements of an array
+		*Array declaration (globally and locally) 
+		*Reading and writing elements of an array
 	2. Implementation of Enumeration type (4 hours)
 	3. Implementation of Break and Continue ( 2 hours)
 	4. Implementation of Switch (3 hours)
 	5. Start to do global variable declaration (8 hours)
------------------------------------------------------------------------------------------------------------------------------------------------
-3/13-3/14 (George && Jeffrey)
-Completing the array part implementation.
 
-3/15 (George && Jeffrey)
-Discover the situation  int x, y, z and consider all the possible situation for ‘,’ structure; Reconfigure the Compound part parser. (We spent a long time on this > 8 hours to figure them out)
+	3/13-3/14 (George && Jeffrey)
+	Completing the array part implementation.
 
-3/16  (George && Jeffrey)
-Finish switch, break and continue.
-Almost finished the Enumeration part
+	3/15 (George && Jeffrey)
+	Discover the situation  int x, y, z and consider all the possible situation for ‘,’ structure; Reconfigure the Compound part parser. (We spent a long time on this > 8 hours to figure them out)
 
-3/18-3/20 ( George and Jeffrey)
-Finished Enumeration part.
-Start to build the testing part, including the makefile.
-Find many bugs. We spend the whole weekend fixing them.
------------------------------------------------------------------------------------------------------------------------------------------------
-2nd Milestone
-Completed all the intermediate features in the requirement.
-Goal Completion status:
-Completed:
-Finished all the intermediated features and figure out all the bugs related to this. According to the test our compiler could pass all the related programs.
-Not Completed:
-Since we spent a long time fixing bugs and doing tests, we do not have any extra time to start doing global variable declarations.
-Partly meet our expectation, not very satisfied
-Time consumption: Average 8hours per day
+	3/16  (George && Jeffrey)
+	Finish switch, break and continue.
+	Almost finished the Enumeration part
+
+	3/18-3/20 ( George and Jeffrey)
+	Finished Enumeration part.
+	Start to build the testing part, including the makefile.
+	Find many bugs. We spend the whole weekend fixing them.
+
+
+	2nd Milestone
+	Completed all the intermediate features in the requirement.
+	Goal Completion status:
+	Completed:
+	Finished all the intermediated features and figure out all the bugs related to this. According to the test our compiler could pass all the related programs.
+	Not Completed:
+	Since we spent a long time fixing bugs and doing tests, we do not have any extra time to start doing global variable declarations.
+	Partly meet our expectation, not very satisfied
+	Time consumption: Average 8hours per day
 
 # WEEK 5
-Mar20-26
-Goal:
-	1. Implementation of the Struct type (5 hours)
-	2. Implementation of the Pointer type (including pointer to local and global type)  (10 hours)
-	*Taking the address of the variable
-	*Dereferencing 
-	*Pointer arithmetic
-	3. Implementation of the Double and Float type ( 15 hours)
------------------------------------------------------------------------------------------------------------------------------------------------
-3/21 (George && Jeffrey)
-Finished doing Struct type.
+### Mar20-26
+	##Goal:
+		1. Implementation of the Struct type (5 hours)
+		2. Implementation of the Pointer type (including pointer to local and global type)  (10 hours)
+		*Taking the address of the variable
+		*Dereferencing 
+		*Pointer arithmetic
+		3. Implementation of the Double and Float type ( 15 hours)
 
-3/22 - 3/24 
-Since we have Information Processing deadline, Communication Lab Oral and Control Lab Report deadline during this week, we spent more time on this.
+	3/21 (George && Jeffrey)
+	Finished doing Struct type.
 
-3/25 (George && Jeffrey)
-Finish Pointer for local variables.
+	3/22 - 3/24 
+	Since we have Information Processing deadline, Communication Lab Oral and Control Lab Report deadline during this week, we spent more time on this.
 
-3/26-3/27 (George && Jeffrey)
-Double type and Float type
------------------------------------------------------------------------------------------------------------------------------------------------
-3nd Milestone
-Completed Double and Float types which requires extra new configuration to generates code.
-Goal Completion status:
-Completed:
-Almost completed all of our goals. A productive week.
-Not Completed:
-Some parts of float type implementation are not completed due to time limitation, but since we build double type configuration successfully, we do not spend quite a long time finishing this part.
-The Process is hard especially regarding the double and float type. But we managed to finish this.
-Time consumption: more than 8 hours on average per day
+	3/25 (George && Jeffrey)
+	Finish Pointer for local variables.
+
+	3/26-3/27 (George && Jeffrey)
+	Double type and Float type
+
+	3nd Milestone
+	Completed Double and Float types which requires extra new configuration to generates code.
+	Goal Completion status:
+	Completed:
+	Almost completed all of our goals. A productive week.
+	Not Completed:
+	Some parts of float type implementation are not completed due to time limitation, but since we build double type configuration successfully, we do not spend quite a long time finishing this part.
+	The Process is hard especially regarding the double and float type. But we managed to finish this.
+	Time consumption: more than 8 hours on average per day
 
 # WEEK 6
-Mar28-29
-Goal:
-Implementation of all types of variables ( + 10 hours)
-Implementation of 'sizeof' function (1hour)
-Implementation of escape sequences like '\n' (1 hour)
-Implementation of 'typedef' (3hours)
-Implementation of pointer to double type array (4 hours)
------------------------------------------------------------------------------------------------------------------------------------------------
-3/28 (George && Jeffrey)
-Char, String and unsigned type type
-Global pointer, global array etc.
+### Mar28-29
+	##Goal:
+	Implementation of all types of variables ( + 10 hours)
+	Implementation of 'sizeof' function (1hour)
+	Implementation of escape sequences like '\n' (1 hour)
+	Implementation of 'typedef' (3hours)
+	Implementation of pointer to double type array (4 hours)
 
-3/29 (George && Jeffrey)
-Fixing error met during test. 
-Finished 'sizeof' function.
-Try to implement pointer to double type array. 
-Try to implement 'typedef'
------------------------------------------------------------------------------------------------------------------------------------------------
-Final Milestone
-Completed 80% of Advanced Requirement
-Goal Completion status:
-Completed:
-Except typedef implementation, we almost finished everything. However, unfortunately, when we are trying to configure the pointer to double type array, we change somewhere by mistake, which makes our compiler cannot compile some parts of double type arithmetic programs.
-Not Completed:
-Typedef, double type arithmetic goes wrong.
-Partly meet our expectation, not very satisfied
-Time consumption: Average 24 hours per day
 
-Addition implementation
-Declaration of variable, array, function of the same type within one code.
-Double pointer.
+	3/28 (George && Jeffrey)
+	Char, String and unsigned type type
+	Global pointer, global array etc.
+
+	3/29 (George && Jeffrey)
+	Fixing error met during test. 
+	Finished 'sizeof' function.
+	Try to implement pointer to double type array. 
+	Try to implement 'typedef'
+
+
+	Final Milestone
+	Completed 80% of Advanced Requirement
+
+	Goal Completion status:
+	Completed:
+	Except typedef implementation, we almost finished everything. However, unfortunately, when we are trying to configure the pointer to double type array, we change somewhere by mistake, which makes our compiler cannot compile some parts of double type arithmetic programs.
+	Not Completed:
+	Typedef, double type arithmetic goes wrong.
+	Partly meet our expectation, not very satisfied
+	Time consumption: Average 24 hours per day
+
+	Addition implementation
+	Declaration of variable, array, function of the same type within one code.
+	Double pointer.
