@@ -16,7 +16,7 @@ Organising the structure of the compiler.\
 	2. Have a clear view on StackFrame design. This is marked as a milestone as it is not included in the previous labs.\ Many instructions are context related hence having stackframe taken in early consider would make the progress go more smoothly)  (7 hours)\
 	3. Implementation of Parser and Lexer.  (7 hours)\
 
------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------\
 
 2/21  (George && Jeffrey)\
 Function of the stack frame pointer.\
