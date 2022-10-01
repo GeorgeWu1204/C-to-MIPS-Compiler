@@ -16,7 +16,7 @@ Organising the structure of the compiler.\
 	2. Have a clear view on StackFrame design. This is marked as a milestone as it is not included in the previous labs.\ Many instructions are context related hence having stackframe taken in early consider would make the progress go more smoothly)  (7 hours)\
 	3. Implementation of Parser and Lexer.  (7 hours)\
 
--------------------------------------------------------------------------------------------------------------------------------\
+-------------------------------------------------------------------------------------------------------------------------------
 
 2/21  (George && Jeffrey)\
 Function of the stack frame pointer.\
@@ -35,9 +35,10 @@ Investigate on C(90) standard parser and lexer.\
 
 2/26 (George && Jeffrey)\
 Built the parser and lexer.\
-We disable most of the parser part and only keep simplest addition for simplicity.\
+We disable most of the parser part and only keep simplest addition for simplicity.
 
------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------
+
 Goal Completed status:\
 Completed:\
 	· Implemented the Parser and Lexer within expected time. (Both)\
