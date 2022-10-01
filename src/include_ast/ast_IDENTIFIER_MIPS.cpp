@@ -50,7 +50,6 @@ void Identifier_Mips::generateMips(std::ostream &dst, Context &context, int dest
         std::string type = context.find_global(identifier_id).type_name;
         if (context.find_global(identifier_id).type_name == "ENUM")
         {
-            // std::cerr << "in correct" << std::endl;
             dst << "li "
                 << "$" << destReg << "," << context.find_global(identifier_id).enum_val << std::endl;
         }
@@ -58,7 +57,7 @@ void Identifier_Mips::generateMips(std::ostream &dst, Context &context, int dest
         {
             if (type == "DOUBLE" || type == "FLOAT")
             {
-                // SOSOSOSOSOSOSO
+                
                 generateFloatMips(dst, context, destReg, make_name, dynamic_offset, type);
             }
             else

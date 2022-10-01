@@ -48,13 +48,7 @@ void Return_Mips::generateMips(std::ostream &dst, Context &context, int destReg,
     dst << "b " << context.Function_Ending_Label << std::endl;
 }
 
-void Return_Mips::generateFloatMips(std::ostream &dst, Context &context, int destReg, MakeName &make_name, int &dynamic_offset, std::string type)
-{
-    std::cerr << "inside call" << std::endl;
-    branch[0]->generateFloatMips(dst, context, 0, make_name, dynamic_offset, type);
-    dst << "b " << context.Function_Ending_Label << std::endl;
-}
-// std::string Return_Mips::get_Id() const
+
 // {
 //     return branch[0]->get_Id();
 // }
